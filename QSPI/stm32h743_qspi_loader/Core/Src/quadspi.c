@@ -18,7 +18,6 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-
 #include "quadspi.h"
 
 /* USER CODE BEGIN 0 */
@@ -32,39 +31,41 @@ static void QSPI_Wait_Busy(void);
 
 uint32_t u32DeviceID = 0;
 uint32_t u32Id = 0;
+QSPI_StatusTypeDef nCurrentMode = QSPI_SPI_MODE;
 
 /* USER CODE END 0 */
 
-QSPI_HandleTypeDef QSPIHandle;
-QSPI_StatusTypeDef nCurrentMode = QSPI_SPI_MODE;
+QSPI_HandleTypeDef hqspi;
 
 /* QUADSPI init function */
 void MX_QUADSPI_Init(void)
 {
-    QSPIHandle.Instance = QUADSPI;
-    QSPIHandle.Init.ClockPrescaler = 1;
-    QSPIHandle.Init.FifoThreshold = 32;
-    QSPIHandle.Init.SampleShifting = QSPI_SAMPLE_SHIFTING_NONE;
-    QSPIHandle.Init.FlashSize = 23;
-    QSPIHandle.Init.ChipSelectHighTime = QSPI_CS_HIGH_TIME_1_CYCLE;
-    QSPIHandle.Init.ClockMode = QSPI_CLOCK_MODE_3;
-    QSPIHandle.Init.FlashID = QSPI_FLASH_ID_1;
-    QSPIHandle.Init.DualFlash = QSPI_DUALFLASH_DISABLE;
 
-    if (HAL_QSPI_Init(&QSPIHandle) != HAL_OK)
-    {
-        Error_Handler();
-    }
+  hqspi.Instance = QUADSPI;
+  hqspi.Init.ClockPrescaler = 1;
+  hqspi.Init.FifoThreshold = 32;
+  hqspi.Init.SampleShifting = QSPI_SAMPLE_SHIFTING_NONE;
+  hqspi.Init.FlashSize = 23;
+  hqspi.Init.ChipSelectHighTime = QSPI_CS_HIGH_TIME_1_CYCLE;
+  hqspi.Init.ClockMode = QSPI_CLOCK_MODE_0;
+  hqspi.Init.FlashID = QSPI_FLASH_ID_1;
+  hqspi.Init.DualFlash = QSPI_DUALFLASH_DISABLE;
+  if (HAL_QSPI_Init(&hqspi) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
 }
 
 void HAL_QSPI_MspInit(QSPI_HandleTypeDef* qspiHandle)
 {
-    GPIO_InitTypeDef GPIO_InitStruct = {0};
-    if(qspiHandle->Instance==QUADSPI)
-    {
-    /* USER CODE BEGIN QUADSPI_MspInit 0 */
 
-    /* USER CODE END QUADSPI_MspInit 0 */
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
+  if(qspiHandle->Instance==QUADSPI)
+  {
+  /* USER CODE BEGIN QUADSPI_MspInit 0 */
+
+  /* USER CODE END QUADSPI_MspInit 0 */
     /* QUADSPI clock enable */
     __HAL_RCC_QSPI_CLK_ENABLE();
 
@@ -107,20 +108,20 @@ void HAL_QSPI_MspInit(QSPI_HandleTypeDef* qspiHandle)
     GPIO_InitStruct.Alternate = GPIO_AF10_QUADSPI;
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-    /* USER CODE BEGIN QUADSPI_MspInit 1 */
+  /* USER CODE BEGIN QUADSPI_MspInit 1 */
 
-    /* USER CODE END QUADSPI_MspInit 1 */
-    }
+  /* USER CODE END QUADSPI_MspInit 1 */
+  }
 }
 
 void HAL_QSPI_MspDeInit(QSPI_HandleTypeDef* qspiHandle)
 {
 
-    if(qspiHandle->Instance==QUADSPI)
-    {
-    /* USER CODE BEGIN QUADSPI_MspDeInit 0 */
+  if(qspiHandle->Instance==QUADSPI)
+  {
+  /* USER CODE BEGIN QUADSPI_MspDeInit 0 */
 
-    /* USER CODE END QUADSPI_MspDeInit 0 */
+  /* USER CODE END QUADSPI_MspDeInit 0 */
     /* Peripheral clock disable */
     __HAL_RCC_QSPI_CLK_DISABLE();
 
@@ -147,7 +148,6 @@ void HAL_QSPI_MspDeInit(QSPI_HandleTypeDef* qspiHandle)
 /* USER CODE BEGIN 1 */
 /**
   * @brief  This function send a Write Enable and wait it is effective.
-  * @param  QSPIHandle: QSPI handle
   * @retval None
   */
 static uint8_t QSPI_WriteEnable(void)
@@ -173,7 +173,7 @@ static uint8_t QSPI_WriteEnable(void)
     sCommand.DdrHoldHalfCycle  = QSPI_DDR_HHC_ANALOG_DELAY;
     sCommand.SIOOMode          = QSPI_SIOO_INST_EVERY_CMD;
 
-    if( HAL_OK != HAL_QSPI_Command( &QSPIHandle,
+    if( HAL_OK != HAL_QSPI_Command( &hqspi,
                                     &sCommand,
                                     HAL_QPSI_TIMEOUT_DEFAULT_VALUE
                                   ) )
@@ -199,7 +199,7 @@ static uint8_t QSPI_WriteEnable(void)
 
     sCommand.Instruction    = READ_STATUS_REG1_CMD;
 
-    if( HAL_OK != HAL_QSPI_AutoPolling( &QSPIHandle,
+    if( HAL_OK != HAL_QSPI_AutoPolling( &hqspi,
                                         &sCommand,
                                         &sConfig,
                                         HAL_QPSI_TIMEOUT_DEFAULT_VALUE
@@ -248,7 +248,7 @@ static uint8_t QSPI_AutoPollingMemReady(void)
     sConfig.Interval        = 0x10U;
     sConfig.AutomaticStop   = QSPI_AUTOMATIC_STOP_ENABLE;
 
-    if( HAL_OK != HAL_QSPI_AutoPolling( &QSPIHandle,
+    if( HAL_OK != HAL_QSPI_AutoPolling( &hqspi,
                                         &sCommand,
                                         &sConfig,
                                         HAL_QPSI_TIMEOUT_DEFAULT_VALUE
@@ -279,26 +279,26 @@ static uint8_t QSPI_ResetMemory()
     sCommand.DdrHoldHalfCycle  = QSPI_DDR_HHC_ANALOG_DELAY;
     sCommand.SIOOMode          = QSPI_SIOO_INST_EVERY_CMD;
 
-    if (HAL_QSPI_Command(&QSPIHandle, &sCommand, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+    if (HAL_QSPI_Command(&hqspi, &sCommand, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
         return QSPI_ERROR;
     }
 
     sCommand.Instruction = RESET_MEMORY_CMD;
-    if (HAL_QSPI_Command(&QSPIHandle, &sCommand, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+    if (HAL_QSPI_Command(&hqspi, &sCommand, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
         return QSPI_ERROR;
     }
 
     sCommand.InstructionMode   = QSPI_INSTRUCTION_4_LINES;
     sCommand.Instruction       = RESET_ENABLE_CMD;
-    if (HAL_QSPI_Command(&QSPIHandle, &sCommand, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+    if (HAL_QSPI_Command(&hqspi, &sCommand, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
         return QSPI_ERROR;
     }
 
     sCommand.Instruction = RESET_MEMORY_CMD;
-    if (HAL_QSPI_Command(&QSPIHandle, &sCommand, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+    if (HAL_QSPI_Command(&hqspi, &sCommand, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
         return QSPI_ERROR;
     }
@@ -314,7 +314,7 @@ static uint8_t QSPI_ResetMemory()
 
 /**
   * @brief  This function enter the QSPI memory in QPI mode
-  * @param  QSPIHandle QSPI handle
+  * @param  hqspi QSPI handle
   * @retval QSPI status
   */
 static uint8_t QSPI_EnterQPI(void)
@@ -344,7 +344,7 @@ static uint8_t QSPI_EnterQPI(void)
     sCommand.DdrHoldHalfCycle  = QSPI_DDR_HHC_ANALOG_DELAY;
     sCommand.SIOOMode          = QSPI_SIOO_INST_EVERY_CMD;
 
-    if (HAL_QSPI_Command(&QSPIHandle, &sCommand, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+    if (HAL_QSPI_Command(&hqspi, &sCommand, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
         while(1)
         {
@@ -406,13 +406,13 @@ static uint32_t QSPI_FLASH_ReadStatusReg(uint8_t reg)
     sCommand.DdrHoldHalfCycle  = QSPI_DDR_HHC_ANALOG_DELAY;
     sCommand.SIOOMode          = QSPI_SIOO_INST_EVERY_CMD;
 
-    if (HAL_QSPI_Command(&QSPIHandle, &sCommand, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+    if (HAL_QSPI_Command(&hqspi, &sCommand, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
         while(1)
         {
         }
     }
-    if (HAL_QSPI_Receive(&QSPIHandle, pData, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+    if (HAL_QSPI_Receive(&hqspi, pData, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
         while(1)
         {
@@ -465,13 +465,13 @@ static uint32_t QSPI_FLASH_WriteStatusReg(uint8_t reg,uint8_t regvalue)
     sCommand.DdrHoldHalfCycle  = QSPI_DDR_HHC_ANALOG_DELAY;
     sCommand.SIOOMode          = QSPI_SIOO_INST_EVERY_CMD;
 
-    if (HAL_QSPI_Command(&QSPIHandle, &sCommand, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+    if (HAL_QSPI_Command(&hqspi, &sCommand, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
         while(1)
         {
         }
     }
-    if (HAL_QSPI_Transmit(&QSPIHandle, &regvalue, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+    if (HAL_QSPI_Transmit(&hqspi, &regvalue, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
         while(1)
         {
@@ -498,48 +498,50 @@ uint8_t CSP_QUADSPI_Init(void)
 
     HAL_Delay(5);
 
-    if (HAL_QSPI_DeInit(&QSPIHandle) != HAL_OK)
+    if (HAL_QSPI_DeInit(&hqspi) != HAL_OK)
     {
-        return QSPI_ERROR;
+        while(1);
     }
+
+    HAL_Delay(5);
 
     MX_QUADSPI_Init();
 
     /* QSPI memory reset */
     if (QSPI_ResetMemory() != QSPI_OK)
     {
-        return QSPI_ERROR;
+        while(1);
     }
 
-    HAL_Delay(1);
+    HAL_Delay(5);
 
     u32DeviceID = QSPI_FLASH_ReadDeviceID();
     if( u32DeviceID != 0xEF17UL )
     {
-        return QSPI_ERROR;
+        while(1);
     }
 
     u32Id = QSPI_FLASH_ReadID();
     if( u32Id != 0xEF4018UL )
     {
-        return QSPI_ERROR;
+        while(1);
     }
 
 
     if (QSPI_AutoPollingMemReady() != HAL_OK)
     {
-        return QSPI_ERROR;
+        while(1);
     }
 
     /* Enter QSPI memory in QSPI mode */
     if( QSPI_OK != QSPI_EnterQPI() )
     {
-        return QSPI_ERROR;
+        while(1);
     }
 
     if (QSPI_WriteEnable() != QSPI_OK)
     {
-        return QSPI_ERROR;
+        while(1);
     }
 
     /* Only use in QPI mode */
@@ -558,19 +560,19 @@ uint8_t CSP_QUADSPI_Init(void)
     /* u8Value = (DummyClock(8)/2 -1)<<4 | ((WrapLenth(8)/8 - 1)&0x03); */
     u8Value = 0x30U;
 
-    if (HAL_QSPI_Command(&QSPIHandle, &sCommand, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+    if (HAL_QSPI_Command(&hqspi, &sCommand, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
-        return QSPI_ERROR;
+        while(1);
     }
 
-    if (HAL_QSPI_Transmit(&QSPIHandle, &u8Value, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+    if (HAL_QSPI_Transmit(&hqspi, &u8Value, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
-        return QSPI_ERROR;
+        while(1);
     }
 
     if (QSPI_AutoPollingMemReady() != QSPI_OK)
     {
-        return QSPI_ERROR;
+        while(1);
     }
 
 
@@ -611,7 +613,7 @@ uint8_t CSP_QSPI_Erase_Chip(void)
     sCommand.DdrHoldHalfCycle  = QSPI_DDR_HHC_ANALOG_DELAY;
     sCommand.SIOOMode          = QSPI_SIOO_INST_EVERY_CMD;
 
-    if (HAL_QSPI_Command(&QSPIHandle, &sCommand, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+    if (HAL_QSPI_Command(&hqspi, &sCommand, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
         return QSPI_ERROR;
     }
@@ -682,7 +684,7 @@ uint8_t CSP_QSPI_EnableMemoryMappedMode(QSPI_StatusTypeDef nDTRMode)
     sMemMappedCfg.TimeOutPeriod = 0U;
 
     /* Configure the memory mapped mode */
-    if( HAL_QSPI_MemoryMapped(&QSPIHandle, &sCommand, &sMemMappedCfg) != HAL_OK)
+    if( HAL_QSPI_MemoryMapped(&hqspi, &sCommand, &sMemMappedCfg) != HAL_OK)
     {
         return QSPI_ERROR;
     }
@@ -732,12 +734,12 @@ uint8_t CSP_QSPI_Read(uint8_t* pData, uint32_t ReadAddr, uint32_t Size)
     sCommand.DdrHoldHalfCycle  = QSPI_DDR_HHC_ANALOG_DELAY;
     sCommand.SIOOMode          = QSPI_SIOO_INST_EVERY_CMD;
 
-    if (HAL_QSPI_Command(&QSPIHandle, &sCommand, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+    if (HAL_QSPI_Command(&hqspi, &sCommand, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
         return QSPI_ERROR;
     }
 
-    if (HAL_QSPI_Receive(&QSPIHandle, pData, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+    if (HAL_QSPI_Receive(&hqspi, pData, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
         return QSPI_ERROR;
     }
@@ -817,12 +819,12 @@ uint8_t CSP_QSPI_WriteMemory(uint8_t* pData, uint32_t WriteAddr, uint32_t Size)
             return QSPI_ERROR;
         }
 
-        if (HAL_QSPI_Command(&QSPIHandle, &sCommand, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+        if (HAL_QSPI_Command(&hqspi, &sCommand, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
         {
             return QSPI_ERROR;
         }
 
-        if (HAL_QSPI_Transmit(&QSPIHandle, pData, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+        if (HAL_QSPI_Transmit(&hqspi, pData, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
         {
             return QSPI_ERROR;
         }
@@ -878,7 +880,7 @@ uint8_t CSP_QSPI_Erase_Block(uint32_t BlockAddress)
 
     QSPI_Wait_Busy();
 
-    if (HAL_QSPI_Command(&QSPIHandle, &sCommand, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+    if (HAL_QSPI_Command(&hqspi, &sCommand, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
         return QSPI_ERROR;
     }
@@ -939,7 +941,7 @@ uint8_t CSP_QSPI_EraseSector(uint32_t EraseStartAddress, uint32_t EraseEndAddres
 
         QSPI_Wait_Busy();
 
-        if (HAL_QSPI_Command(&QSPIHandle, &sCommand, HAL_QPSI_TIMEOUT_DEFAULT_VALUE)
+        if (HAL_QSPI_Command(&hqspi, &sCommand, HAL_QPSI_TIMEOUT_DEFAULT_VALUE)
                 != HAL_OK)
         {
             return QSPI_ERROR;
@@ -972,11 +974,11 @@ uint8_t CSP_QSPI_GetStatus(void)
     sCommand.DdrHoldHalfCycle  = QSPI_DDR_HHC_ANALOG_DELAY;
     sCommand.SIOOMode          = QSPI_SIOO_INST_EVERY_CMD;
 
-    if (HAL_QSPI_Command(&QSPIHandle, &sCommand, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+    if (HAL_QSPI_Command(&hqspi, &sCommand, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
         return QSPI_ERROR;
     }
-    if (HAL_QSPI_Receive(&QSPIHandle, &reg, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+    if (HAL_QSPI_Receive(&hqspi, &reg, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
         return QSPI_ERROR;
     }
@@ -1022,7 +1024,7 @@ uint32_t QSPI_FLASH_ReadID(void)
     sCommand.AddressMode       = QSPI_ADDRESS_1_LINE;
     sCommand.AddressSize       = QSPI_ADDRESS_24_BITS;
     sCommand.DataMode          = QSPI_DATA_1_LINE;
-      sCommand.AddressMode       = QSPI_ADDRESS_NONE;
+    sCommand.AddressMode       = QSPI_ADDRESS_NONE;
     sCommand.AlternateByteMode = QSPI_ALTERNATE_BYTES_NONE;
     sCommand.DummyCycles       = 0;
     sCommand.NbData            = 3;
@@ -1030,13 +1032,13 @@ uint32_t QSPI_FLASH_ReadID(void)
     sCommand.DdrHoldHalfCycle  = QSPI_DDR_HHC_ANALOG_DELAY;
     sCommand.SIOOMode          = QSPI_SIOO_INST_EVERY_CMD;
 
-    if (HAL_QSPI_Command(&QSPIHandle, &sCommand, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+    if (HAL_QSPI_Command(&hqspi, &sCommand, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
         while(1)
         {
         }
     }
-    if (HAL_QSPI_Receive(&QSPIHandle, pData, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+    if (HAL_QSPI_Receive(&hqspi, pData, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
         while(1)
         {
@@ -1081,13 +1083,13 @@ uint32_t QSPI_FLASH_ReadDeviceID(void)
     sCommand.DdrHoldHalfCycle  = QSPI_DDR_HHC_ANALOG_DELAY;
     sCommand.SIOOMode          = QSPI_SIOO_INST_EVERY_CMD;
 
-    if (HAL_QSPI_Command(&QSPIHandle, &sCommand, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+    if (HAL_QSPI_Command(&hqspi, &sCommand, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
         while(1)
         {
         }
     }
-    if (HAL_QSPI_Receive(&QSPIHandle, pData, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
+    if (HAL_QSPI_Receive(&hqspi, pData, HAL_QPSI_TIMEOUT_DEFAULT_VALUE) != HAL_OK)
     {
         while(1)
         {

@@ -65,16 +65,12 @@ void SystemClock_Config(void);
   */
 int main(void)
 {
-    /* USER CODE BEGIN 1 */
+  /* USER CODE BEGIN 1 */
     uint8_t buffer_test[MEMORY_SECTOR_SIZE];
 
     uint32_t var = 0;
   /* USER CODE END 1 */
-  /* Enable I-Cache---------------------------------------------------------*/
-  SCB_EnableICache();
 
-  /* Enable D-Cache---------------------------------------------------------*/
-  SCB_EnableDCache();
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
@@ -93,35 +89,60 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_QUADSPI_Init();
   /* USER CODE BEGIN 2 */
 
      if( HAL_ERROR == CSP_QUADSPI_Init() )
      {
-         while( 1UL );
+        while( 1UL )
+        {
+            HAL_GPIO_WritePin(D2_GPIO_Port, D2_Pin, GPIO_PIN_SET);
+            HAL_Delay(80);
+            HAL_GPIO_WritePin(D2_GPIO_Port, D2_Pin, GPIO_PIN_RESET);
+            HAL_Delay(80);
+        }
      }
 
     for (var = 0; var < MEMORY_SECTOR_SIZE; var++) {
         buffer_test[var] = (var & 0xff);
     }
 
-     for (var = 0; var < SECTORS_COUNT; var++)
-     {
-         if (CSP_QSPI_EraseSector(var * MEMORY_SECTOR_SIZE,
-                 (var + 1) * MEMORY_SECTOR_SIZE - 1) != HAL_OK)
-         {
-             while (1);
-         }
+    for (var = 0; var < SECTORS_COUNT; var++)
+    {
+        if (CSP_QSPI_EraseSector(var * MEMORY_SECTOR_SIZE,
+                (var + 1) * MEMORY_SECTOR_SIZE - 1) != HAL_OK)
+        {
+            while( 1UL )
+            {
+                HAL_GPIO_WritePin(D2_GPIO_Port, D2_Pin, GPIO_PIN_SET);
+                HAL_Delay(80);
+                HAL_GPIO_WritePin(D2_GPIO_Port, D2_Pin, GPIO_PIN_RESET);
+                HAL_Delay(80);
+            }
+        }
 
-         if (CSP_QSPI_WriteMemory(buffer_test, var * MEMORY_SECTOR_SIZE,
-                 sizeof(buffer_test)) != HAL_OK)
-         {
-             while (1);
-         }
-     }
+        if (CSP_QSPI_WriteMemory(buffer_test, var * MEMORY_SECTOR_SIZE,
+                sizeof(buffer_test)) != HAL_OK)
+        {
+            while( 1UL )
+            {
+                HAL_GPIO_WritePin(D2_GPIO_Port, D2_Pin, GPIO_PIN_SET);
+                HAL_Delay(80);
+                HAL_GPIO_WritePin(D2_GPIO_Port, D2_Pin, GPIO_PIN_RESET);
+                HAL_Delay(80);
+            }
+        }
+    }
 
    if( CSP_QSPI_EnableMemoryMappedMode(QSPI_QPI_MODE) != QSPI_OK )
    {
-       while( 1UL );
+        while( 1UL )
+        {
+            HAL_GPIO_WritePin(D2_GPIO_Port, D2_Pin, GPIO_PIN_SET);
+            HAL_Delay(80);
+            HAL_GPIO_WritePin(D2_GPIO_Port, D2_Pin, GPIO_PIN_RESET);
+            HAL_Delay(80);
+        }
    }
 
     for (var = 0; var < SECTORS_COUNT; var++)
@@ -130,7 +151,13 @@ int main(void)
                 (uint8_t*) (0x90000000 + var * MEMORY_SECTOR_SIZE),
                 MEMORY_SECTOR_SIZE) != HAL_OK)
         {
-            while (1);
+            while( 1UL )
+            {
+                HAL_GPIO_WritePin(D2_GPIO_Port, D2_Pin, GPIO_PIN_SET);
+                HAL_Delay(80);
+                HAL_GPIO_WritePin(D2_GPIO_Port, D2_Pin, GPIO_PIN_RESET);
+                HAL_Delay(80);
+            }
         }
     }
 
@@ -140,6 +167,10 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+      HAL_GPIO_WritePin(D2_GPIO_Port, D2_Pin, GPIO_PIN_SET);
+      HAL_Delay(500);
+      HAL_GPIO_WritePin(D2_GPIO_Port, D2_Pin, GPIO_PIN_RESET);
+      HAL_Delay(500);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -173,9 +204,9 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
   RCC_OscInitStruct.PLL.PLLM = 5;
-  RCC_OscInitStruct.PLL.PLLN = 96;
+  RCC_OscInitStruct.PLL.PLLN = 192;
   RCC_OscInitStruct.PLL.PLLP = 2;
-  RCC_OscInitStruct.PLL.PLLQ = 1;
+  RCC_OscInitStruct.PLL.PLLQ = 3;
   RCC_OscInitStruct.PLL.PLLR = 2;
   RCC_OscInitStruct.PLL.PLLRGE = RCC_PLL1VCIRANGE_2;
   RCC_OscInitStruct.PLL.PLLVCOSEL = RCC_PLL1VCOWIDE;

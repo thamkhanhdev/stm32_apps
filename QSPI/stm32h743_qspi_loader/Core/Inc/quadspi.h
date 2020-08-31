@@ -32,7 +32,7 @@
 
 /* USER CODE END Includes */
 
-extern QSPI_HandleTypeDef QSPIHandle;
+extern QSPI_HandleTypeDef hqspi;
 
 /* USER CODE BEGIN Private defines */
 /* USER CODE END Private defines */
