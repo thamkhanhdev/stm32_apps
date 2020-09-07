@@ -1,0 +1,143 @@
+Removed Pin From Net: NetName=GND Pin=C23-1
+Removed Pin From Net: NetName=+3.3V Pin=C23-2
+Removed Pin From Net: NetName=GND Pin=C24-1
+Removed Pin From Net: NetName=+3.3V Pin=C24-2
+Removed Pin From Net: NetName=GND Pin=LCD1-1
+Removed Pin From Net: NetName=+3.3V Pin=LCD1-2
+Removed Pin From Net: NetName=FMC_A16 Pin=LCD1-4
+Removed Pin From Net: NetName=FMC_NWE Pin=LCD1-5
+Removed Pin From Net: NetName=FMC_NOE Pin=LCD1-6
+Removed Pin From Net: NetName=FMC_D8 Pin=LCD1-7
+Removed Pin From Net: NetName=FMC_D9 Pin=LCD1-8
+Removed Pin From Net: NetName=FMC_D10 Pin=LCD1-9
+Removed Pin From Net: NetName=FMC_D11 Pin=LCD1-10
+Removed Pin From Net: NetName=FMC_D12 Pin=LCD1-11
+Removed Pin From Net: NetName=FMC_D13 Pin=LCD1-12
+Removed Pin From Net: NetName=FMC_D14 Pin=LCD1-13
+Removed Pin From Net: NetName=FMC_D15 Pin=LCD1-14
+Removed Pin From Net: NetName=FMC_NE1 Pin=LCD1-15
+Removed Pin From Net: NetName=FMC_RST Pin=LCD1-17
+Removed Pin From Net: NetName=FMC_D0 Pin=LCD1-21
+Removed Pin From Net: NetName=FMC_D1 Pin=LCD1-22
+Removed Pin From Net: NetName=FMC_D2 Pin=LCD1-23
+Removed Pin From Net: NetName=FMC_D3 Pin=LCD1-24
+Removed Pin From Net: NetName=FMC_D4 Pin=LCD1-25
+Removed Pin From Net: NetName=FMC_D5 Pin=LCD1-26
+Removed Pin From Net: NetName=FMC_D6 Pin=LCD1-27
+Removed Pin From Net: NetName=FMC_D7 Pin=LCD1-28
+Removed Pin From Net: NetName=T_CLK Pin=LCD1-29
+Removed Pin From Net: NetName=T_CS Pin=LCD1-30
+Removed Pin From Net: NetName=T_DIN Pin=LCD1-31
+Removed Pin From Net: NetName=T_DOUT Pin=LCD1-33
+Removed Pin From Net: NetName=T_IRQ Pin=LCD1-34
+Removed Pin From Net: NetName=FSMC_PWM Pin=R23-1
+Removed Pin From Net: NetName=+5V Pin=R24-1
+Removed Pin From Net: NetName=GND Pin=R25-2
+Removed Pin From Net: NetName=+5V Pin=T1-3
+Removed Pin From Net: NetName=GND Pin=T2-3
+Removed Pin From Net: NetName=SXOSC_OUT Pin=Y1-1
+Removed Pin From Net: NetName=SXOSC_IN Pin=Y1-2
+Removed Member From Class: ClassName=[03] - POWER Member=R4
+Removed Member From Class: ClassName=[04] - MCU Member=R10
+Removed Member From Class: ClassName=[04] - MCU Member=R11
+Removed Member From Class: ClassName=[05] - FLASH, MICROSD Member=R16
+Removed Member From Class: ClassName=[05] - FLASH, MICROSD Member=R17
+Removed Member From Class: ClassName=[07] - OTHER Member=R23
+Removed Member From Class: ClassName=[04] - MCU Member=Y1
+Added Component: Designator=C1(C0603)
+Add component (AddParameter): Name = ".Checked PCB"; Value = "RF"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = ".Checked SCH"; Value = "RF"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Applications"; Value = "General Purpose"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Capacitance"; Value = "22pF"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Category"; Value = "Capacitors"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink1Description"; Value = "http://www.tdk.com/pdf/general_B11.pdf"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink1URL"; Value = "http://www.tdk.com/pdf/general_B11.pdf"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Features"; Value = "-"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Height - Seated (Max)"; Value = "-"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Lead Spacing"; Value = "-"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Lead Style"; Value = "-"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer"; Value = "TDK Corporation"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer Part Number"; Value = "C2012X5R1C226K"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Mounting Type"; Value = "Surface Mount, MLCC"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Operating Temperature"; Value = "-55°C ~ 85°C"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Package / Case"; Value = "0805 (2012 Metric)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Packaging"; Value = "Cut Tape (CT)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Ratings"; Value = "-"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "RoHS"; Value = "RoHS Compliant"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Size / Dimension"; Value = "0.079" L x 0.049" W (2.00mm x 1.25mm)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Temperature Coefficient"; Value = "X5R"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Thickness (Max)"; Value = "0.057" (1.45mm)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Tolerance"; Value = "±10%"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Voltage - Rated"; Value = "16V"; VariantName = "[No Variations]"
+Added Component: Designator=C7(C0603)
+Add component (AddParameter): Name = ".Checked PCB"; Value = "RF"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = ".Checked SCH"; Value = "RF"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Applications"; Value = "General Purpose"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Capacitance"; Value = "22pF"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Category"; Value = "Capacitors"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink1Description"; Value = "http://www.tdk.com/pdf/general_B11.pdf"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink1URL"; Value = "http://www.tdk.com/pdf/general_B11.pdf"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Features"; Value = "-"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Height - Seated (Max)"; Value = "-"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Lead Spacing"; Value = "-"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Lead Style"; Value = "-"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer"; Value = "TDK Corporation"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer Part Number"; Value = "C2012X5R1C226K"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Mounting Type"; Value = "Surface Mount, MLCC"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Operating Temperature"; Value = "-55°C ~ 85°C"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Package / Case"; Value = "0805 (2012 Metric)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Packaging"; Value = "Cut Tape (CT)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Ratings"; Value = "-"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "RoHS"; Value = "RoHS Compliant"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Size / Dimension"; Value = "0.079" L x 0.049" W (2.00mm x 1.25mm)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Temperature Coefficient"; Value = "X5R"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Thickness (Max)"; Value = "0.057" (1.45mm)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Tolerance"; Value = "±10%"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Voltage - Rated"; Value = "16V"; VariantName = "[No Variations]"
+Added Component: Designator=C8(C0603)
+Add component (AddParameter): Name = ".Checked PCB"; Value = "RF"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = ".Checked SCH"; Value = "RF"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Applications"; Value = "General Purpose"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Capacitance"; Value = "22pF"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Category"; Value = "Capacitors"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink1Description"; Value = "http://www.tdk.com/pdf/general_B11.pdf"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink1URL"; Value = "http://www.tdk.com/pdf/general_B11.pdf"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Features"; Value = "-"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Height - Seated (Max)"; Value = "-"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Lead Spacing"; Value = "-"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Lead Style"; Value = "-"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer"; Value = "TDK Corporation"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer Part Number"; Value = "C2012X5R1C226K"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Mounting Type"; Value = "Surface Mount, MLCC"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Operating Temperature"; Value = "-55°C ~ 85°C"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Package / Case"; Value = "0805 (2012 Metric)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Packaging"; Value = "Cut Tape (CT)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Ratings"; Value = "-"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "RoHS"; Value = "RoHS Compliant"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Size / Dimension"; Value = "0.079" L x 0.049" W (2.00mm x 1.25mm)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Temperature Coefficient"; Value = "X5R"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Thickness (Max)"; Value = "0.057" (1.45mm)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Tolerance"; Value = "±10%"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Voltage - Rated"; Value = "16V"; VariantName = "[No Variations]"
+Added Pin To Net: NetName=+3.3V Pin=C1-1
+Added Pin To Net: NetName=GND Pin=C1-2
+Added Pin To Net: NetName=+3.3V Pin=C7-1
+Added Pin To Net: NetName=GND Pin=C7-2
+Added Pin To Net: NetName=+3.3V Pin=C8-1
+Added Pin To Net: NetName=GND Pin=C8-2
+Added Class: Name=[08] - DISPLAY
+Added Member To Class: ClassName=[03] - POWER Member=Component C1 104
+Added Member To Class: ClassName=[03] - POWER Member=Component C7 104
+Added Member To Class: ClassName=[03] - POWER Member=Component C8 104
+Added Member To Class: ClassName=[03] - POWER Member=Component R2 0r
+Added Member To Class: ClassName=[04] - MCU Member=Component R3 0r
+Added Member To Class: ClassName=[04] - MCU Member=Component R6 4.7K
+Added Member To Class: ClassName=[05] - FLASH, MICROSD Member=Component R13 4.7K
+Added Member To Class: ClassName=[05] - FLASH, MICROSD Member=Component R14 4.7K
+Added Member To Class: ClassName=[07] - OTHER Member=Component R21 4.7K
+Added Room: Name=[03] - POWER
+Added Room: Name=[04] - MCU
+Added Room: Name=[05] - FLASH, MICROSD
+Added Room: Name=[06] - AUDIO
+Added Room: Name=[07] - OTHER
+Added Room: Name=[08] - DISPLAY

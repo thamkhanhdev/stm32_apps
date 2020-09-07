@@ -9,10 +9,10 @@
   * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
   *
   ******************************************************************************
   */
@@ -44,15 +44,15 @@ void MX_GPIO_Init(void)
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, LA_Pin|LB_Pin|LC_Pin|LD_Pin 
+  HAL_GPIO_WritePin(GPIOC, LA_Pin|LB_Pin|LC_Pin|LD_Pin
                           |LE_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, LAT_Pin|CLK_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, B4_Pin|R4_Pin|G4_Pin|B2_Pin 
-                          |R2_Pin|R3_Pin|G3_Pin|B3_Pin 
+  HAL_GPIO_WritePin(GPIOB, B4_Pin|R4_Pin|G4_Pin|B2_Pin
+                          |R2_Pin|R3_Pin|G3_Pin|B3_Pin
                           |R1_Pin|G1_Pin|B1_Pin|G2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : PCPin PCPin PCPin PCPin */
@@ -76,11 +76,11 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PBPin PBPin PBPin PBPin 
-                           PBPin PBPin PBPin PBPin 
+  /*Configure GPIO pins : PBPin PBPin PBPin PBPin
+                           PBPin PBPin PBPin PBPin
                            PBPin PBPin PBPin PBPin */
-  GPIO_InitStruct.Pin = B4_Pin|R4_Pin|G4_Pin|B2_Pin 
-                          |R2_Pin|R3_Pin|G3_Pin|B3_Pin 
+  GPIO_InitStruct.Pin = B4_Pin|R4_Pin|G4_Pin|B2_Pin
+                          |R2_Pin|R3_Pin|G3_Pin|B3_Pin
                           |R1_Pin|G1_Pin|B1_Pin|G2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
@@ -96,7 +96,7 @@ void MX_GPIO_Init(void)
   /*Configure GPIO pin : PA8 */
   GPIO_InitStruct.Pin = GPIO_PIN_8;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PA9 PA10 */
