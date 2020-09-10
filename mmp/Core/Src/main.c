@@ -214,20 +214,13 @@ void MEDIA_DisplayJpeg(char * pPath)
     FILINFO pListFileInfo;
     uint8_t r, g, b;
     uint16_t u16Color;
-    uint8_t u8Index = 0U;
+    uint16_t u16Index;
 
     if (f_mount(&SDFatFS, (TCHAR const*) SDPath, 1U) == FR_OK)
     {
-        MATRIX_Printf( FONT_DEFAULT, "SdCard Mounted!\n");
-        HAL_Delay(1000);
-        MATRIX_FillScreen(0x0);
-
-        // nFatResult = f_stat( sFileName, &pListFileInfo);
-        // if(FR_OK != nFatResult)
-        // {
-        //     MATRIX_Printf( FONT_DEFAULT, "%s f_stat error %u\r\n",  sFileName, nFatResult);
-        //     return;
-        // }
+        // MATRIX_Printf( FONT_DEFAULT, "SdCard Mounted!\n");
+        // HAL_Delay(1000);
+        // MATRIX_FillScreen(0x0);
 
         if( FR_OK==f_open(&SDFile, (TCHAR*) pPath, FA_READ) )
         {
@@ -289,11 +282,12 @@ void MEDIA_DisplayJpeg(char * pPath)
                     // MATRIX_Printf( FONT_DEFAULT, "step 0: %i\n",cinfo.output_height);
                     (void) jpeg_read_scanlines(&cinfo, nRowBuff, 1);
                     // MATRIX_Printf( FONT_DEFAULT, "step 1: %i\n",cinfo.output_height);
-                    for( u8Index = 0U; u8Index < MATRIX_WIDTH; u8Index++ )
+                    for( u16Index = 0U; u16Index < MATRIX_WIDTH; u16Index++ )
                     {
-                        r = (uint8_t) nRowBuff[0][ u8Index * 3 + 0 ];
-                        g = (uint8_t) nRowBuff[0][ u8Index * 3 + 1 ];
-                        b = (uint8_t) nRowBuff[0][ u8Index * 3 + 2 ];
+                        r = (uint8_t) pagebuff[ u16Index * 3 + 0 ];
+                        g = (uint8_t) pagebuff[ u16Index * 3 + 1 ];
+                        b = (uint8_t) pagebuff[ u16Index * 3 + 2 ];
+
                         r = pgm_read_byte(&gamma_table[(r * 255) >> 8]); // Gamma correction table maps
                         g = pgm_read_byte(&gamma_table[(g * 255) >> 8]); // 8-bit input to 4-bit output
                         b = pgm_read_byte(&gamma_table[(b * 255) >> 8]);
@@ -301,12 +295,12 @@ void MEDIA_DisplayJpeg(char * pPath)
                         u16Color =  (r << 12) | ((r & 0x8) << 8) | // 4/4/4 -> 5/6/5
                                     (g <<  7) | ((g & 0xC) << 3) |
                                     (b <<  1) | ( b        >> 3);
-                        MATRIX_WritePixel( u8Index, cinfo.output_scanline, u16Color );
+                        MATRIX_WritePixel( u16Index, cinfo.output_scanline - 1, u16Color );
                     }
-                    // MATRIX_Printf( FONT_DEFAULT, "step 2: %i\n",cinfo.output_scanline);
-                    // HAL_Delay(1000);
                 }
-                // MATRIX_Printf( FONT_DEFAULT, "step 3: %i\n",cinfo.output_height);
+
+                // MATRIX_SetCursor(0, 5);
+                // MATRIX_Printf( FONT_DEFAULT, "%s\r\n",  pPath);
 
                 /* Step 7: Finish decompression */
                 (void) jpeg_finish_decompress(&cinfo);
@@ -443,29 +437,22 @@ void play_image( void )
         SDResult = f_readdir(&dir, &fno);
         if (SDResult != FR_OK || fno.fname[0] == 0)
         {
-            MATRIX_Printf( FONT_DEFAULT, "SDResult: %i\n",SDResult);
-            while(1);
             return;
         }
         if (fno.fattrib & AM_DIR)
         {
-            MATRIX_Printf( FONT_DEFAULT, "SDResult2: %i\n",SDResult);
-            while(1);
             return;
         }
 
         SDResult=f_open(&SDFile,fno.fname, FA_READ);
         {
-            MATRIX_Printf( FONT_DEFAULT, "SDResult3: %i\n",SDResult);
-            while(1);
             return;
         }
         l_Cinfo.err = jpeg_std_error(&l_Jerr);
         jpeg_create_decompress(&l_Cinfo);
         jpeg_stdio_src(&l_Cinfo, (JFILE * ) &SDFile);
         (void) jpeg_read_header(&l_Cinfo, TRUE);
-        //l_Cinfo.scale_num=1;
-        //l_Cinfo.scale_denom=2;
+
         (void) jpeg_start_decompress(&l_Cinfo);
         uint32_t row_stride = l_Cinfo.output_width * l_Cinfo.output_components;
         buffer = (*l_Cinfo.mem->alloc_sarray)((j_common_ptr) &l_Cinfo, JPOOL_IMAGE, row_stride, 1);
@@ -473,7 +460,6 @@ void play_image( void )
         while(l_Cinfo.output_scanline < l_Cinfo.output_height)
         {
             (void) jpeg_read_scanlines(&l_Cinfo, buffer, 1);
-            //do something
             for( int i=0;i<l_Cinfo.output_width;i++)
             {
                 l_Data = (buffer[0][i*3]<<16) | (buffer[0][i*3+1]<<8) | buffer[0][i*3+2];
@@ -510,7 +496,7 @@ int main(void)
   SCB_EnableICache();
 
   /* Enable D-Cache---------------------------------------------------------*/
-  SCB_EnableDCache();
+  /* SCB_EnableDCache(); */
 
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -730,6 +716,10 @@ int main(void)
         // }
         // HAL_Delay(2000);
     }
+    MATRIX_SetTextColor(0xF81F);
+    MATRIX_FillScreen(0x0);
+    MATRIX_SetCursor(0, 5);
+    MATRIX_Printf( FONT_DEFAULT, "-----------No SDCard---------\n");
     HAL_Delay(2000);
     /* USER CODE END WHILE */
 
@@ -768,7 +758,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
   RCC_OscInitStruct.PLL.PLLM = 32;
-  RCC_OscInitStruct.PLL.PLLN = 360;
+  RCC_OscInitStruct.PLL.PLLN = 480;
   RCC_OscInitStruct.PLL.PLLP = 2;
   RCC_OscInitStruct.PLL.PLLQ = 2;
   RCC_OscInitStruct.PLL.PLLR = 2;
@@ -798,7 +788,7 @@ void SystemClock_Config(void)
   }
   PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_SDMMC;
   PeriphClkInitStruct.PLL2.PLL2M = 32;
-  PeriphClkInitStruct.PLL2.PLL2N = 96;
+  PeriphClkInitStruct.PLL2.PLL2N = 168;
   PeriphClkInitStruct.PLL2.PLL2P = 2;
   PeriphClkInitStruct.PLL2.PLL2Q = 2;
   PeriphClkInitStruct.PLL2.PLL2R = 4;
