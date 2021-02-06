@@ -1,4 +1,4 @@
-[Design]
+ï»¿[Design]
 Version=1.0
 HierarchyMode=1
 ChannelRoomNamingStyle=0
@@ -23,11 +23,13 @@ DefaultPcbPcad=0
 ReorderDocumentsOnCompile=1
 NameNetsHierarchically=0
 PowerPortNamesTakePriority=0
+AutoSheetNumbering=0
 PushECOToAnnotationFile=1
 DItemRevisionGUID=
 ReportSuppressedErrorsInMessages=0
 FSMCodingStyle=eFMSDropDownList_OneProcess
 FSMEncodingStyle=eFMSDropDownList_OneHot
+IsProjectConflictPreventionWarningsEnabled=1
 OutputPath=
 LogFolderPath=
 ManagedProjectGUID=
@@ -241,6 +243,23 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=
 
+[Document13]
+DocumentPath=Evb board STM32H7 Fullcolor V1l0.PcbLib
+AnnotationEnabled=1
+AnnotateStartValue=1
+AnnotationIndexControlEnabled=0
+AnnotateSuffix=
+AnnotateScope=All
+AnnotateOrder=-1
+DoLibraryUpdate=1
+DoDatabaseUpdate=1
+ClassGenCCAutoEnabled=1
+ClassGenCCAutoRoomEnabled=1
+ClassGenNCAutoScope=None
+DItemRevisionGUID=
+GenerateClassCluster=0
+DocumentUniqueId=HSRNPSRX
+
 [ProjectVariant1]
 UniqueID=0F0A08C7-DE3E-4401-B3AF-463CA4D53207
 Description=Production
@@ -422,6 +441,118 @@ Variation172=Designator=C417|UniqueId=\LBVRFSXP|Kind=1|AlternatePart=
 Variation173=Designator=C418|UniqueId=\QNUDEADW|Kind=1|AlternatePart= 
 Variation174=Designator=D38|UniqueId=\UUEYVBNA|Kind=1|AlternatePart= 
 ParamVariationCount=0
+
+[GeneratedDocument1]
+DocumentPath=Project Outputs for Evb board STM32H7 Fullcolor V1l0\Evb board STM32H7 Fullcolor V1l0-RoundHoles.TXT
+DItemRevisionGUID=
+
+[GeneratedDocument2]
+DocumentPath=Project Outputs for Evb board STM32H7 Fullcolor V1l0\Evb board STM32H7 Fullcolor V1l0-SlotHoles.TXT
+DItemRevisionGUID=
+
+[GeneratedDocument3]
+DocumentPath=Project Outputs for Evb board STM32H7 Fullcolor V1l0\Evb board STM32H7 Fullcolor V1l0.DRR
+DItemRevisionGUID=
+
+[GeneratedDocument4]
+DocumentPath=Project Outputs for Evb board STM32H7 Fullcolor V1l0\Evb board STM32H7 Fullcolor V1l0.EXTREP
+DItemRevisionGUID=
+
+[GeneratedDocument5]
+DocumentPath=Project Outputs for Evb board STM32H7 Fullcolor V1l0\Evb board STM32H7 Fullcolor V1l0.GBL
+DItemRevisionGUID=
+
+[GeneratedDocument6]
+DocumentPath=Project Outputs for Evb board STM32H7 Fullcolor V1l0\Evb board STM32H7 Fullcolor V1l0.GBO
+DItemRevisionGUID=
+
+[GeneratedDocument7]
+DocumentPath=Project Outputs for Evb board STM32H7 Fullcolor V1l0\Evb board STM32H7 Fullcolor V1l0.GBP
+DItemRevisionGUID=
+
+[GeneratedDocument8]
+DocumentPath=Project Outputs for Evb board STM32H7 Fullcolor V1l0\Evb board STM32H7 Fullcolor V1l0.GBS
+DItemRevisionGUID=
+
+[GeneratedDocument9]
+DocumentPath=Project Outputs for Evb board STM32H7 Fullcolor V1l0\Evb board STM32H7 Fullcolor V1l0.GD1
+DItemRevisionGUID=
+
+[GeneratedDocument10]
+DocumentPath=Project Outputs for Evb board STM32H7 Fullcolor V1l0\Evb board STM32H7 Fullcolor V1l0.GG1
+DItemRevisionGUID=
+
+[GeneratedDocument11]
+DocumentPath=Project Outputs for Evb board STM32H7 Fullcolor V1l0\Evb board STM32H7 Fullcolor V1l0.GKO
+DItemRevisionGUID=
+
+[GeneratedDocument12]
+DocumentPath=Project Outputs for Evb board STM32H7 Fullcolor V1l0\Evb board STM32H7 Fullcolor V1l0.GM1
+DItemRevisionGUID=
+
+[GeneratedDocument13]
+DocumentPath=Project Outputs for Evb board STM32H7 Fullcolor V1l0\Evb board STM32H7 Fullcolor V1l0.GM6
+DItemRevisionGUID=
+
+[GeneratedDocument14]
+DocumentPath=Project Outputs for Evb board STM32H7 Fullcolor V1l0\Evb board STM32H7 Fullcolor V1l0.GM7
+DItemRevisionGUID=
+
+[GeneratedDocument15]
+DocumentPath=Project Outputs for Evb board STM32H7 Fullcolor V1l0\Evb board STM32H7 Fullcolor V1l0.GM11
+DItemRevisionGUID=
+
+[GeneratedDocument16]
+DocumentPath=Project Outputs for Evb board STM32H7 Fullcolor V1l0\Evb board STM32H7 Fullcolor V1l0.GM13
+DItemRevisionGUID=
+
+[GeneratedDocument17]
+DocumentPath=Project Outputs for Evb board STM32H7 Fullcolor V1l0\Evb board STM32H7 Fullcolor V1l0.GM15
+DItemRevisionGUID=
+
+[GeneratedDocument18]
+DocumentPath=Project Outputs for Evb board STM32H7 Fullcolor V1l0\Evb board STM32H7 Fullcolor V1l0.GM16
+DItemRevisionGUID=
+
+[GeneratedDocument19]
+DocumentPath=Project Outputs for Evb board STM32H7 Fullcolor V1l0\Evb board STM32H7 Fullcolor V1l0.GM29
+DItemRevisionGUID=
+
+[GeneratedDocument20]
+DocumentPath=Project Outputs for Evb board STM32H7 Fullcolor V1l0\Evb board STM32H7 Fullcolor V1l0.GPB
+DItemRevisionGUID=
+
+[GeneratedDocument21]
+DocumentPath=Project Outputs for Evb board STM32H7 Fullcolor V1l0\Evb board STM32H7 Fullcolor V1l0.GPT
+DItemRevisionGUID=
+
+[GeneratedDocument22]
+DocumentPath=Project Outputs for Evb board STM32H7 Fullcolor V1l0\Evb board STM32H7 Fullcolor V1l0.GTL
+DItemRevisionGUID=
+
+[GeneratedDocument23]
+DocumentPath=Project Outputs for Evb board STM32H7 Fullcolor V1l0\Evb board STM32H7 Fullcolor V1l0.GTO
+DItemRevisionGUID=
+
+[GeneratedDocument24]
+DocumentPath=Project Outputs for Evb board STM32H7 Fullcolor V1l0\Evb board STM32H7 Fullcolor V1l0.GTP
+DItemRevisionGUID=
+
+[GeneratedDocument25]
+DocumentPath=Project Outputs for Evb board STM32H7 Fullcolor V1l0\Evb board STM32H7 Fullcolor V1l0.GTS
+DItemRevisionGUID=
+
+[GeneratedDocument26]
+DocumentPath=Project Outputs for Evb board STM32H7 Fullcolor V1l0\Evb board STM32H7 Fullcolor V1l0.LDP
+DItemRevisionGUID=
+
+[GeneratedDocument27]
+DocumentPath=Project Outputs for Evb board STM32H7 Fullcolor V1l0\Evb board STM32H7 Fullcolor V1l0.REP
+DItemRevisionGUID=
+
+[GeneratedDocument28]
+DocumentPath=Project Outputs for Evb board STM32H7 Fullcolor V1l0\Evb board STM32H7 Fullcolor V1l0.RUL
+DItemRevisionGUID=
 
 [Parameter1]
 Name=ClientCompanyName
@@ -723,72 +854,84 @@ Name=Fabrication Outputs
 Description=
 TargetPrinter=Microsoft Print to PDF
 PrinterOptions=Record=PrinterOptions|Copies=1|Duplex=1|TrueTypeOptions=3|Collate=1|PrintJobKind=1|PrintWhat=1
-OutputType1=CompositeDrill
-OutputName1=Composite Drill Drawing
+OutputType1=Drill
+OutputName1=Drill Drawing/Guides
 OutputDocumentPath1=
 OutputVariantName1=
 OutputDefault1=0
 PageOptions1=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=1.00|XCorrection=1.00|YCorrection=1.00|PrintKind=1|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=7|PrintQuality=-4|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=A4|PaperIndex=9
-OutputType2=Drill
-OutputName2=Drill Drawing/Guides
+OutputType2=Final
+OutputName2=Final Artwork Prints
 OutputDocumentPath2=
-OutputVariantName2=
+OutputVariantName2=[No Variations]
 OutputDefault2=0
 PageOptions2=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=1.00|XCorrection=1.00|YCorrection=1.00|PrintKind=1|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=7|PrintQuality=-4|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=A4|PaperIndex=9
-OutputType3=Final
-OutputName3=Final Artwork Prints
+OutputType3=CompositeDrill
+OutputName3=Composite Drill Drawing
 OutputDocumentPath3=
-OutputVariantName3=[No Variations]
+OutputVariantName3=
 OutputDefault3=0
 PageOptions3=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=1.00|XCorrection=1.00|YCorrection=1.00|PrintKind=1|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=7|PrintQuality=-4|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=A4|PaperIndex=9
-OutputType4=Gerber
-OutputName4=Gerber Files
+OutputType4=Mask
+OutputName4=Solder/Paste Mask Prints
 OutputDocumentPath4=
-OutputVariantName4=[No Variations]
+OutputVariantName4=
 OutputDefault4=0
-OutputType5=Mask
-OutputName5=Solder/Paste Mask Prints
+PageOptions4=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=1.00|XCorrection=1.00|YCorrection=1.00|PrintKind=1|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=7|PrintQuality=-4|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=A4|PaperIndex=9
+OutputType5=NC Drill
+OutputName5=NC Drill Files
 OutputDocumentPath5=
 OutputVariantName5=
 OutputDefault5=0
-PageOptions5=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=1.00|XCorrection=1.00|YCorrection=1.00|PrintKind=1|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=7|PrintQuality=-4|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=A4|PaperIndex=9
-OutputType6=NC Drill
-OutputName6=NC Drill Files
+Configuration5_Name1=ForceUpdateSettings
+Configuration5_Item1=False
+Configuration5_Name2=OutputConfigurationParameter1
+Configuration5_Item2=BoardEdgeRoutToolDia=2000000|GenerateBoardEdgeRout=False|GenerateDrilledSlotsG85=False|GenerateEIADrillFile=False|GenerateSeparatePlatedNonPlatedFiles=False|NumberOfDecimals=4|NumberOfUnits=2|OptimizeChangeLocationCommands=True|OriginPosition=Absolute|Record=DrillView|Units=Imperial|ZeroesMode=SuppressTrailingZeroes|DocumentPath=E:\Data\GitHub\stm32_apps\mmp\Altium Files\Evb board STM32H7 Fullcolor V1l0.PcbDoc
+OutputType6=Board Stack Report
+OutputName6=Report Board Stack
 OutputDocumentPath6=
 OutputVariantName6=
 OutputDefault6=0
-OutputType7=ODB
-OutputName7=ODB++ Files
+PageOptions6=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=1.00|XCorrection=1.00|YCorrection=1.00|PrintKind=1|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=7|PrintQuality=-4|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=A4|PaperIndex=9
+Configuration6_Name1=ForceUpdateSettings
+Configuration6_Item1=False
+Configuration6_Name2=OutputConfigurationParameter1
+Configuration6_Item2=Record=LayerStackReportView|Units=Imperial|DocumentPath=E:\Data\GitHub\stm32_apps\mmp\Altium Files\Evb board STM32H7 Fullcolor V1l0.PcbDoc
+OutputType7=Plane
+OutputName7=Power-Plane Prints
 OutputDocumentPath7=
-OutputVariantName7=[No Variations]
+OutputVariantName7=
 OutputDefault7=0
-OutputType8=Plane
-OutputName8=Power-Plane Prints
+PageOptions7=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=1.00|XCorrection=1.00|YCorrection=1.00|PrintKind=1|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=7|PrintQuality=-4|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=A4|PaperIndex=9
+OutputType8=Test Points
+OutputName8=Test Point Report
 OutputDocumentPath8=
 OutputVariantName8=
 OutputDefault8=0
-PageOptions8=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=1.00|XCorrection=1.00|YCorrection=1.00|PrintKind=1|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=7|PrintQuality=-4|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=A4|PaperIndex=9
-OutputType9=Test Points
-OutputName9=Test Point Report
+OutputType9=ODB
+OutputName9=ODB++ Files
 OutputDocumentPath9=
-OutputVariantName9=
+OutputVariantName9=[No Variations]
 OutputDefault9=0
-OutputType10=Board Stack Report
-OutputName10=Report Board Stack
+OutputType10=Gerber X2
+OutputName10=Gerber X2 Files
 OutputDocumentPath10=
 OutputVariantName10=
 OutputDefault10=0
-PageOptions10=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=1.00|XCorrection=1.00|YCorrection=1.00|PrintKind=1|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=7|PrintQuality=-4|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=A4|PaperIndex=9
-OutputType11=Gerber X2
-OutputName11=Gerber X2 Files
+OutputType11=IPC2581
+OutputName11=IPC-2581 Files
 OutputDocumentPath11=
 OutputVariantName11=
 OutputDefault11=0
-OutputType12=IPC2581
-OutputName12=IPC-2581 Files
+OutputType12=Gerber
+OutputName12=Gerber Files
 OutputDocumentPath12=
-OutputVariantName12=
+OutputVariantName12=[No Variations]
 OutputDefault12=0
+Configuration12_Name1=ForceUpdateSettings
+Configuration12_Item1=False
+Configuration12_Name2=OutputConfigurationParameter1
+Configuration12_Item2=AddToAllLayerClasses.Set= |AddToAllPlots.Set=SerializeLayerHash.Version~2,ClassName~TPlotLayerStateArray|CentrePlots=False|DrillDrawingSymbol=GraphicsSymbol|DrillDrawingSymbolSize=200000|EmbeddedApertures=True|FilmBorderSize=10000000|FilmXSize=200000000|FilmYSize=160000000|FlashAllFills=False|FlashPadShapes=True|G54OnApertureChange=False|GenerateDRCRulesFile=True|GenerateDRCRulesFile=True|GenerateReliefShapes=True|GerberUnit=Imperial|GerberUnit=Imperial|IncludeUnconnectedMidLayerPads=False|LayerClassesMirror.Set= |LayerClassesPlot.Set= |LeadingAndTrailingZeroesMode=SuppressTrailingZeroes|MaxApertureSize=2500000|MinusApertureTolerance=50|MinusApertureTolerance=50|Mirror.Set=SerializeLayerHash.Version~2,ClassName~TPlotLayerStateArray|MirrorDrillDrawingPlots=False|MirrorDrillGuidePlots=False|NoRegularPolygons=False|NumberOfDecimals=4|NumberOfDecimals=4|OptimizeChangeLocationCommands=True|OptimizeChangeLocationCommands=True|OriginPosition=Absolute|Panelize=False|Plot.Set=SerializeLayerHash.Version~2,ClassName~TPlotLayerStateArray,16973830~1,16973832~1,16973834~1,16777217~1,16842751~1,16973835~1,16973833~1,16973831~1,16908289~1,16908294~1,16908295~1,16908299~1,16908301~1,16908303~1,16908304~1,16908317~1,16973837~1,16973848~1,16973849~1|PlotPositivePlaneLayers=False|PlotUsedDrillDrawingLayerPairs=True|PlotUsedDrillGuideLayerPairs=True|PlusApertureTolerance=50|PlusApertureTolerance=50|Record=GerberView|SoftwareArcs=False|Sorted=False|Sorted=False|DocumentPath=E:\Data\GitHub\stm32_apps\mmp\Altium Files\Evb board STM32H7 Fullcolor V1l0.PcbDoc
 
 [OutputGroup6]
 Name=Report Outputs
@@ -946,78 +1089,6 @@ OutputDocumentPath17=
 OutputVariantName17=
 OutputDefault17=0
 PageOptions17=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=1.00|XCorrection=1.00|YCorrection=1.00|PrintKind=1|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=7|PrintQuality=-3|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=Letter|PaperIndex=1
-OutputType18=Text Print
-OutputName18=Text Print
-OutputDocumentPath18=
-OutputVariantName18=
-OutputDefault18=0
-PageOptions18=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=1.00|XCorrection=1.00|YCorrection=1.00|PrintKind=1|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=7|PrintQuality=-3|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=Letter|PaperIndex=1
-OutputType19=Text Print
-OutputName19=Text Print
-OutputDocumentPath19=
-OutputVariantName19=
-OutputDefault19=0
-PageOptions19=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=1.00|XCorrection=1.00|YCorrection=1.00|PrintKind=1|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=7|PrintQuality=-3|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=Letter|PaperIndex=1
-OutputType20=Text Print
-OutputName20=Text Print
-OutputDocumentPath20=
-OutputVariantName20=
-OutputDefault20=0
-PageOptions20=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=1.00|XCorrection=1.00|YCorrection=1.00|PrintKind=1|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=7|PrintQuality=-3|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=Letter|PaperIndex=1
-OutputType21=Text Print
-OutputName21=Text Print
-OutputDocumentPath21=
-OutputVariantName21=
-OutputDefault21=0
-PageOptions21=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=1.00|XCorrection=1.00|YCorrection=1.00|PrintKind=1|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=7|PrintQuality=-3|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=Letter|PaperIndex=1
-OutputType22=Text Print
-OutputName22=Text Print
-OutputDocumentPath22=
-OutputVariantName22=
-OutputDefault22=0
-PageOptions22=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=1.00|XCorrection=1.00|YCorrection=1.00|PrintKind=1|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=7|PrintQuality=-3|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=Letter|PaperIndex=1
-OutputType23=Text Print
-OutputName23=Text Print
-OutputDocumentPath23=
-OutputVariantName23=
-OutputDefault23=0
-PageOptions23=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=1.00|XCorrection=1.00|YCorrection=1.00|PrintKind=1|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=7|PrintQuality=-3|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=Letter|PaperIndex=1
-OutputType24=Text Print
-OutputName24=Text Print
-OutputDocumentPath24=
-OutputVariantName24=
-OutputDefault24=0
-PageOptions24=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=1.00|XCorrection=1.00|YCorrection=1.00|PrintKind=1|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=7|PrintQuality=-3|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=Letter|PaperIndex=1
-OutputType25=Text Print
-OutputName25=Text Print
-OutputDocumentPath25=
-OutputVariantName25=
-OutputDefault25=0
-PageOptions25=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=1.00|XCorrection=1.00|YCorrection=1.00|PrintKind=1|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=7|PrintQuality=-3|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=Letter|PaperIndex=1
-OutputType26=Text Print
-OutputName26=Text Print
-OutputDocumentPath26=
-OutputVariantName26=
-OutputDefault26=0
-PageOptions26=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=1.00|XCorrection=1.00|YCorrection=1.00|PrintKind=1|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=7|PrintQuality=-3|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=Letter|PaperIndex=1
-OutputType27=Text Print
-OutputName27=Text Print
-OutputDocumentPath27=
-OutputVariantName27=
-OutputDefault27=0
-PageOptions27=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=1.00|XCorrection=1.00|YCorrection=1.00|PrintKind=1|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=7|PrintQuality=-3|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=Letter|PaperIndex=1
-OutputType28=Text Print
-OutputName28=Text Print
-OutputDocumentPath28=
-OutputVariantName28=
-OutputDefault28=0
-PageOptions28=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=1.00|XCorrection=1.00|YCorrection=1.00|PrintKind=1|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=7|PrintQuality=-3|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=Letter|PaperIndex=1
-OutputType29=Text Print
-OutputName29=Text Print
-OutputDocumentPath29=
-OutputVariantName29=
-OutputDefault29=0
-PageOptions29=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=1.00|XCorrection=1.00|YCorrection=1.00|PrintKind=1|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=7|PrintQuality=-3|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=Letter|PaperIndex=1
 
 [OutputGroup8]
 Name=Validation Outputs
@@ -1449,6 +1520,9 @@ Type119=3
 MultiChannelAlternate=2
 AlternateItemFail=3
 Type122=2
+Type123=1
+Type124=1
+Type125=1
 
 [ERC Connection Matrix]
 L1=NNNNNNNNNNNWNNNWW
@@ -2576,9 +2650,9 @@ ParameterName43=Current - Collector (Ic) (Max)
 ParameterUpdate43=1
 ParameterName44=Current - Collector Cutoff (Max)
 ParameterUpdate44=1
-ParameterName45=Current - Continuous Drain (Id) @ 25° C
+ParameterName45=Current - Continuous Drain (Id) @ 25Â° C
 ParameterUpdate45=1
-ParameterName46=Current - Continuous Drain (Id) @ 25°C
+ParameterName46=Current - Continuous Drain (Id) @ 25Â°C
 ParameterUpdate46=1
 ParameterName47=Current - DC Forward (If)
 ParameterUpdate47=1
@@ -2884,7 +2958,7 @@ ParameterName197=Q @ Freq
 ParameterUpdate197=1
 ParameterName198=RAM Size
 ParameterUpdate198=1
-ParameterName199=Range °/s
+ParameterName199=Range Â°/s
 ParameterUpdate199=1
 ParameterName200=Ratings
 ParameterUpdate200=1
@@ -3034,7 +3108,7 @@ ParameterName272=Voltage - Supply, Analog
 ParameterUpdate272=1
 ParameterName273=Voltage - Supply, Digital
 ParameterUpdate273=1
-ParameterName274=Voltage - Supply, Single/Dual (±)
+ParameterName274=Voltage - Supply, Single/Dual (Â±)
 ParameterUpdate274=1
 ParameterName275=Voltage - Threshold
 ParameterUpdate275=1
@@ -3892,80 +3966,92 @@ ComponentIsDeviceSheet99=0
 [NetInfos]
 Net1=NetName=+3.3V|NetColor=$000000CC
 Net2=NetName=+5V|NetColor=$000033CC
-Net3=NetName=B1|NetColor=$00FFFF6E
-Net4=NetName=B2|NetColor=$00FFFF6E
+Net3=NetName=B1|NetColor=$00FF6EFF
+Net4=NetName=B2|NetColor=$00FF6EFF
 Net5=NetName=B3|NetColor=$00FFFF6E
 Net6=NetName=B4|NetColor=$00FFFF6E
-Net7=NetName=BOOT0|NetColor=$00D1AC7C
-Net8=NetName=CLK|NetColor=$006EA300
-Net9=NetName=FLASH_MISO|NetColor=$006EFF6E
-Net10=NetName=FLASH_MOSI|NetColor=$006EFF6E
-Net11=NetName=FLASH_NSS|NetColor=$006EFF6E
-Net12=NetName=FLASH_SCK|NetColor=$006EFF6E
-Net13=NetName=FMC_A16|NetColor=$00C7A956
-Net14=NetName=FMC_D0|NetColor=$004C9AF5
-Net15=NetName=FMC_D1|NetColor=$004C9AF5
-Net16=NetName=FMC_D10|NetColor=$004C9AF5
-Net17=NetName=FMC_D11|NetColor=$004C9AF5
-Net18=NetName=FMC_D12|NetColor=$004C9AF5
-Net19=NetName=FMC_D13|NetColor=$004C9AF5
-Net20=NetName=FMC_D14|NetColor=$004C9AF5
-Net21=NetName=FMC_D15|NetColor=$004C9AF5
-Net22=NetName=FMC_D2|NetColor=$004C9AF5
-Net23=NetName=FMC_D3|NetColor=$004C9AF5
-Net24=NetName=FMC_D4|NetColor=$004C9AF5
-Net25=NetName=FMC_D5|NetColor=$004C9AF5
-Net26=NetName=FMC_D6|NetColor=$004C9AF5
-Net27=NetName=FMC_D7|NetColor=$004C9AF5
-Net28=NetName=FMC_D8|NetColor=$004C9AF5
-Net29=NetName=FMC_D9|NetColor=$004C9AF5
-Net30=NetName=FMC_NE1|NetColor=$00C7A956
-Net31=NetName=FMC_NOE|NetColor=$00C7A956
-Net32=NetName=FMC_NWE|NetColor=$00C7A956
-Net33=NetName=FMC_RST|NetColor=$00C7A956
-Net34=NetName=G1|NetColor=$00FFFF6E
-Net35=NetName=G2|NetColor=$00FFFF6E
-Net36=NetName=G3|NetColor=$00FFFF6E
-Net37=NetName=G4|NetColor=$00FFFF6E
-Net38=NetName=GND|NetColor=clGray
-Net39=NetName=LA|NetColor=$00164FDE
-Net40=NetName=LAT|NetColor=$006EA300
-Net41=NetName=LB|NetColor=$00164FDE
-Net42=NetName=LC|NetColor=$00164FDE
-Net43=NetName=LD|NetColor=$00164FDE
-Net44=NetName=LE|NetColor=$00164FDE
-Net45=NetName=NRST|NetColor=$006EA300
-Net46=NetName=OE|NetColor=$006EA300
-Net47=NetName=R1|NetColor=$00FFFF6E
-Net48=NetName=R2|NetColor=$00FFFF6E
-Net49=NetName=R3|NetColor=$00FFFF6E
-Net50=NetName=R4|NetColor=$00FFFF6E
-Net51=NetName=SD_CD|NetColor=$00FFF0FF
-Net52=NetName=SD_CLK|NetColor=$00FFF0FF
-Net53=NetName=SD_CMD|NetColor=$00FFF0FF
-Net54=NetName=SD_DAT0|NetColor=$00FFF0FF
-Net55=NetName=SD_DAT1|NetColor=$00FFF0FF
-Net56=NetName=SD_DAT2|NetColor=$00FFF0FF
-Net57=NetName=SD_DAT3|NetColor=$00FFF0FF
-Net58=NetName=SPI_MISO|NetColor=$006EFF6E
-Net59=NetName=SPI_MOSI|NetColor=$006EFF6E
-Net60=NetName=SPI_NSS|NetColor=$006EFF6E
-Net61=NetName=SPI_SCK|NetColor=$006EFF6E
-Net62=NetName=T_CLK|NetColor=$00E2745F
-Net63=NetName=T_CS|NetColor=$00E2745F
-Net64=NetName=T_DIN|NetColor=$00E2745F
-Net65=NetName=T_DOUT|NetColor=$00E2745F
-Net66=NetName=T_IRQ|NetColor=$00E2745F
-Net67=NetName=USB_N|NetColor=clYellow
-Net68=NetName=USB_P|NetColor=clYellow
+Net7=NetName=B5|NetColor=$0000BE00
+Net8=NetName=B6|NetColor=$0000BE00
+Net9=NetName=B7|NetColor=$000083FD
+Net10=NetName=B8|NetColor=$000083FD
+Net11=NetName=BOOT0|NetColor=$00D1AC7C
+Net12=NetName=CLK|NetColor=$006EA300
+Net13=NetName=FLASH_MISO|NetColor=$006EFF6E
+Net14=NetName=FLASH_MOSI|NetColor=$006EFF6E
+Net15=NetName=FLASH_NSS|NetColor=$006EFF6E
+Net16=NetName=FLASH_SCK|NetColor=$006EFF6E
+Net17=NetName=FMC_A16|NetColor=$00C7A956
+Net18=NetName=FMC_D0|NetColor=$004C9AF5
+Net19=NetName=FMC_D1|NetColor=$004C9AF5
+Net20=NetName=FMC_D10|NetColor=$004C9AF5
+Net21=NetName=FMC_D11|NetColor=$004C9AF5
+Net22=NetName=FMC_D12|NetColor=$004C9AF5
+Net23=NetName=FMC_D13|NetColor=$004C9AF5
+Net24=NetName=FMC_D14|NetColor=$004C9AF5
+Net25=NetName=FMC_D15|NetColor=$004C9AF5
+Net26=NetName=FMC_D2|NetColor=$004C9AF5
+Net27=NetName=FMC_D3|NetColor=$004C9AF5
+Net28=NetName=FMC_D4|NetColor=$004C9AF5
+Net29=NetName=FMC_D5|NetColor=$004C9AF5
+Net30=NetName=FMC_D6|NetColor=$004C9AF5
+Net31=NetName=FMC_D7|NetColor=$004C9AF5
+Net32=NetName=FMC_D8|NetColor=$004C9AF5
+Net33=NetName=FMC_D9|NetColor=$004C9AF5
+Net34=NetName=FMC_NE1|NetColor=$00C7A956
+Net35=NetName=FMC_NOE|NetColor=$00C7A956
+Net36=NetName=FMC_NWE|NetColor=$00C7A956
+Net37=NetName=FMC_RST|NetColor=$00C7A956
+Net38=NetName=G1|NetColor=$00FF6EFF
+Net39=NetName=G2|NetColor=$00FF6EFF
+Net40=NetName=G3|NetColor=$00FFFF6E
+Net41=NetName=G4|NetColor=$00FFFF6E
+Net42=NetName=G5|NetColor=$0000BE00
+Net43=NetName=G6|NetColor=$0000BE00
+Net44=NetName=G7|NetColor=$000083FD
+Net45=NetName=G8|NetColor=$000083FD
+Net46=NetName=GND|NetColor=clTeal
+Net47=NetName=LA|NetColor=clYellow
+Net48=NetName=LAT|NetColor=$006EA300
+Net49=NetName=LB|NetColor=clYellow
+Net50=NetName=LC|NetColor=clYellow
+Net51=NetName=LD|NetColor=clYellow
+Net52=NetName=LE|NetColor=clYellow
+Net53=NetName=NRST|NetColor=$006EA300
+Net54=NetName=OE|NetColor=$006EA300
+Net55=NetName=R1|NetColor=$00FF6EFF
+Net56=NetName=R2|NetColor=$00FF6EFF
+Net57=NetName=R3|NetColor=$00FFFF6E
+Net58=NetName=R4|NetColor=$00FFFF6E
+Net59=NetName=R5|NetColor=$0000BE00
+Net60=NetName=R6|NetColor=$0000BE00
+Net61=NetName=R7|NetColor=$000083FD
+Net62=NetName=R8|NetColor=$000083FD
+Net63=NetName=SD_CD|NetColor=$006A00A1
+Net64=NetName=SD_CLK|NetColor=$006A00A1
+Net65=NetName=SD_CMD|NetColor=$006A00A1
+Net66=NetName=SD_DAT0|NetColor=$006A00A1
+Net67=NetName=SD_DAT1|NetColor=$006A00A1
+Net68=NetName=SD_DAT2|NetColor=$006A00A1
+Net69=NetName=SD_DAT3|NetColor=$006A00A1
+Net70=NetName=SPI_MISO|NetColor=$006EFF6E
+Net71=NetName=SPI_MOSI|NetColor=$006EFF6E
+Net72=NetName=SPI_NSS|NetColor=$006EFF6E
+Net73=NetName=SPI_SCK|NetColor=$006EFF6E
+Net74=NetName=T_CLK|NetColor=$00E2745F
+Net75=NetName=T_CS|NetColor=$00E2745F
+Net76=NetName=T_DIN|NetColor=$00E2745F
+Net77=NetName=T_DOUT|NetColor=$00E2745F
+Net78=NetName=T_IRQ|NetColor=$00E2745F
+Net79=NetName=USB_N|NetColor=clYellow
+Net80=NetName=USB_P|NetColor=clYellow
 
 [Comparison Options]
-ComparisonOptions0=Kind=Net|MinPercent=75|MinMatch=3|ShowMatch=-1|Confirm=-1|UseName=-1|InclAllRules=0
-ComparisonOptions1=Kind=Net Class|MinPercent=75|MinMatch=3|ShowMatch=-1|Confirm=-1|UseName=-1|InclAllRules=0
-ComparisonOptions2=Kind=Component Class|MinPercent=75|MinMatch=3|ShowMatch=-1|Confirm=-1|UseName=-1|InclAllRules=0
-ComparisonOptions3=Kind=Rule|MinPercent=75|MinMatch=3|ShowMatch=-1|Confirm=-1|UseName=-1|InclAllRules=0
-ComparisonOptions4=Kind=Differential Pair|MinPercent=50|MinMatch=1|ShowMatch=-1|Confirm=0|UseName=-1|InclAllRules=0
-ComparisonOptions5=Kind=Structure Class|MinPercent=75|MinMatch=3|ShowMatch=-1|Confirm=-1|UseName=-1|InclAllRules=0
+ComparisonOptions0=Kind=Net|MinPercent=75|MinMatch=3|ShowMatch=-1|UseName=-1|InclAllRules=0
+ComparisonOptions1=Kind=Net Class|MinPercent=75|MinMatch=3|ShowMatch=-1|UseName=-1|InclAllRules=0
+ComparisonOptions2=Kind=Component Class|MinPercent=75|MinMatch=3|ShowMatch=-1|UseName=-1|InclAllRules=0
+ComparisonOptions3=Kind=Rule|MinPercent=75|MinMatch=3|ShowMatch=-1|UseName=-1|InclAllRules=0
+ComparisonOptions4=Kind=Differential Pair|MinPercent=50|MinMatch=1|ShowMatch=-1|UseName=-1|InclAllRules=0
+ComparisonOptions5=Kind=Structure Class|MinPercent=75|MinMatch=3|ShowMatch=-1|UseName=-1|InclAllRules=0
 
 [SmartPDF]
 PageOptions=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=1.00|XCorrection=1.00|YCorrection=1.00|PrintKind=1|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=7|PrintQuality=-4|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=Letter|PaperIndex=9
