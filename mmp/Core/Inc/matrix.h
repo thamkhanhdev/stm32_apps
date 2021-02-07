@@ -75,13 +75,19 @@ extern "C"{
 /*==================================================================================================
 *                                      DEFINES AND MACROS
 ==================================================================================================*/
-#define MATRIX_WIDTH    256U
-#define MATRIX_HEIGHT   128U
-#define MATRIX_SCANRATE  32U
+#define MATRIX_WIDTH            256U
+#define MATRIX_WIDTH_BIT        8U
+#define MATRIX_HEIGHT           192U
+#define MAXTRIX_MAX_BUFFER      128U
+#define MAXTRIX_MAX_BUFFER_BIT  7U
+#define MATRIX_SCANRATE     32U
 #define MATRIX_MASKROWS (uint16_t)(~(MATRIX_SCANRATE-1U))
 
 #define RGB565
-#define USE2BUS
+#define USE_BUS_1
+#define USE_BUS_2
+#define USE_BUS_3
+#define USE_BUS_4
 
 #if defined(RGB888)
 #define MAX_BIT   8
@@ -95,63 +101,92 @@ extern "C"{
 #define MAX_BIT   3
 #endif
 
-#define LAT       0   	//A
+/* Port A */
+#define LAT       0
 #define LAT_OFF   ((1<<(LAT+16)))
 #define LAT_ON    (1<<LAT)
-#define OE        1		//A
+#define OE        1
 #define OE_OFF    ((1<<(OE+16)))
 #define OE_ON     (1<<OE)
-#define CLK       2  	//A
+#define CLK       2
 #define CLK_OFF   ((1<<(CLK+16)))
 #define CLK_ON    (1<<CLK)
 
-#define A         0   //C
-#define B         1   //C
-#define C         2   //C
-#define D         3   //C
-#define E         4   //C
+/* Port C */
+#define A         0
+#define B         1
+#define C         2
+#define D         3
+#define E         4
 
-#define B1        8
-#define R1        6
-#define G1        7
-#define R2        11
-#define G2        9
-#define B2        10
+/* Port E */
+#define R1        2
+#define G1        3
+#define B1        4
+#define R2        5
+#define G2        6
+#define B2        7
+#define R3        8
+#define G3        9
+#define B3        10
+#define R4        11
+#define G4        12
+#define B4        13
+
+/* Port B */
+#define R5        0
+#define G5        1
+#define B5        2
+#define R6        3
+#define G6        4
+#define B6        5
+#define R7        6
+#define G7        7
+#define B7        8
+#define R8        9
+#define G8        10
+#define B8        11
 
 #define R1_MASK     (uint16_t) (1 << R1)
 #define G1_MASK     (uint16_t) (1 << G1)
 #define B1_MASK     (uint16_t) (1 << B1)
 #define RGB1_MASK   (uint16_t) (R1_MASK | G1_MASK | B1_MASK)
-
 #define R2_MASK     ((uint16_t) 1 << R2)
 #define G2_MASK     ((uint16_t) 1 << G2)
 #define B2_MASK     ((uint16_t) 1 << B2)
 #define RGB2_MASK   ((uint16_t) R2_MASK | G2_MASK | B2_MASK)
-
-#ifdef USE2BUS
-#define B3        5
-#define R3        3
-#define G3        4
-#define R4        1
-#define G4        2
-#define B4        0
-
 #define R3_MASK     (uint16_t) (1 << R3)
 #define G3_MASK     (uint16_t) (1 << G3)
 #define B3_MASK     (uint16_t) (1 << B3)
 #define RGB3_MASK   (uint16_t) (R3_MASK | G3_MASK | B3_MASK)
-
 #define R4_MASK     ((uint16_t) 1 << R4)
 #define G4_MASK     ((uint16_t) 1 << G4)
 #define B4_MASK     ((uint16_t) 1 << B4)
 #define RGB4_MASK   ((uint16_t) R4_MASK | G4_MASK | B4_MASK)
-#endif /* USE2BUS */
+
+#define R5_MASK     (uint16_t) (1 << R5)
+#define G5_MASK     (uint16_t) (1 << G5)
+#define B5_MASK     (uint16_t) (1 << B5)
+#define RGB5_MASK   (uint16_t) (R5_MASK | G5_MASK | B5_MASK)
+#define R6_MASK     ((uint16_t) 1 << R6)
+#define G6_MASK     ((uint16_t) 1 << G6)
+#define B6_MASK     ((uint16_t) 1 << B6)
+#define RGB6_MASK   ((uint16_t) R6_MASK | G6_MASK | B6_MASK)
+#define R7_MASK     (uint16_t) (1 << R7)
+#define G7_MASK     (uint16_t) (1 << G7)
+#define B7_MASK     (uint16_t) (1 << B7)
+#define RGB7_MASK   (uint16_t) (R7_MASK | G7_MASK | B7_MASK)
+#define R8_MASK     ((uint16_t) 1 << R8)
+#define G8_MASK     ((uint16_t) 1 << G8)
+#define B8_MASK     ((uint16_t) 1 << B8)
+#define RGB8_MASK   ((uint16_t) R8_MASK | G8_MASK | B8_MASK)
 
 #define OE_P        GPIOA
-#define ROW_P       GPIOC
 #define CLK_P       GPIOA
 #define LAT_P       GPIOA
-#define DAT_P       GPIOB
+#define ROW_P       GPIOC
+#define DAT0_P      GPIOE
+#define DAT1_P      GPIOB
 
 #ifndef pgm_read_byte
     #define pgm_read_byte(addr) (*(const unsigned char *)(addr))

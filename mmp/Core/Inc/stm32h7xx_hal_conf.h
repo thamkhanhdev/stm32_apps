@@ -42,7 +42,7 @@
 /* #define HAL_CORDIC_MODULE_ENABLED   */
 /* #define HAL_CRC_MODULE_ENABLED   */
 /* #define HAL_CRYP_MODULE_ENABLED   */
-/* #define HAL_DAC_MODULE_ENABLED   */
+#define HAL_DAC_MODULE_ENABLED
 /* #define HAL_DCMI_MODULE_ENABLED   */
 /* #define HAL_DMA2D_MODULE_ENABLED   */
 /* #define HAL_ETH_MODULE_ENABLED   */
@@ -105,7 +105,7 @@
   *        (when HSE is used as system clock source, directly or through the PLL).
   */
 #if !defined  (HSE_VALUE)
-#define HSE_VALUE    ((uint32_t)16000000) /*!< Value of the External oscillator in Hz : FPGA case fixed to 60MHZ */
+#define HSE_VALUE    ((uint32_t)4000000) /*!< Value of the External oscillator in Hz : FPGA case fixed to 60MHZ */
 #endif /* HSE_VALUE */
 
 #if !defined  (HSE_STARTUP_TIMEOUT)

@@ -19,7 +19,9 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "dac.h"
 #include "fatfs.h"
+#include "i2c.h"
 #include "libjpeg.h"
 #include "sdmmc.h"
 #include "tim.h"
@@ -35,6 +37,7 @@
 #include "neu.h"
 #include "pic1.h"
 #include "phung.h"
+#include "256_192.h"
 #include <setjmp.h>
 #include "gamma.h"
 /* USER CODE END Includes */
@@ -496,7 +499,7 @@ int main(void)
   SCB_EnableICache();
 
   /* Enable D-Cache---------------------------------------------------------*/
-  /* SCB_EnableDCache(); */
+  SCB_EnableDCache();
 
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -521,8 +524,10 @@ int main(void)
   MX_TIM4_Init();
   MX_FATFS_Init();
   MX_LIBJPEG_Init();
+  MX_DAC1_Init();
+  MX_I2C4_Init();
   /* USER CODE BEGIN 2 */
-    MATRIX_Init( 20 );
+    MATRIX_Init( 70 );
 
     HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_2);
     HAL_TIM_Base_Start_IT(&htim4);
@@ -532,13 +537,19 @@ int main(void)
     MATRIX_SetCursor(0, 5);
     MATRIX_SetTextColor(0xFFFF);
 
-    // MATRIX_disImage(gImage_Phung, 256, 128, 0, 0, RGB_888);
-    // HAL_Delay(1000);
-    // MATRIX_disImage(gImage_Anime, 256, 128, 0, 0, RGB_888);
-    // HAL_Delay(1000);
+
+    MATRIX_disImage(gImage_Phung, 256, 128, 0, 0, RGB_888);
+    HAL_Delay(3000);
+    MATRIX_FillScreen(0x0);
+    MATRIX_disImage(gImage_Anime, 256, 128, 0, 25, RGB_888);
+    HAL_Delay(3000);
+    MATRIX_FillScreen(0x0);
     MATRIX_disImage(gImage_Nature, 256, 128, 0, 0, RGB_888);
-    HAL_Delay(1000);
-    // HAL_Delay(3000);
+    HAL_Delay(3000);
+    MATRIX_FillScreen(0x0);
+    MATRIX_disImage(gImage_256_192, 256, 192, 0, 0, RGB_888);
+    HAL_Delay(3000);
+    MATRIX_FillScreen(0x0);
     // MATRIX_disImage(gImage_NEU, 128, 128, 0, 0, RGB_888);
     // MATRIX_disImage(gImage_NEU, 128, 128, 128, 0, RGB_888);
     // HAL_Delay(3000);
@@ -547,11 +558,11 @@ int main(void)
     // HAL_Delay(5000);
     // MATRIX_FillCircle( 128, 31, 30, 0x7E0 );
     MATRIX_FillScreen(0xF800);
-    HAL_Delay(500);
+    HAL_Delay(1000);
     MATRIX_FillScreen(0xCE0);
-    HAL_Delay(500);
+    HAL_Delay(1000);
     MATRIX_FillScreen(0x1F);
-    HAL_Delay(500);
+    HAL_Delay(1000);
     MATRIX_FillScreen(0x0);
     // plasma();
 
@@ -743,12 +754,9 @@ void SystemClock_Config(void)
   HAL_PWREx_ConfigSupply(PWR_LDO_SUPPLY);
   /** Configure the main internal regulator output voltage
   */
-  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE0);
 
   while(!__HAL_PWR_GET_FLAG(PWR_FLAG_VOSRDY)) {}
-  /** Macro to configure the PLL clock source
-  */
-  __HAL_RCC_PLL_PLLSOURCE_CONFIG(RCC_PLLSOURCE_HSI);
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
@@ -757,12 +765,12 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
-  RCC_OscInitStruct.PLL.PLLM = 32;
-  RCC_OscInitStruct.PLL.PLLN = 480;
+  RCC_OscInitStruct.PLL.PLLM = 4;
+  RCC_OscInitStruct.PLL.PLLN = 60;
   RCC_OscInitStruct.PLL.PLLP = 2;
   RCC_OscInitStruct.PLL.PLLQ = 2;
   RCC_OscInitStruct.PLL.PLLR = 2;
-  RCC_OscInitStruct.PLL.PLLRGE = RCC_PLL1VCIRANGE_1;
+  RCC_OscInitStruct.PLL.PLLRGE = RCC_PLL1VCIRANGE_3;
   RCC_OscInitStruct.PLL.PLLVCOSEL = RCC_PLL1VCOWIDE;
   RCC_OscInitStruct.PLL.PLLFRACN = 0;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
@@ -782,20 +790,13 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.APB2CLKDivider = RCC_APB2_DIV2;
   RCC_ClkInitStruct.APB4CLKDivider = RCC_APB4_DIV2;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_4) != HAL_OK)
   {
     Error_Handler();
   }
-  PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_SDMMC;
-  PeriphClkInitStruct.PLL2.PLL2M = 32;
-  PeriphClkInitStruct.PLL2.PLL2N = 168;
-  PeriphClkInitStruct.PLL2.PLL2P = 2;
-  PeriphClkInitStruct.PLL2.PLL2Q = 2;
-  PeriphClkInitStruct.PLL2.PLL2R = 4;
-  PeriphClkInitStruct.PLL2.PLL2RGE = RCC_PLL2VCIRANGE_1;
-  PeriphClkInitStruct.PLL2.PLL2VCOSEL = RCC_PLL2VCOWIDE;
-  PeriphClkInitStruct.PLL2.PLL2FRACN = 0;
-  PeriphClkInitStruct.SdmmcClockSelection = RCC_SDMMCCLKSOURCE_PLL2;
+  PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_SDMMC|RCC_PERIPHCLK_I2C4;
+  PeriphClkInitStruct.SdmmcClockSelection = RCC_SDMMCCLKSOURCE_PLL;
+  PeriphClkInitStruct.I2c4ClockSelection = RCC_I2C4CLKSOURCE_D3PCLK1;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
   {
     Error_Handler();

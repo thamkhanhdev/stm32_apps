@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * @file    sdmmc.h
+  * @file    dac.h
   * @brief   This file contains all the function prototypes for
-  *          the sdmmc.c file
+  *          the dac.c file
   ******************************************************************************
   * @attention
   *
@@ -17,8 +17,8 @@
   ******************************************************************************
   */
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __SDMMC_H__
-#define __SDMMC_H__
+#ifndef __DAC_H__
+#define __DAC_H__
 
 #ifdef __cplusplus
 extern "C" {
@@ -31,13 +31,13 @@ extern "C" {
 
 /* USER CODE END Includes */
 
-extern SD_HandleTypeDef hsd1;
+extern DAC_HandleTypeDef hdac1;
 
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
 
-void MX_SDMMC1_SD_Init(void);
+void MX_DAC1_Init(void);
 
 /* USER CODE BEGIN Prototypes */
 
@@ -47,6 +47,6 @@ void MX_SDMMC1_SD_Init(void);
 }
 #endif
 
-#endif /* __SDMMC_H__ */
+#endif /* __DAC_H__ */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
