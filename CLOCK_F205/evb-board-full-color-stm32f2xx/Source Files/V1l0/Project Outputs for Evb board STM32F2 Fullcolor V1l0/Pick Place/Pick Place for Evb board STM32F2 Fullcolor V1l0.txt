@@ -1,0 +1,72 @@
+Altium Designer Pick and Place Locations
+E:\Data\Bitbucket\altium-projects\evb-board-full-color-stm32f2xx\Source Files\Project Outputs for Evb board STM32F2 Fullcolor V1l0\Pick Place\Pick Place for Evb board STM32F2 Fullcolor V1l0.txt
+
+========================================================================================================================
+File Design Information:
+
+Date:       24-12-19
+Time:       12:36
+Revision:   5620882fa967d7cb70833ba0d18ff80a2c9543da
+Variant:    No variations
+Units used: mm
+
+Designator Comment                   Layer       Footprint           Center-X(mm) Center-Y(mm) Rotation Description                                                                                                 
+R14        1K                        TopLayer    R0402               28.0496      3.6575       180      "RES 0R OHM 1/8W 1% SMD"                                                                                    
+R16        1K                        TopLayer    R0402               24.7142      10.3377      180      "RES 0R OHM 1/8W 1% SMD"                                                                                    
+U4         LM386N                    TopLayer    SOIC127P390X490-8N  11.9380      7.6200       180      "TEXAS INSTRUMENTS         LM386N-3/NOPB            AUDIO POWER AMPLIFIER, CLASS AB, 700mW DIP-8"           
+U3         LM386N                    TopLayer    SOIC127P390X490-8N  20.3200      3.4544       180      "TEXAS INSTRUMENTS         LM386N-3/NOPB            AUDIO POWER AMPLIFIER, CLASS AB, 700mW DIP-8"           
+R18        10R                       TopLayer    R0402               5.1308       9.4997       360      "RES 0R OHM 1/8W 1% SMD"                                                                                    
+R17        10R                       TopLayer    R0402               16.9164      6.9851       360      "RES 0R OHM 1/8W 1% SMD"                                                                                    
+R13        10K                       TopLayer    R0402               29.4133      9.0822       270      "RES 0R OHM 1/8W 1% SMD"                                                                                    
+R15        10K                       TopLayer    R0402               26.5684      10.3123      180      "RES 0R OHM 1/8W 1% SMD"                                                                                    
+J4         62000411821               TopLayer    62000411121         4.9022       1.2954       360      "WR-PHD 2.00 mm Socket Header"                                                                              
+C19        100uF                     TopLayer    CAP-TAN-SMD-3530    6.1468       5.5626       270      "Tantalum capacitor , T491A475K016AT, KEMET"                                                                
+C18        105                       TopLayer    C0402               7.2898       9.4996       180      "Surface Mound Multilayer Ceramic Chip Capacitor (SMD MLCC)"                                                
+C17        100uF                     TopLayer    CAP-TAN-SMD-3530    12.2936      2.6416       180      "Tantalum capacitor , T491A475K016AT, KEMET"                                                                
+C16        105                       TopLayer    C0402               18.8468      6.9851       180      "Surface Mound Multilayer Ceramic Chip Capacitor (SMD MLCC)"                                                
+C15        1uF                       TopLayer    CAP-TAN-SMD-3216    24.3332      8.6868       180      "Tantalum capacitor , T491A475K016AT, KEMET"                                                                
+C14        1uF                       TopLayer    CAP-TAN-SMD-3216    27.3304      5.6896       180      "Tantalum capacitor , T491A475K016AT, KEMET"                                                                
+R12        4.7K                      BottomLayer R0402               30.5308      24.7903      360      "RES 0R OHM 1/8W 1% SMD"                                                                                    
+BT1        "Button 2"                TopLayer    BT-2P0604B1V        36.9165      2.5400       90       "Button 2 Pin no Sheld"                                                                                     
+R8         510R                      TopLayer    R0402               14.8082      36.4743      180      "RES 0R OHM 1/8W 1% SMD"                                                                                    
+LD1        "LED SMD"                 TopLayer    LED_0805/2012_BLUE  12.6746      34.2646      180      "LED DIFFUSED SMD"                                                                                          
+C7         104                       TopLayer    C0603               20.7264      32.2120      360      "Surface Mound Multilayer Ceramic Chip Capacitor (SMD MLCC)"                                                
+USB1       629105150921              TopLayer    USB-629105150921    44.0713      27.6076      90       "Micro USB 2.0 Type AB"                                                                                     
+U2         W25Q128FV                 TopLayer    SOIC127P530X530-8N  45.2628      14.2034      90       ""                                                                                                          
+R10        4.7K                      BottomLayer R0402               27.4321      17.8355      90       "RES 0R OHM 1/8W 1% SMD"                                                                                    
+R11        4.7K                      BottomLayer R0402               30.5308      24.0841      180      "RES 0R OHM 1/8W 1% SMD"                                                                                    
+R2         4.7K                      BottomLayer R0402               46.4058      19.0755      180      "RES 0R OHM 1/8W 1% SMD"                                                                                    
+R1         4.7K                      TopLayer    R0402               41.6561      14.1986      270      "RES 0R OHM 1/8W 1% SMD"                                                                                    
+R20        4.7K                      TopLayer    R0402               42.5958      32.4912      180      "RES 0R OHM 1/8W 1% SMD"                                                                                    
+R19        4.7K                      TopLayer    R0402               42.5958      33.4310      180      "RES 0R OHM 1/8W 1% SMD"                                                                                    
+P1         DCIN                      TopLayer    DC-694108301002     9.5548       38.2194      360      TBD                                                                                                         
+K1         KF2                       TopLayer    KF5.08_2DV          18.7198      41.7116      360      "KF2, 5.08mm, 10A, 300V, -40C ~ 105C"                                                                       
+J1         62000411821               TopLayer    62000411121         44.4754      21.1376      360      "WR-PHD 2.00 mm Socket Header"                                                                              
+J2         61301621821               BottomLayer 61301621821         11.1760      20.8836      270      "2.54 mm Dual Socket Header, 16p"                                                                           
+J3         61301621821               BottomLayer 61301621821         3.8100       20.8836      270      "2.54 mm Dual Socket Header, 16p"                                                                           
+IR1        IR1838                    TopLayer    IR_RECEIVE_V1       45.7962      4.5847       90       "VISHAY SEMICONDUCTOR   TSOP31238   IR RECEIVER, 40M, 38KHZ, SIP"                                           
+C10        104                       BottomLayer C0402               29.5910      17.5260      360      "Surface Mound Multilayer Ceramic Chip Capacitor (SMD MLCC)"                                                
+C13        104                       TopLayer    C0603               26.4160      12.2222      360      "Surface Mound Multilayer Ceramic Chip Capacitor (SMD MLCC)"                                                
+C5         100uF                     TopLayer    CAP-TAN-SMD-3530    20.7010      35.0568      360      "Tantalum capacitor , T491A475K016AT, KEMET"                                                                
+BT2        "Button 2"                TopLayer    BT-2P0604B1V        36.8784      6.5786       90       "Button 2 Pin no Sheld"                                                                                     
+AS1        AMS1117-3V3               BottomLayer SOT223-BCE          19.1516      32.8146      90       "800mA Low-Dropout Linear Regulator"                                                                        
+Y2         16Mhz                     BottomLayer XT4-2520NX-SA       29.7688      20.0962      180      "XMHz ±30ppm Crystal 20pF 150 Ohm -20°C ~ 70°C  Surface Mount HC49/US"                                      
+Y1         "FC-135 12.5PF 32.768kHz" BottomLayer XT2-3215-2V         26.4414      21.0106      270      "CRYSTAL X.0000MHZ 18PF SMD"                                                                                
+XS1        "Micro SD holder"         TopLayer    SD-CARD-MICRO-V3    32.1738      35.4738      180      ""                                                                                                          
+U1         STM32F205RxTx             TopLayer    QFP50P1000X1000-64N 32.1310      18.6738      0        "ARM Cortex-M3 32-bit MCU, 1024 KB Flash, 128 KB Internal RAM, 51 I/Os, 64-pin LQFP, -40 to 105 degC, Tray" 
+R9         4.7K                      BottomLayer R0402               37.6173      33.3804      270      "RES 0R OHM 1/8W 1% SMD"                                                                                    
+R7         4.7K                      BottomLayer R0402               36.5251      33.3804      270      "RES 0R OHM 1/8W 1% SMD"                                                                                    
+R6         4.7K                      BottomLayer R0402               34.3153      33.3804      270      "RES 0R OHM 1/8W 1% SMD"                                                                                    
+R5         4.7K                      BottomLayer R0402               32.1309      33.3804      270      "RES 0R OHM 1/8W 1% SMD"                                                                                    
+R4         4.7K                      BottomLayer R0402               31.0387      33.3804      270      "RES 0R OHM 1/8W 1% SMD"                                                                                    
+R3         4.7K                      BottomLayer R0402               29.8957      33.3804      270      "RES 0R OHM 1/8W 1% SMD"                                                                                    
+P2         CR-1220/BN                BottomLayer PIN-CR1220-SMD      37.7698      9.2964       360      "PANASONIC - CR-1220/BN - BATTERY, LITHIUM, CR1220"                                                         
+C6         104                       BottomLayer C0402               29.7180      16.7180      0        "Surface Mound Multilayer Ceramic Chip Capacitor (SMD MLCC)"                                                
+C4         104                       TopLayer    C0402               38.2778      23.5506      90       "Surface Mound Multilayer Ceramic Chip Capacitor (SMD MLCC)"                                                
+C3         104                       BottomLayer C0402               28.5496      22.5854      360      "Surface Mound Multilayer Ceramic Chip Capacitor (SMD MLCC)"                                                
+C2         104                       TopLayer    C0402               47.2948      8.5598       180      "Surface Mound Multilayer Ceramic Chip Capacitor (SMD MLCC)"                                                
+C1         104                       BottomLayer C0402               28.8036      33.3756      270      "Surface Mound Multilayer Ceramic Chip Capacitor (SMD MLCC)"                                                
+C9         104                       TopLayer    C0402               35.8902      11.1252      360      "Surface Mound Multilayer Ceramic Chip Capacitor (SMD MLCC)"                                                
+C8         104                       TopLayer    C0402               39.1922      23.5130      90       "Surface Mound Multilayer Ceramic Chip Capacitor (SMD MLCC)"                                                
+C11        22P                       BottomLayer C0402               29.6164      18.3271      360      "Surface Mound Multilayer Ceramic Chip Capacitor (SMD MLCC)"                                                
+C12        22P                       BottomLayer C0402               32.0548      19.9438      270      "Surface Mound Multilayer Ceramic Chip Capacitor (SMD MLCC)"                                                

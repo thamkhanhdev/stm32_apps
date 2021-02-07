@@ -1,0 +1,28 @@
+﻿Field=#~Integer~#~50|Field=Comment~String~Comment~100|Field=Designator~String~Designator~100|Field=Footprint~String~Footprint~100|Field=Quantity~Integer~Quantity~100|ReportField=Currency~<none>|ReportField=ProductionQuantity~1|ReportField=ProjectFileName~Evb board STM32F2 Fullcolor V1l0.PrjPcb|ReportField=ProjectFullPath~E:\Data\Bitbucket\altium-projects\evb-board-full-color-stm32f2xx\Source Files\Evb board STM32F2 Fullcolor V1l0.PrjPcb|ReportField=Title~Bill of Materials For PCB Document [Evb board STM32F2 Fullcolor V1l0.PcbDoc]|ReportField=ReportTime~12:28:52|ReportField=ReportDate~24-Dec-19|ReportField=ReportDateTime~24-Dec-19 12:28:52|ReportField=OutputName~Bill of Materials|ReportField=OutputType~BOM_PartType|ReportField=GeneratorName~BOM|ReportField=GeneratorDescription~Bill of Materials|ReportField=VariantName~None|ReportField=TotalQuantity~59|ReportField=TotalActualPrice~0|ReportField=TotalTargetPrice~0|ReportField=VersionControl_RevNumber~|ReportField=VersionControl_ProjFolderRevNumber~60f285b4856dcd001af5c6396607ee819163bc72|ReportField=ClientCompanyName~KAIO|ReportField=ClientContactEmail~thamkhanhdev@gmail.com|ReportField=ClientContactName~Khanh Tham|ReportField=ClientWebsite~Reserved|ReportField=Company~(c) 2019 KAIO|ReportField=Note~FREE for personal.|ReportField=NotFitted~NF|ReportField=Project~Evb board STM32F2 Fullcolor|ReportField=VersionRevision~V1I0|ReportField=DataSourceFileName~Evb board STM32F2 Fullcolor V1l0.PcbDoc|ReportField=DataSourceFullPath~E:\Data\Bitbucket\altium-projects\evb-board-full-color-stm32f2xx\Source Files\Evb board STM32F2 Fullcolor V1l0.PcbDoc|ReportField=PCBConfigurationName~Default Configuration|ReportField=Item~|ReportField=ItemRevision~|ReportField=ItemAndRevision~|ReportField=ItemRevisionBase~|ReportField=ItemRevisionLevel1~|ReportField=ItemRevisionLevel2~|ReportField=ItemRevisionLevel1AndBase~|ReportField=ItemRevisionLevel2AndLevel1~
+1|AMS1117-3V3|AS1|SOT223-BCE|1
+2|Button 2|BT1, BT2|BT-2P0604B1V|2
+3|104|C1, C2, C3, C4, C6, C8, C9, C10|C0402|8
+4|100uF|C5, C17, C19|CAP-TAN-SMD-3530|3
+5|104|C7, C13|C0603|2
+6|22P|C11, C12|C0402|2
+7|1uF|C14, C15|CAP-TAN-SMD-3216|2
+8|105|C16, C18|C0402|2
+9|IR1838|IR1|IR RECEIVE V1|1
+10|62000411821|J1, J4|62000411121|2
+11|61301621821|J2, J3|61301621821|2
+12|KF2|K1|KF5.08 2DV|1
+13|LED SMD|LD1|LED 0805/2012 BLUE|1
+14|DCIN|P1|DC-694108301002|1
+15|CR-1220/BN|P2|PIN-CR1220-SMD|1
+16|4.7K|R1, R2, R3, R4, R5, R6, R7, R9, R10, R11, R12, R19, R20|R0402|13
+17|510R|R8|R0402|1
+18|10K|R13, R15|R0402|2
+19|1K|R14, R16|R0402|2
+20|10R|R17, R18|R0402|2
+21|STM32F205RxTx|U1|QFP50P1000X1000-64N|1
+22|W25Q128FV|U2|SOIC127P530X530-8N|1
+23|LM386N|U3, U4|SOIC127P390X490-8N|2
+24|629105150921|USB1|USB-629105150921|1
+25|Micro SD holder|XS1|SD-CARD-MICRO-V3|1
+26|FC-135 12.5PF 32.768kHz|Y1|XT2-3215-2V|1
+27|16Mhz|Y2|XT4-2520NX-SA|1
