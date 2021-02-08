@@ -48,7 +48,12 @@
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-
+int Init(void);
+int Write(uint32_t Address, uint32_t Size, uint8_t* buffer);
+int SectorErase(uint32_t EraseStartAddress, uint32_t EraseEndAddress);
+int MassErase(void);
+uint32_t CheckSum(uint32_t StartAddress, uint32_t Size, uint32_t InitVal);
+uint64_t Verify(uint32_t MemoryAddr, uint32_t RAMBufferAddr, uint32_t Size,uint32_t missalignement);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -92,74 +97,93 @@ int main(void)
   MX_QUADSPI_Init();
   /* USER CODE BEGIN 2 */
 
-     if( HAL_ERROR == CSP_QUADSPI_Init() )
-     {
-        while( 1UL )
-        {
-            HAL_GPIO_WritePin(D2_GPIO_Port, D2_Pin, GPIO_PIN_SET);
-            HAL_Delay(80);
-            HAL_GPIO_WritePin(D2_GPIO_Port, D2_Pin, GPIO_PIN_RESET);
-            HAL_Delay(80);
-        }
+      if( HAL_ERROR == CSP_QUADSPI_Init() )
+      {
+         while( 1UL )
+         {
+             HAL_GPIO_WritePin(D2_GPIO_Port, D2_Pin, GPIO_PIN_SET);
+             HAL_Delay(80);
+             HAL_GPIO_WritePin(D2_GPIO_Port, D2_Pin, GPIO_PIN_RESET);
+             HAL_Delay(80);
+         }
+      }
+
+     for (var = 0; var < MEMORY_SECTOR_SIZE; var++) {
+         buffer_test[var] = (var & 0xff);
      }
 
-    for (var = 0; var < MEMORY_SECTOR_SIZE; var++) {
-        buffer_test[var] = (var & 0xff);
-    }
+     for (var = 0; var < SECTORS_COUNT; var++)
+     {
+         if (CSP_QSPI_EraseSector(var * MEMORY_SECTOR_SIZE,
+                 (var + 1) * MEMORY_SECTOR_SIZE - 1) != HAL_OK)
+         {
+             while( 1UL )
+             {
+                 HAL_GPIO_WritePin(D2_GPIO_Port, D2_Pin, GPIO_PIN_SET);
+                 HAL_Delay(80);
+                 HAL_GPIO_WritePin(D2_GPIO_Port, D2_Pin, GPIO_PIN_RESET);
+                 HAL_Delay(80);
+             }
+         }
 
-    for (var = 0; var < SECTORS_COUNT; var++)
-    {
-        if (CSP_QSPI_EraseSector(var * MEMORY_SECTOR_SIZE,
-                (var + 1) * MEMORY_SECTOR_SIZE - 1) != HAL_OK)
-        {
-            while( 1UL )
-            {
-                HAL_GPIO_WritePin(D2_GPIO_Port, D2_Pin, GPIO_PIN_SET);
-                HAL_Delay(80);
-                HAL_GPIO_WritePin(D2_GPIO_Port, D2_Pin, GPIO_PIN_RESET);
-                HAL_Delay(80);
-            }
-        }
+         if (CSP_QSPI_WriteMemory(buffer_test, var * MEMORY_SECTOR_SIZE,
+                 sizeof(buffer_test)) != HAL_OK)
+         {
+             while( 1UL )
+             {
+                 HAL_GPIO_WritePin(D2_GPIO_Port, D2_Pin, GPIO_PIN_SET);
+                 HAL_Delay(80);
+                 HAL_GPIO_WritePin(D2_GPIO_Port, D2_Pin, GPIO_PIN_RESET);
+                 HAL_Delay(80);
+             }
+         }
+     }
 
-        if (CSP_QSPI_WriteMemory(buffer_test, var * MEMORY_SECTOR_SIZE,
-                sizeof(buffer_test)) != HAL_OK)
-        {
-            while( 1UL )
-            {
-                HAL_GPIO_WritePin(D2_GPIO_Port, D2_Pin, GPIO_PIN_SET);
-                HAL_Delay(80);
-                HAL_GPIO_WritePin(D2_GPIO_Port, D2_Pin, GPIO_PIN_RESET);
-                HAL_Delay(80);
-            }
-        }
-    }
+//    if( CSP_QSPI_EnableMemoryMappedMode() != QSPI_OK )
+//    {
+//         while( 1UL )
+//         {
+//             HAL_GPIO_WritePin(D2_GPIO_Port, D2_Pin, GPIO_PIN_SET);
+//             HAL_Delay(80);
+//             HAL_GPIO_WritePin(D2_GPIO_Port, D2_Pin, GPIO_PIN_RESET);
+//             HAL_Delay(80);
+//         }
+//    }
 
-   if( CSP_QSPI_EnableMemoryMappedMode(QSPI_QPI_MODE) != QSPI_OK )
-   {
-        while( 1UL )
-        {
-            HAL_GPIO_WritePin(D2_GPIO_Port, D2_Pin, GPIO_PIN_SET);
-            HAL_Delay(80);
-            HAL_GPIO_WritePin(D2_GPIO_Port, D2_Pin, GPIO_PIN_RESET);
-            HAL_Delay(80);
-        }
-   }
+//     for (var = 0; var < SECTORS_COUNT; var++)
+//     {
+//         if (memcmp(buffer_test,
+//                 (uint8_t*) (0x90000000 + var * MEMORY_SECTOR_SIZE),
+//                 MEMORY_SECTOR_SIZE) != HAL_OK)
+//         {
+//             while( 1UL )
+//             {
+//                 HAL_GPIO_WritePin(D2_GPIO_Port, D2_Pin, GPIO_PIN_SET);
+//                 HAL_Delay(80);
+//                 HAL_GPIO_WritePin(D2_GPIO_Port, D2_Pin, GPIO_PIN_RESET);
+//                 HAL_Delay(80);
+//             }
+//         }
+//     }
 
-    for (var = 0; var < SECTORS_COUNT; var++)
-    {
-        if (memcmp(buffer_test,
-                (uint8_t*) (0x90000000 + var * MEMORY_SECTOR_SIZE),
-                MEMORY_SECTOR_SIZE) != HAL_OK)
-        {
-            while( 1UL )
-            {
-                HAL_GPIO_WritePin(D2_GPIO_Port, D2_Pin, GPIO_PIN_SET);
-                HAL_Delay(80);
-                HAL_GPIO_WritePin(D2_GPIO_Port, D2_Pin, GPIO_PIN_RESET);
-                HAL_Delay(80);
-            }
-        }
-    }
+
+//     Init();
+//     MassErase();
+//     SectorErase(0, 4095);
+//     Write(1, 1, (uint8_t*) 1);
+//     CheckSum(1, 1, 1);
+//     Verify(1, 1, 1, 1);
+
+//     if( 1U != MassErase() )
+//     {
+//         while(1UL);
+//     }
+
+//     if( SectorErase(0, 4095) != 1U )
+//     {
+//         while(1UL);
+//     }
+
 
   /* USER CODE END 2 */
 
@@ -175,6 +199,12 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
   }
+    Init();
+    MassErase();
+    SectorErase(0, 4095);
+    Write(1, 1, (uint8_t*) 1);
+    CheckSum(1, 1, 1);
+    Verify(1, 1, 1, 1);
   /* USER CODE END 3 */
 }
 

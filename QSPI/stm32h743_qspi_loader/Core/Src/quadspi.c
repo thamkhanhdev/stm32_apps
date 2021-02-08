@@ -14,7 +14,7 @@
   * License. You may obtain a copy of the License at:
   *                        opensource.org/licenses/BSD-3-Clause
   *
-  ******************************************************************************
+  ***************************************ẻ***************************************
   */
 
 /* Includes ------------------------------------------------------------------*/
@@ -22,7 +22,6 @@
 
 /* USER CODE BEGIN 0 */
 static uint8_t QSPI_WriteEnable(void);
-static uint8_t QSPI_AutoPollingMemReady(void);
 static uint32_t QSPI_FLASH_ReadStatusReg(uint8_t reg);
 static uint32_t QSPI_FLASH_WriteStatusReg(uint8_t reg,uint8_t regvalue);
 static uint8_t QSPI_ResetMemory(void);
@@ -31,7 +30,8 @@ static void QSPI_Wait_Busy(void);
 
 uint32_t u32DeviceID = 0;
 uint32_t u32Id = 0;
-QSPI_StatusTypeDef nCurrentMode = QSPI_SPI_MODE;
+QSPI_StatusTypeDef nDTRMode = QSPI_NORMAL_MODE; /* Default mode */
+QSPI_StatusTypeDef nCurrentMode = QSPI_SPI_MODE; /* Default mode */
 
 /* USER CODE END 0 */
 
@@ -216,7 +216,7 @@ static uint8_t QSPI_WriteEnable(void)
   * @brief  This function read the SR of the memory and wait the EOP.
   * @retval None
   */
-static uint8_t QSPI_AutoPollingMemReady(void)
+uint8_t QSPI_AutoPollingMemReady(void)
 {
     QSPI_CommandTypeDef     sCommand;
     QSPI_AutoPollingTypeDef sConfig;
@@ -633,7 +633,7 @@ uint8_t CSP_QSPI_Erase_Chip(void)
   * @param  DTRMode: w25qxx_DTRMode DTR mode ,w25qxx_NormalMode Normal mode
   * @retval QSPI memory status
   */
-uint8_t CSP_QSPI_EnableMemoryMappedMode(QSPI_StatusTypeDef nDTRMode)
+uint8_t CSP_QSPI_EnableMemoryMappedMode(void)
 {
     QSPI_CommandTypeDef      sCommand;
     QSPI_MemoryMappedTypeDef sMemMappedCfg;

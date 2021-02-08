@@ -154,13 +154,14 @@ typedef enum
 #define SET_READ_PARAM_CMD                   0xC0
 #define QUAD_INOUT_FAST_READ_DTR_CMD         0xED
 
- uint8_t CSP_QUADSPI_Init(void);
- uint8_t CSP_QSPI_EraseSector(uint32_t EraseStartAddress ,uint32_t EraseEndAddress);
- uint8_t CSP_QSPI_WriteMemory(uint8_t* pData, uint32_t WriteAddr, uint32_t Size);
- uint8_t CSP_QSPI_EnableMemoryMappedMode(QSPI_StatusTypeDef nDTRMode);
- uint8_t CSP_QSPI_Erase_Chip (void);
- uint32_t QSPI_FLASH_ReadDeviceID(void);
- uint32_t QSPI_FLASH_ReadID(void);
+uint8_t CSP_QUADSPI_Init(void);
+uint8_t CSP_QSPI_EraseSector(uint32_t EraseStartAddress ,uint32_t EraseEndAddress);
+uint8_t CSP_QSPI_WriteMemory(uint8_t* pData, uint32_t WriteAddr, uint32_t Size);
+uint8_t CSP_QSPI_EnableMemoryMappedMode(void);
+uint8_t CSP_QSPI_Erase_Chip (void);
+uint8_t QSPI_AutoPollingMemReady(void);
+uint32_t QSPI_FLASH_ReadDeviceID(void);
+uint32_t QSPI_FLASH_ReadID(void);
 
 /* USER CODE END Prototypes */
 
