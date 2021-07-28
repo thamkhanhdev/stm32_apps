@@ -68,6 +68,16 @@ typedef enum
     IR_KEY_LEFT,
     IR_KEY_RIGHT,
     IR_KEY_OK,
+    IR_KEY_0,
+    IR_KEY_1,
+    IR_KEY_2,
+    IR_KEY_3,
+    IR_KEY_4,
+    IR_KEY_5,
+    IR_KEY_6,
+    IR_KEY_7,
+    IR_KEY_8,
+    IR_KEY_9,
     IR_KEY_DONE,
     IR_TOTAL_KEY
 } IR_KeysLists;
@@ -99,6 +109,7 @@ uint8_t IR1838_GetKeysCode(IR_KeysLists nKeyPos);
 void IR1838_EnterSetupMode(void);
 void IR1838_ExitSetupMode(void);
 IR_ModeLists IR1838_GetCurrentMode(void);
+void IR1838_InitData(void);
 
 #ifdef __cplusplus
 }
