@@ -177,7 +177,7 @@ void SystemClock_Config(void)
   LL_RCC_PLL1_SetVCOInputRange(LL_RCC_PLLINPUTRANGE_4_8);
   LL_RCC_PLL1_SetVCOOutputRange(LL_RCC_PLLVCORANGE_WIDE);
   LL_RCC_PLL1_SetM(5);
-  LL_RCC_PLL1_SetN(48);
+  LL_RCC_PLL1_SetN(72);
   LL_RCC_PLL1_SetP(2);
   LL_RCC_PLL1_SetQ(20);
   LL_RCC_PLL1_SetR(2);
@@ -188,6 +188,9 @@ void SystemClock_Config(void)
   {
   }
 
+   /* Intermediate AHB prescaler 2 when target frequency clock is higher than 80 MHz */
+   LL_RCC_SetAHBPrescaler(LL_RCC_AHB_DIV_2);
+
   LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_PLL1);
   LL_RCC_SetSysPrescaler(LL_RCC_SYSCLK_DIV_1);
   LL_RCC_SetAHBPrescaler(LL_RCC_AHB_DIV_2);
@@ -196,9 +199,9 @@ void SystemClock_Config(void)
   LL_RCC_SetAPB3Prescaler(LL_RCC_APB3_DIV_2);
   LL_RCC_SetAPB4Prescaler(LL_RCC_APB4_DIV_2);
 
-  LL_Init1msTick(120000000);
+  LL_Init1msTick(180000000);
 
-  LL_SetSystemCoreClock(120000000);
+  LL_SetSystemCoreClock(180000000);
   LL_RCC_HSE_EnableCSS();
 }
 
@@ -351,18 +354,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
   GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
   LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-  /**/
-  LL_SYSCFG_EnableFastModePlus(LL_SYSCFG_I2C_FASTMODEPLUS_PB6);
-
-  /**/
-  LL_SYSCFG_EnableFastModePlus(LL_SYSCFG_I2C_FASTMODEPLUS_PB7);
-
-  /**/
-  LL_SYSCFG_EnableFastModePlus(LL_SYSCFG_I2C_FASTMODEPLUS_PB8);
-
-  /**/
-  LL_SYSCFG_EnableFastModePlus(LL_SYSCFG_I2C_FASTMODEPLUS_PB9);
 
 }
 

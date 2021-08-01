@@ -358,22 +358,23 @@ void IRQ_ProcessMonitor( void )
     /* Clear interrupt flag */
     TIM_DAT->SR = 0xFFFFFFFE;
 
-    /* Latch data loaded during *prior* interrupt */
-    LAT_P->BSRR=LAT_BIT_RESET;
     /* Disable LED output during gRows/gBitPos switchover */
     TIM_OE->CCR2 = 0U;
+
+    /* Latch data loaded during *prior* interrupt */
+    LAT_P->BSRR = LAT_BIT_RESET;
 
     /* Release new data region */
     while( u16Count-- )
     {
-        CLK_P->BSRR=CLK_BIT_RESET;
         DAT_P->ODR= gBuff[ gCountBit++ ];
+        CLK_P->BSRR=CLK_BIT_RESET;
         CLK_P->BSRR=CLK_BIT_SET;
     }
 
-    TIM_OE->CCR2 = gBrightness;
-    LAT_P->BSRR = LAT_BIT_SET;
     ROW_P->ODR = gRows;
+    LAT_P->BSRR=LAT_BIT_SET;
+    TIM_OE->CCR2 = gBrightness;
 
     if( ++gBitPos >= MAX_BIT )
     {
