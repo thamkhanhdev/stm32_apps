@@ -1,0 +1,254 @@
+ARM GAS  C:\Users\KhanhTD8\AppData\Local\Temp\cctzx3qn.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.eabi_attribute 28, 1
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 4
+  10              		.eabi_attribute 34, 1
+  11              		.eabi_attribute 18, 4
+  12              		.file	"system_stm32h7xx.c"
+  13              		.text
+  14              		.section	.text.SystemInit,"ax",%progbits
+  15              		.align	1
+  16              		.global	SystemInit
+  17              		.arch armv7e-m
+  18              		.syntax unified
+  19              		.thumb
+  20              		.thumb_func
+  21              		.fpu fpv5-d16
+  23              	SystemInit:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26 0000 1449     		ldr	r1, .L2
+  27 0002 1548     		ldr	r0, .L2+4
+  28 0004 D1F88830 		ldr	r3, [r1, #136]
+  29 0008 43F47003 		orr	r3, r3, #15728640
+  30 000c 10B5     		push	{r4, lr}
+  31 000e C1F88830 		str	r3, [r1, #136]
+  32 0012 124B     		ldr	r3, .L2+8
+  33 0014 1A68     		ldr	r2, [r3]
+  34 0016 42F00102 		orr	r2, r2, #1
+  35 001a 1A60     		str	r2, [r3]
+  36 001c 0022     		movs	r2, #0
+  37 001e 1A61     		str	r2, [r3, #16]
+  38 0020 1C68     		ldr	r4, [r3]
+  39 0022 2040     		ands	r0, r0, r4
+  40 0024 1860     		str	r0, [r3]
+  41 0026 9A61     		str	r2, [r3, #24]
+  42 0028 DA61     		str	r2, [r3, #28]
+  43 002a 1A62     		str	r2, [r3, #32]
+  44 002c 9A62     		str	r2, [r3, #40]
+  45 002e DA62     		str	r2, [r3, #44]
+  46 0030 1A63     		str	r2, [r3, #48]
+  47 0032 5A63     		str	r2, [r3, #52]
+  48 0034 9A63     		str	r2, [r3, #56]
+  49 0036 DA63     		str	r2, [r3, #60]
+  50 0038 1A64     		str	r2, [r3, #64]
+  51 003a 5A64     		str	r2, [r3, #68]
+  52 003c 1868     		ldr	r0, [r3]
+  53 003e 20F48020 		bic	r0, r0, #262144
+  54 0042 1860     		str	r0, [r3]
+  55 0044 1A66     		str	r2, [r3, #96]
+  56 0046 0122     		movs	r2, #1
+  57 0048 054B     		ldr	r3, .L2+12
+  58 004a 1A60     		str	r2, [r3]
+ARM GAS  C:\Users\KhanhTD8\AppData\Local\Temp\cctzx3qn.s 			page 2
+
+
+  59 004c 4FF00063 		mov	r3, #134217728
+  60 0050 8B60     		str	r3, [r1, #8]
+  61 0052 10BD     		pop	{r4, pc}
+  62              	.L3:
+  63              		.align	2
+  64              	.L2:
+  65 0054 00ED00E0 		.word	-536810240
+  66 0058 7FEDF6EA 		.word	-352916097
+  67 005c 00440258 		.word	1476543488
+  68 0060 08810051 		.word	1358987528
+  70              		.section	.text.SystemCoreClockUpdate,"ax",%progbits
+  71              		.align	1
+  72              		.global	SystemCoreClockUpdate
+  73              		.syntax unified
+  74              		.thumb
+  75              		.thumb_func
+  76              		.fpu fpv5-d16
+  78              	SystemCoreClockUpdate:
+  79              		@ args = 0, pretend = 0, frame = 0
+  80              		@ frame_needed = 0, uses_anonymous_args = 0
+  81 0000 4A4A     		ldr	r2, .L18
+  82 0002 4B48     		ldr	r0, .L18+4
+  83 0004 1369     		ldr	r3, [r2, #16]
+  84 0006 03F03803 		and	r3, r3, #56
+  85 000a 102B     		cmp	r3, #16
+  86 000c 30B5     		push	{r4, r5, lr}
+  87 000e 1BD0     		beq	.L5
+  88 0010 182B     		cmp	r3, #24
+  89 0012 1BD0     		beq	.L6
+  90 0014 B3B9     		cbnz	r3, .L7
+  91 0016 1268     		ldr	r2, [r2]
+  92 0018 464B     		ldr	r3, .L18+8
+  93 001a C2F3C102 		ubfx	r2, r2, #3, #2
+  94 001e 1341     		asrs	r3, r3, r2
+  95              	.L17:
+  96 0020 0360     		str	r3, [r0]
+  97              	.L8:
+  98 0022 424B     		ldr	r3, .L18
+  99 0024 4FF48072 		mov	r2, #256
+ 100 0028 9B69     		ldr	r3, [r3, #24]
+ 101 002a 03F47063 		and	r3, r3, #3840
+ 102              		.syntax unified
+ 103              	@ 1055 "Drivers/CMSIS/Include/cmsis_gcc.h" 1
+ 104 002e 92FAA2F2 		rbit r2, r2
+ 105              	@ 0 "" 2
+ 106              		.thumb
+ 107              		.syntax unified
+ 108 0032 B2FA82F2 		clz	r2, r2
+ 109 0036 D340     		lsrs	r3, r3, r2
+ 110 0038 3F4A     		ldr	r2, .L18+12
+ 111 003a D25C     		ldrb	r2, [r2, r3]	@ zero_extendqisi2
+ 112 003c 0368     		ldr	r3, [r0]
+ 113 003e D340     		lsrs	r3, r3, r2
+ 114 0040 0360     		str	r3, [r0]
+ 115 0042 30BD     		pop	{r4, r5, pc}
+ 116              	.L7:
+ 117 0044 3D4B     		ldr	r3, .L18+16
+ARM GAS  C:\Users\KhanhTD8\AppData\Local\Temp\cctzx3qn.s 			page 3
+
+
+ 118 0046 EBE7     		b	.L17
+ 119              	.L5:
+ 120 0048 3D4B     		ldr	r3, .L18+20
+ 121 004a E9E7     		b	.L17
+ 122              	.L6:
+ 123 004c 956A     		ldr	r5, [r2, #40]
+ 124 004e F7EE005A 		vmov.f32	s11, #1.0e+0
+ 125 0052 946A     		ldr	r4, [r2, #40]
+ 126 0054 D16A     		ldr	r1, [r2, #44]
+ 127 0056 05F00305 		and	r5, r5, #3
+ 128 005a 536B     		ldr	r3, [r2, #52]
+ 129 005c C4F30514 		ubfx	r4, r4, #4, #6
+ 130 0060 01F00101 		and	r1, r1, #1
+ 131 0064 012D     		cmp	r5, #1
+ 132 0066 C3F3CC03 		ubfx	r3, r3, #3, #13
+ 133 006a 01FB03F3 		mul	r3, r1, r3
+ 134 006e 07EE103A 		vmov	s14, r3	@ int
+ 135 0072 BAEEE97A 		vcvt.f32.s32	s14, s14, #13
+ 136 0076 2BD0     		beq	.L9
+ 137 0078 022D     		cmp	r5, #2
+ 138 007a 36D0     		beq	.L10
+ 139 007c 002D     		cmp	r5, #0
+ 140 007e 49D1     		bne	.L11
+ 141 0080 1168     		ldr	r1, [r2]
+ 142 0082 2C4B     		ldr	r3, .L18+8
+ 143 0084 C1F3C101 		ubfx	r1, r1, #3, #2
+ 144 0088 126B     		ldr	r2, [r2, #48]
+ 145 008a 0B41     		asrs	r3, r3, r1
+ 146 008c C2F30802 		ubfx	r2, r2, #0, #9
+ 147 0090 B3FBF4F3 		udiv	r3, r3, r4
+ 148 0094 07EE903A 		vmov	s15, r3	@ int
+ 149 0098 F8EEE76A 		vcvt.f32.s32	s13, s15
+ 150 009c 07EE902A 		vmov	s15, r2	@ int
+ 151 00a0 B8EEE76A 		vcvt.f32.s32	s12, s15
+ 152 00a4 36EE077A 		vadd.f32	s14, s12, s14
+ 153 00a8 37EE257A 		vadd.f32	s14, s14, s11
+ 154 00ac 66EE877A 		vmul.f32	s15, s13, s14
+ 155              	.L12:
+ 156 00b0 1E4B     		ldr	r3, .L18
+ 157 00b2 1B6B     		ldr	r3, [r3, #48]
+ 158 00b4 C3F34623 		ubfx	r3, r3, #9, #7
+ 159 00b8 0133     		adds	r3, r3, #1
+ 160 00ba 07EE103A 		vmov	s14, r3	@ int
+ 161 00be B8EEC77A 		vcvt.f32.s32	s14, s14
+ 162 00c2 C7EE876A 		vdiv.f32	s13, s15, s14
+ 163 00c6 FCEEE66A 		vcvt.u32.f32	s13, s13
+ 164 00ca C0ED006A 		vstr.32	s13, [r0]	@ int
+ 165 00ce A8E7     		b	.L8
+ 166              	.L9:
+ 167 00d0 136B     		ldr	r3, [r2, #48]
+ 168 00d2 C3F30803 		ubfx	r3, r3, #0, #9
+ 169 00d6 06EE903A 		vmov	s13, r3	@ int
+ 170 00da F8EEE66A 		vcvt.f32.s32	s13, s13
+ 171 00de 36EE877A 		vadd.f32	s14, s13, s14
+ 172 00e2 37EE257A 		vadd.f32	s14, s14, s11
+ 173              	.L15:
+ 174 00e6 154B     		ldr	r3, .L18+16
+ARM GAS  C:\Users\KhanhTD8\AppData\Local\Temp\cctzx3qn.s 			page 4
+
+
+ 175 00e8 0BE0     		b	.L16
+ 176              	.L10:
+ 177 00ea 136B     		ldr	r3, [r2, #48]
+ 178 00ec C3F30803 		ubfx	r3, r3, #0, #9
+ 179 00f0 06EE903A 		vmov	s13, r3	@ int
+ 180 00f4 124B     		ldr	r3, .L18+20
+ 181 00f6 F8EEE66A 		vcvt.f32.s32	s13, s13
+ 182 00fa 36EE877A 		vadd.f32	s14, s13, s14
+ 183 00fe 37EE257A 		vadd.f32	s14, s14, s11
+ 184              	.L16:
+ 185 0102 B3FBF4F3 		udiv	r3, r3, r4
+ 186 0106 07EE903A 		vmov	s15, r3	@ int
+ 187 010a F8EEE77A 		vcvt.f32.s32	s15, s15
+ 188 010e 67EE277A 		vmul.f32	s15, s14, s15
+ 189 0112 CDE7     		b	.L12
+ 190              	.L11:
+ 191 0114 136B     		ldr	r3, [r2, #48]
+ 192 0116 C3F30803 		ubfx	r3, r3, #0, #9
+ 193 011a 06EE903A 		vmov	s13, r3	@ int
+ 194 011e F8EEE66A 		vcvt.f32.s32	s13, s13
+ 195 0122 76EE877A 		vadd.f32	s15, s13, s14
+ 196 0126 37EEA57A 		vadd.f32	s14, s15, s11
+ 197 012a DCE7     		b	.L15
+ 198              	.L19:
+ 199              		.align	2
+ 200              	.L18:
+ 201 012c 00440258 		.word	1476543488
+ 202 0130 00000000 		.word	.LANCHOR0
+ 203 0134 0090D003 		.word	64000000
+ 204 0138 00000000 		.word	.LANCHOR1
+ 205 013c 00093D00 		.word	4000000
+ 206 0140 40787D01 		.word	25000000
+ 208              		.global	D1CorePrescTable
+ 209              		.global	SystemD2Clock
+ 210              		.global	SystemCoreClock
+ 211              		.section	.data.SystemCoreClock,"aw"
+ 212              		.align	2
+ 213              		.set	.LANCHOR0,. + 0
+ 216              	SystemCoreClock:
+ 217 0000 0090D003 		.word	64000000
+ 218              		.section	.data.SystemD2Clock,"aw"
+ 219              		.align	2
+ 222              	SystemD2Clock:
+ 223 0000 0090D003 		.word	64000000
+ 224              		.section	.rodata.D1CorePrescTable,"a"
+ 225              		.set	.LANCHOR1,. + 0
+ 228              	D1CorePrescTable:
+ 229 0000 00000000 		.ascii	"\000\000\000\000\001\002\003\004\001\002\003\004\006"
+ 229      01020304 
+ 229      01020304 
+ 229      06
+ 230 000d 070809   		.ascii	"\007\010\011"
+ 231              		.ident	"GCC: (GNU Arm Embedded Toolchain 9-2020-q2-update) 9.3.1 20200408 (release)"
+ARM GAS  C:\Users\KhanhTD8\AppData\Local\Temp\cctzx3qn.s 			page 5
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 system_stm32h7xx.c
+C:\Users\KhanhTD8\AppData\Local\Temp\cctzx3qn.s:15     .text.SystemInit:00000000 $t
+C:\Users\KhanhTD8\AppData\Local\Temp\cctzx3qn.s:23     .text.SystemInit:00000000 SystemInit
+C:\Users\KhanhTD8\AppData\Local\Temp\cctzx3qn.s:65     .text.SystemInit:00000054 $d
+C:\Users\KhanhTD8\AppData\Local\Temp\cctzx3qn.s:71     .text.SystemCoreClockUpdate:00000000 $t
+C:\Users\KhanhTD8\AppData\Local\Temp\cctzx3qn.s:78     .text.SystemCoreClockUpdate:00000000 SystemCoreClockUpdate
+C:\Users\KhanhTD8\AppData\Local\Temp\cctzx3qn.s:201    .text.SystemCoreClockUpdate:0000012c $d
+C:\Users\KhanhTD8\AppData\Local\Temp\cctzx3qn.s:228    .rodata.D1CorePrescTable:00000000 D1CorePrescTable
+C:\Users\KhanhTD8\AppData\Local\Temp\cctzx3qn.s:222    .data.SystemD2Clock:00000000 SystemD2Clock
+C:\Users\KhanhTD8\AppData\Local\Temp\cctzx3qn.s:216    .data.SystemCoreClock:00000000 SystemCoreClock
+C:\Users\KhanhTD8\AppData\Local\Temp\cctzx3qn.s:212    .data.SystemCoreClock:00000000 $d
+C:\Users\KhanhTD8\AppData\Local\Temp\cctzx3qn.s:219    .data.SystemD2Clock:00000000 $d
+
+NO UNDEFINED SYMBOLS

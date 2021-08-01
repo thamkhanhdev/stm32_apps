@@ -1,0 +1,313 @@
+ARM GAS  C:\Users\KhanhTD8\AppData\Local\Temp\ccrNK3Jh.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.eabi_attribute 28, 1
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 4
+  10              		.eabi_attribute 34, 1
+  11              		.eabi_attribute 18, 4
+  12              		.file	"stm32h7xx_ll_gpio.c"
+  13              		.text
+  14              		.section	.text.LL_AHB4_GRP1_ForceReset,"ax",%progbits
+  15              		.align	1
+  16              		.arch armv7e-m
+  17              		.syntax unified
+  18              		.thumb
+  19              		.thumb_func
+  20              		.fpu fpv5-d16
+  22              	LL_AHB4_GRP1_ForceReset:
+  23              		@ args = 0, pretend = 0, frame = 0
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25              		@ link register save eliminated.
+  26 0000 034A     		ldr	r2, .L2
+  27 0002 D2F88830 		ldr	r3, [r2, #136]
+  28 0006 1843     		orrs	r0, r0, r3
+  29 0008 C2F88800 		str	r0, [r2, #136]
+  30 000c 7047     		bx	lr
+  31              	.L3:
+  32 000e 00BF     		.align	2
+  33              	.L2:
+  34 0010 00440258 		.word	1476543488
+  36              		.section	.text.LL_AHB4_GRP1_ReleaseReset,"ax",%progbits
+  37              		.align	1
+  38              		.syntax unified
+  39              		.thumb
+  40              		.thumb_func
+  41              		.fpu fpv5-d16
+  43              	LL_AHB4_GRP1_ReleaseReset:
+  44              		@ args = 0, pretend = 0, frame = 0
+  45              		@ frame_needed = 0, uses_anonymous_args = 0
+  46              		@ link register save eliminated.
+  47 0000 034A     		ldr	r2, .L5
+  48 0002 D2F88830 		ldr	r3, [r2, #136]
+  49 0006 23EA0000 		bic	r0, r3, r0
+  50 000a C2F88800 		str	r0, [r2, #136]
+  51 000e 7047     		bx	lr
+  52              	.L6:
+  53              		.align	2
+  54              	.L5:
+  55 0010 00440258 		.word	1476543488
+  57              		.section	.text.LL_GPIO_DeInit,"ax",%progbits
+  58              		.align	1
+  59              		.global	LL_GPIO_DeInit
+  60              		.syntax unified
+  61              		.thumb
+ARM GAS  C:\Users\KhanhTD8\AppData\Local\Temp\ccrNK3Jh.s 			page 2
+
+
+  62              		.thumb_func
+  63              		.fpu fpv5-d16
+  65              	LL_GPIO_DeInit:
+  66              		@ args = 0, pretend = 0, frame = 0
+  67              		@ frame_needed = 0, uses_anonymous_args = 0
+  68 0000 08B5     		push	{r3, lr}
+  69 0002 314B     		ldr	r3, .L21
+  70 0004 9842     		cmp	r0, r3
+  71 0006 07D1     		bne	.L8
+  72 0008 0120     		movs	r0, #1
+  73 000a FFF7FEFF 		bl	LL_AHB4_GRP1_ForceReset
+  74 000e 0120     		movs	r0, #1
+  75              	.L20:
+  76 0010 FFF7FEFF 		bl	LL_AHB4_GRP1_ReleaseReset
+  77 0014 0020     		movs	r0, #0
+  78              	.L9:
+  79 0016 08BD     		pop	{r3, pc}
+  80              	.L8:
+  81 0018 2C4B     		ldr	r3, .L21+4
+  82 001a 9842     		cmp	r0, r3
+  83 001c 04D1     		bne	.L10
+  84 001e 0220     		movs	r0, #2
+  85 0020 FFF7FEFF 		bl	LL_AHB4_GRP1_ForceReset
+  86 0024 0220     		movs	r0, #2
+  87 0026 F3E7     		b	.L20
+  88              	.L10:
+  89 0028 294B     		ldr	r3, .L21+8
+  90 002a 9842     		cmp	r0, r3
+  91 002c 04D1     		bne	.L11
+  92 002e 0420     		movs	r0, #4
+  93 0030 FFF7FEFF 		bl	LL_AHB4_GRP1_ForceReset
+  94 0034 0420     		movs	r0, #4
+  95 0036 EBE7     		b	.L20
+  96              	.L11:
+  97 0038 264B     		ldr	r3, .L21+12
+  98 003a 9842     		cmp	r0, r3
+  99 003c 04D1     		bne	.L12
+ 100 003e 0820     		movs	r0, #8
+ 101 0040 FFF7FEFF 		bl	LL_AHB4_GRP1_ForceReset
+ 102 0044 0820     		movs	r0, #8
+ 103 0046 E3E7     		b	.L20
+ 104              	.L12:
+ 105 0048 234B     		ldr	r3, .L21+16
+ 106 004a 9842     		cmp	r0, r3
+ 107 004c 04D1     		bne	.L13
+ 108 004e 1020     		movs	r0, #16
+ 109 0050 FFF7FEFF 		bl	LL_AHB4_GRP1_ForceReset
+ 110 0054 1020     		movs	r0, #16
+ 111 0056 DBE7     		b	.L20
+ 112              	.L13:
+ 113 0058 204B     		ldr	r3, .L21+20
+ 114 005a 9842     		cmp	r0, r3
+ 115 005c 04D1     		bne	.L14
+ 116 005e 2020     		movs	r0, #32
+ 117 0060 FFF7FEFF 		bl	LL_AHB4_GRP1_ForceReset
+ 118 0064 2020     		movs	r0, #32
+ 119 0066 D3E7     		b	.L20
+ARM GAS  C:\Users\KhanhTD8\AppData\Local\Temp\ccrNK3Jh.s 			page 3
+
+
+ 120              	.L14:
+ 121 0068 1D4B     		ldr	r3, .L21+24
+ 122 006a 9842     		cmp	r0, r3
+ 123 006c 04D1     		bne	.L15
+ 124 006e 4020     		movs	r0, #64
+ 125 0070 FFF7FEFF 		bl	LL_AHB4_GRP1_ForceReset
+ 126 0074 4020     		movs	r0, #64
+ 127 0076 CBE7     		b	.L20
+ 128              	.L15:
+ 129 0078 1A4B     		ldr	r3, .L21+28
+ 130 007a 9842     		cmp	r0, r3
+ 131 007c 04D1     		bne	.L16
+ 132 007e 8020     		movs	r0, #128
+ 133 0080 FFF7FEFF 		bl	LL_AHB4_GRP1_ForceReset
+ 134 0084 8020     		movs	r0, #128
+ 135 0086 C3E7     		b	.L20
+ 136              	.L16:
+ 137 0088 174B     		ldr	r3, .L21+32
+ 138 008a 9842     		cmp	r0, r3
+ 139 008c 06D1     		bne	.L17
+ 140 008e 4FF48070 		mov	r0, #256
+ 141 0092 FFF7FEFF 		bl	LL_AHB4_GRP1_ForceReset
+ 142 0096 4FF48070 		mov	r0, #256
+ 143 009a B9E7     		b	.L20
+ 144              	.L17:
+ 145 009c 134B     		ldr	r3, .L21+36
+ 146 009e 9842     		cmp	r0, r3
+ 147 00a0 06D1     		bne	.L18
+ 148 00a2 4FF40070 		mov	r0, #512
+ 149 00a6 FFF7FEFF 		bl	LL_AHB4_GRP1_ForceReset
+ 150 00aa 4FF40070 		mov	r0, #512
+ 151 00ae AFE7     		b	.L20
+ 152              	.L18:
+ 153 00b0 0F4B     		ldr	r3, .L21+40
+ 154 00b2 9842     		cmp	r0, r3
+ 155 00b4 06D1     		bne	.L19
+ 156 00b6 4FF48060 		mov	r0, #1024
+ 157 00ba FFF7FEFF 		bl	LL_AHB4_GRP1_ForceReset
+ 158 00be 4FF48060 		mov	r0, #1024
+ 159 00c2 A5E7     		b	.L20
+ 160              	.L19:
+ 161 00c4 0120     		movs	r0, #1
+ 162 00c6 A6E7     		b	.L9
+ 163              	.L22:
+ 164              		.align	2
+ 165              	.L21:
+ 166 00c8 00000258 		.word	1476526080
+ 167 00cc 00040258 		.word	1476527104
+ 168 00d0 00080258 		.word	1476528128
+ 169 00d4 000C0258 		.word	1476529152
+ 170 00d8 00100258 		.word	1476530176
+ 171 00dc 00140258 		.word	1476531200
+ 172 00e0 00180258 		.word	1476532224
+ 173 00e4 001C0258 		.word	1476533248
+ 174 00e8 00200258 		.word	1476534272
+ 175 00ec 00240258 		.word	1476535296
+ 176 00f0 00280258 		.word	1476536320
+ARM GAS  C:\Users\KhanhTD8\AppData\Local\Temp\ccrNK3Jh.s 			page 4
+
+
+ 178              		.section	.text.LL_GPIO_Init,"ax",%progbits
+ 179              		.align	1
+ 180              		.global	LL_GPIO_Init
+ 181              		.syntax unified
+ 182              		.thumb
+ 183              		.thumb_func
+ 184              		.fpu fpv5-d16
+ 186              	LL_GPIO_Init:
+ 187              		@ args = 0, pretend = 0, frame = 0
+ 188              		@ frame_needed = 0, uses_anonymous_args = 0
+ 189 0000 2DE9F047 		push	{r4, r5, r6, r7, r8, r9, r10, lr}
+ 190 0004 0246     		mov	r2, r0
+ 191 0006 0E68     		ldr	r6, [r1]
+ 192              		.syntax unified
+ 193              	@ 1055 "Drivers/CMSIS/Include/cmsis_gcc.h" 1
+ 194 0008 96FAA6F4 		rbit r4, r6
+ 195              	@ 0 "" 2
+ 196              		.thumb
+ 197              		.syntax unified
+ 198 000c 4FF0010E 		mov	lr, #1
+ 199 0010 B4FA84F4 		clz	r4, r4
+ 200 0014 6FEA0608 		mvn	r8, r6
+ 201              	.L25:
+ 202 0018 36FA04F0 		lsrs	r0, r6, r4
+ 203 001c 01D1     		bne	.L30
+ 204 001e BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 205              	.L30:
+ 206 0022 0EFA04F3 		lsl	r3, lr, r4
+ 207 0026 3340     		ands	r3, r3, r6
+ 208 0028 3FD0     		beq	.L26
+ 209 002a D1F804C0 		ldr	ip, [r1, #4]
+ 210 002e 03FB03F5 		mul	r5, r3, r3
+ 211 0032 0CF1FF37 		add	r7, ip, #-1
+ 212 0036 05EB4500 		add	r0, r5, r5, lsl #1
+ 213 003a 012F     		cmp	r7, #1
+ 214 003c 6FEA0000 		mvn	r0, r0
+ 215 0040 10D8     		bhi	.L27
+ 216 0042 D2F80890 		ldr	r9, [r2, #8]
+ 217 0046 8F68     		ldr	r7, [r1, #8]
+ 218 0048 00EA0909 		and	r9, r0, r9
+ 219 004c 6F43     		muls	r7, r5, r7
+ 220 004e 47EA0907 		orr	r7, r7, r9
+ 221 0052 9760     		str	r7, [r2, #8]
+ 222 0054 5768     		ldr	r7, [r2, #4]
+ 223 0056 08EA0709 		and	r9, r8, r7
+ 224 005a CF68     		ldr	r7, [r1, #12]
+ 225 005c 7743     		muls	r7, r6, r7
+ 226 005e 49EA0707 		orr	r7, r9, r7
+ 227 0062 5760     		str	r7, [r2, #4]
+ 228              	.L27:
+ 229 0064 D2F80C90 		ldr	r9, [r2, #12]
+ 230 0068 BCF1020F 		cmp	ip, #2
+ 231 006c 0F69     		ldr	r7, [r1, #16]
+ 232 006e 00EA0909 		and	r9, r0, r9
+ 233 0072 07FB05F7 		mul	r7, r7, r5
+ 234 0076 47EA0907 		orr	r7, r7, r9
+ 235 007a D760     		str	r7, [r2, #12]
+ARM GAS  C:\Users\KhanhTD8\AppData\Local\Temp\ccrNK3Jh.s 			page 5
+
+
+ 236 007c 0FD1     		bne	.L28
+ 237 007e FF2B     		cmp	r3, #255
+ 238 0080 D1F81490 		ldr	r9, [r1, #20]
+ 239 0084 13D8     		bhi	.L29
+ 240 0086 05FB05F7 		mul	r7, r5, r5
+ 241 008a 136A     		ldr	r3, [r2, #32]
+ 242 008c C7EB071A 		rsb	r10, r7, r7, lsl #4
+ 243 0090 07FB09F9 		mul	r9, r7, r9
+ 244 0094 23EA0A03 		bic	r3, r3, r10
+ 245 0098 43EA0903 		orr	r3, r3, r9
+ 246 009c 1362     		str	r3, [r2, #32]
+ 247              	.L28:
+ 248 009e 1368     		ldr	r3, [r2]
+ 249 00a0 05FB0CF5 		mul	r5, r5, ip
+ 250 00a4 1840     		ands	r0, r0, r3
+ 251 00a6 0543     		orrs	r5, r5, r0
+ 252 00a8 1560     		str	r5, [r2]
+ 253              	.L26:
+ 254 00aa 0134     		adds	r4, r4, #1
+ 255 00ac B4E7     		b	.L25
+ 256              	.L29:
+ 257 00ae 1B0A     		lsrs	r3, r3, #8
+ 258 00b0 576A     		ldr	r7, [r2, #36]
+ 259 00b2 5B43     		muls	r3, r3, r3
+ 260 00b4 5B43     		muls	r3, r3, r3
+ 261 00b6 C3EB031A 		rsb	r10, r3, r3, lsl #4
+ 262 00ba 03FB09F3 		mul	r3, r3, r9
+ 263 00be 27EA0A07 		bic	r7, r7, r10
+ 264 00c2 3B43     		orrs	r3, r3, r7
+ 265 00c4 5362     		str	r3, [r2, #36]
+ 266 00c6 EAE7     		b	.L28
+ 268              		.section	.text.LL_GPIO_StructInit,"ax",%progbits
+ 269              		.align	1
+ 270              		.global	LL_GPIO_StructInit
+ 271              		.syntax unified
+ 272              		.thumb
+ 273              		.thumb_func
+ 274              		.fpu fpv5-d16
+ 276              	LL_GPIO_StructInit:
+ 277              		@ args = 0, pretend = 0, frame = 0
+ 278              		@ frame_needed = 0, uses_anonymous_args = 0
+ 279              		@ link register save eliminated.
+ 280 0000 0323     		movs	r3, #3
+ 281 0002 4FF6FF72 		movw	r2, #65535
+ 282 0006 C0E90023 		strd	r2, r3, [r0]
+ 283 000a 0023     		movs	r3, #0
+ 284 000c C0E90233 		strd	r3, r3, [r0, #8]
+ 285 0010 C0E90433 		strd	r3, r3, [r0, #16]
+ 286 0014 7047     		bx	lr
+ 288              		.ident	"GCC: (GNU Arm Embedded Toolchain 9-2020-q2-update) 9.3.1 20200408 (release)"
+ARM GAS  C:\Users\KhanhTD8\AppData\Local\Temp\ccrNK3Jh.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 stm32h7xx_ll_gpio.c
+C:\Users\KhanhTD8\AppData\Local\Temp\ccrNK3Jh.s:15     .text.LL_AHB4_GRP1_ForceReset:00000000 $t
+C:\Users\KhanhTD8\AppData\Local\Temp\ccrNK3Jh.s:22     .text.LL_AHB4_GRP1_ForceReset:00000000 LL_AHB4_GRP1_ForceReset
+C:\Users\KhanhTD8\AppData\Local\Temp\ccrNK3Jh.s:34     .text.LL_AHB4_GRP1_ForceReset:00000010 $d
+C:\Users\KhanhTD8\AppData\Local\Temp\ccrNK3Jh.s:37     .text.LL_AHB4_GRP1_ReleaseReset:00000000 $t
+C:\Users\KhanhTD8\AppData\Local\Temp\ccrNK3Jh.s:43     .text.LL_AHB4_GRP1_ReleaseReset:00000000 LL_AHB4_GRP1_ReleaseReset
+C:\Users\KhanhTD8\AppData\Local\Temp\ccrNK3Jh.s:55     .text.LL_AHB4_GRP1_ReleaseReset:00000010 $d
+C:\Users\KhanhTD8\AppData\Local\Temp\ccrNK3Jh.s:58     .text.LL_GPIO_DeInit:00000000 $t
+C:\Users\KhanhTD8\AppData\Local\Temp\ccrNK3Jh.s:65     .text.LL_GPIO_DeInit:00000000 LL_GPIO_DeInit
+C:\Users\KhanhTD8\AppData\Local\Temp\ccrNK3Jh.s:166    .text.LL_GPIO_DeInit:000000c8 $d
+C:\Users\KhanhTD8\AppData\Local\Temp\ccrNK3Jh.s:179    .text.LL_GPIO_Init:00000000 $t
+C:\Users\KhanhTD8\AppData\Local\Temp\ccrNK3Jh.s:186    .text.LL_GPIO_Init:00000000 LL_GPIO_Init
+C:\Users\KhanhTD8\AppData\Local\Temp\ccrNK3Jh.s:269    .text.LL_GPIO_StructInit:00000000 $t
+C:\Users\KhanhTD8\AppData\Local\Temp\ccrNK3Jh.s:276    .text.LL_GPIO_StructInit:00000000 LL_GPIO_StructInit
+
+NO UNDEFINED SYMBOLS

@@ -1,0 +1,306 @@
+ARM GAS  C:\Users\KhanhTD8\AppData\Local\Temp\ccQ05FXZ.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.eabi_attribute 28, 1
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 4
+  10              		.eabi_attribute 34, 1
+  11              		.eabi_attribute 18, 4
+  12              		.file	"stm32h7xx_ll_exti.c"
+  13              		.text
+  14              		.section	.text.LL_EXTI_DeInit,"ax",%progbits
+  15              		.align	1
+  16              		.global	LL_EXTI_DeInit
+  17              		.arch armv7e-m
+  18              		.syntax unified
+  19              		.thumb
+  20              		.thumb_func
+  21              		.fpu fpv5-d16
+  23              	LL_EXTI_DeInit:
+  24              		@ args = 0, pretend = 0, frame = 0
+  25              		@ frame_needed = 0, uses_anonymous_args = 0
+  26              		@ link register save eliminated.
+  27 0000 4FF0B043 		mov	r3, #1476395008
+  28 0004 0020     		movs	r0, #0
+  29 0006 154A     		ldr	r2, .L2
+  30 0008 1860     		str	r0, [r3]
+  31 000a 1862     		str	r0, [r3, #32]
+  32 000c 1864     		str	r0, [r3, #64]
+  33 000e 5860     		str	r0, [r3, #4]
+  34 0010 5862     		str	r0, [r3, #36]
+  35 0012 5864     		str	r0, [r3, #68]
+  36 0014 9860     		str	r0, [r3, #8]
+  37 0016 9862     		str	r0, [r3, #40]
+  38 0018 9864     		str	r0, [r3, #72]
+  39 001a D860     		str	r0, [r3, #12]
+  40 001c D862     		str	r0, [r3, #44]
+  41 001e D864     		str	r0, [r3, #76]
+  42 0020 1861     		str	r0, [r3, #16]
+  43 0022 1863     		str	r0, [r3, #48]
+  44 0024 1865     		str	r0, [r3, #80]
+  45 0026 5861     		str	r0, [r3, #20]
+  46 0028 5863     		str	r0, [r3, #52]
+  47 002a 5865     		str	r0, [r3, #84]
+  48 002c C3F88000 		str	r0, [r3, #128]
+  49 0030 C3F89000 		str	r0, [r3, #144]
+  50 0034 C3F8A000 		str	r0, [r3, #160]
+  51 0038 C3F88400 		str	r0, [r3, #132]
+  52 003c C3F89400 		str	r0, [r3, #148]
+  53 0040 C3F8A400 		str	r0, [r3, #164]
+  54 0044 C3F88820 		str	r2, [r3, #136]
+  55 0048 4FF42022 		mov	r2, #655360
+  56 004c C3F89820 		str	r2, [r3, #152]
+  57 0050 4FF4E802 		mov	r2, #7602176
+  58 0054 C3F8A820 		str	r2, [r3, #168]
+ARM GAS  C:\Users\KhanhTD8\AppData\Local\Temp\ccQ05FXZ.s 			page 2
+
+
+  59 0058 7047     		bx	lr
+  60              	.L3:
+  61 005a 00BF     		.align	2
+  62              	.L2:
+  63 005c FFFF3F00 		.word	4194303
+  65              		.section	.text.LL_EXTI_Init,"ax",%progbits
+  66              		.align	1
+  67              		.global	LL_EXTI_Init
+  68              		.syntax unified
+  69              		.thumb
+  70              		.thumb_func
+  71              		.fpu fpv5-d16
+  73              	LL_EXTI_Init:
+  74              		@ args = 0, pretend = 0, frame = 0
+  75              		@ frame_needed = 0, uses_anonymous_args = 0
+  76 0000 70B5     		push	{r4, r5, r6, lr}
+  77 0002 057B     		ldrb	r5, [r0, #12]	@ zero_extendqisi2
+  78 0004 8368     		ldr	r3, [r0, #8]
+  79 0006 D0E90012 		ldrd	r1, r2, [r0]
+  80 000a 002D     		cmp	r5, #0
+  81 000c 00F0B380 		beq	.L5
+  82 0010 0029     		cmp	r1, #0
+  83 0012 55D1     		bne	.L6
+  84              	.L50:
+  85 0014 0025     		movs	r5, #0
+  86              	.L7:
+  87 0016 3AB3     		cbz	r2, .L15
+  88 0018 467B     		ldrb	r6, [r0, #13]	@ zero_extendqisi2
+  89 001a 4FF0B041 		mov	r1, #1476395008
+  90 001e 16F0010F 		tst	r6, #1
+  91 0022 D1F89040 		ldr	r4, [r1, #144]
+  92 0026 14BF     		ite	ne
+  93 0028 1443     		orrne	r4, r4, r2
+  94 002a 9443     		biceq	r4, r4, r2
+  95 002c 16F0020F 		tst	r6, #2
+  96 0030 C1F89040 		str	r4, [r1, #144]
+  97 0034 4FF0B041 		mov	r1, #1476395008
+  98 0038 D1F89440 		ldr	r4, [r1, #148]
+  99 003c 14BF     		ite	ne
+ 100 003e 1443     		orrne	r4, r4, r2
+ 101 0040 9443     		biceq	r4, r4, r2
+ 102 0042 C1F89440 		str	r4, [r1, #148]
+ 103 0046 817B     		ldrb	r1, [r0, #14]	@ zero_extendqisi2
+ 104 0048 71B1     		cbz	r1, .L15
+ 105 004a 0229     		cmp	r1, #2
+ 106 004c 73D0     		beq	.L20
+ 107 004e 0329     		cmp	r1, #3
+ 108 0050 7BD0     		beq	.L21
+ 109 0052 0129     		cmp	r1, #1
+ 110 0054 7ED1     		bne	.L30
+ 111 0056 4FF0B041 		mov	r1, #1476395008
+ 112 005a 4C6A     		ldr	r4, [r1, #36]
+ 113 005c 24EA0204 		bic	r4, r4, r2
+ 114 0060 4C62     		str	r4, [r1, #36]
+ 115 0062 0C6A     		ldr	r4, [r1, #32]
+ 116 0064 2243     		orrs	r2, r2, r4
+ 117 0066 0A62     		str	r2, [r1, #32]
+ARM GAS  C:\Users\KhanhTD8\AppData\Local\Temp\ccQ05FXZ.s 			page 3
+
+
+ 118              	.L15:
+ 119 0068 43B3     		cbz	r3, .L22
+ 120 006a 447B     		ldrb	r4, [r0, #13]	@ zero_extendqisi2
+ 121 006c 4FF0B042 		mov	r2, #1476395008
+ 122 0070 14F0010F 		tst	r4, #1
+ 123 0074 D2F8A010 		ldr	r1, [r2, #160]
+ 124 0078 14BF     		ite	ne
+ 125 007a 1943     		orrne	r1, r1, r3
+ 126 007c 9943     		biceq	r1, r1, r3
+ 127 007e 14F0020F 		tst	r4, #2
+ 128 0082 C2F8A010 		str	r1, [r2, #160]
+ 129 0086 4FF0B042 		mov	r2, #1476395008
+ 130 008a D2F8A410 		ldr	r1, [r2, #164]
+ 131 008e 14BF     		ite	ne
+ 132 0090 1943     		orrne	r1, r1, r3
+ 133 0092 9943     		biceq	r1, r1, r3
+ 134 0094 C2F8A410 		str	r1, [r2, #164]
+ 135 0098 827B     		ldrb	r2, [r0, #14]	@ zero_extendqisi2
+ 136 009a 7AB1     		cbz	r2, .L22
+ 137 009c 022A     		cmp	r2, #2
+ 138 009e 5BD0     		beq	.L27
+ 139 00a0 032A     		cmp	r2, #3
+ 140 00a2 63D0     		beq	.L28
+ 141 00a4 012A     		cmp	r2, #1
+ 142 00a6 40F08D80 		bne	.L31
+ 143 00aa 4FF0B042 		mov	r2, #1476395008
+ 144 00ae 516C     		ldr	r1, [r2, #68]
+ 145 00b0 21EA0301 		bic	r1, r1, r3
+ 146 00b4 5164     		str	r1, [r2, #68]
+ 147 00b6 116C     		ldr	r1, [r2, #64]
+ 148 00b8 0B43     		orrs	r3, r3, r1
+ 149 00ba 1364     		str	r3, [r2, #64]
+ 150              	.L22:
+ 151 00bc 2846     		mov	r0, r5
+ 152 00be 70BD     		pop	{r4, r5, r6, pc}
+ 153              	.L6:
+ 154 00c0 467B     		ldrb	r6, [r0, #13]	@ zero_extendqisi2
+ 155 00c2 4FF0B044 		mov	r4, #1476395008
+ 156 00c6 16F0010F 		tst	r6, #1
+ 157 00ca D4F88050 		ldr	r5, [r4, #128]
+ 158 00ce 14BF     		ite	ne
+ 159 00d0 0D43     		orrne	r5, r5, r1
+ 160 00d2 8D43     		biceq	r5, r5, r1
+ 161 00d4 16F0020F 		tst	r6, #2
+ 162 00d8 C4F88050 		str	r5, [r4, #128]
+ 163 00dc 4FF0B044 		mov	r4, #1476395008
+ 164 00e0 D4F88450 		ldr	r5, [r4, #132]
+ 165 00e4 14BF     		ite	ne
+ 166 00e6 0D43     		orrne	r5, r5, r1
+ 167 00e8 8D43     		biceq	r5, r5, r1
+ 168 00ea C4F88450 		str	r5, [r4, #132]
+ 169 00ee 847B     		ldrb	r4, [r0, #14]	@ zero_extendqisi2
+ 170 00f0 002C     		cmp	r4, #0
+ 171 00f2 8FD0     		beq	.L50
+ 172 00f4 022C     		cmp	r4, #2
+ 173 00f6 0DD0     		beq	.L13
+ 174 00f8 032C     		cmp	r4, #3
+ARM GAS  C:\Users\KhanhTD8\AppData\Local\Temp\ccQ05FXZ.s 			page 4
+
+
+ 175 00fa 15D0     		beq	.L14
+ 176 00fc 012C     		cmp	r4, #1
+ 177 00fe 18D1     		bne	.L29
+ 178 0100 4FF0B044 		mov	r4, #1476395008
+ 179 0104 6568     		ldr	r5, [r4, #4]
+ 180 0106 25EA0105 		bic	r5, r5, r1
+ 181 010a 6560     		str	r5, [r4, #4]
+ 182 010c 2568     		ldr	r5, [r4]
+ 183 010e 2943     		orrs	r1, r1, r5
+ 184 0110 2160     		str	r1, [r4]
+ 185 0112 7FE7     		b	.L50
+ 186              	.L13:
+ 187 0114 4FF0B044 		mov	r4, #1476395008
+ 188 0118 2568     		ldr	r5, [r4]
+ 189 011a 25EA0105 		bic	r5, r5, r1
+ 190              	.L49:
+ 191 011e 2560     		str	r5, [r4]
+ 192 0120 6568     		ldr	r5, [r4, #4]
+ 193 0122 2943     		orrs	r1, r1, r5
+ 194 0124 6160     		str	r1, [r4, #4]
+ 195 0126 75E7     		b	.L50
+ 196              	.L14:
+ 197 0128 4FF0B044 		mov	r4, #1476395008
+ 198 012c 2568     		ldr	r5, [r4]
+ 199 012e 0D43     		orrs	r5, r5, r1
+ 200 0130 F5E7     		b	.L49
+ 201              	.L29:
+ 202 0132 0125     		movs	r5, #1
+ 203 0134 6FE7     		b	.L7
+ 204              	.L20:
+ 205 0136 4FF0B041 		mov	r1, #1476395008
+ 206 013a 0C6A     		ldr	r4, [r1, #32]
+ 207 013c 24EA0204 		bic	r4, r4, r2
+ 208              	.L53:
+ 209 0140 0C62     		str	r4, [r1, #32]
+ 210 0142 4C6A     		ldr	r4, [r1, #36]
+ 211 0144 2243     		orrs	r2, r2, r4
+ 212 0146 4A62     		str	r2, [r1, #36]
+ 213 0148 8EE7     		b	.L15
+ 214              	.L21:
+ 215 014a 4FF0B041 		mov	r1, #1476395008
+ 216 014e 0C6A     		ldr	r4, [r1, #32]
+ 217 0150 1443     		orrs	r4, r4, r2
+ 218 0152 F5E7     		b	.L53
+ 219              	.L30:
+ 220 0154 0125     		movs	r5, #1
+ 221 0156 87E7     		b	.L15
+ 222              	.L27:
+ 223 0158 4FF0B042 		mov	r2, #1476395008
+ 224 015c 116C     		ldr	r1, [r2, #64]
+ 225 015e 21EA0301 		bic	r1, r1, r3
+ 226              	.L56:
+ 227 0162 1164     		str	r1, [r2, #64]
+ 228 0164 516C     		ldr	r1, [r2, #68]
+ 229 0166 0B43     		orrs	r3, r3, r1
+ 230 0168 5364     		str	r3, [r2, #68]
+ 231 016a A7E7     		b	.L22
+ARM GAS  C:\Users\KhanhTD8\AppData\Local\Temp\ccQ05FXZ.s 			page 5
+
+
+ 232              	.L28:
+ 233 016c 4FF0B042 		mov	r2, #1476395008
+ 234 0170 116C     		ldr	r1, [r2, #64]
+ 235 0172 1943     		orrs	r1, r1, r3
+ 236 0174 F5E7     		b	.L56
+ 237              	.L5:
+ 238 0176 4FF0B044 		mov	r4, #1476395008
+ 239 017a D4F88000 		ldr	r0, [r4, #128]
+ 240 017e 20EA0100 		bic	r0, r0, r1
+ 241 0182 C4F88000 		str	r0, [r4, #128]
+ 242 0186 D4F89000 		ldr	r0, [r4, #144]
+ 243 018a 20EA0200 		bic	r0, r0, r2
+ 244 018e C4F89000 		str	r0, [r4, #144]
+ 245 0192 D4F8A000 		ldr	r0, [r4, #160]
+ 246 0196 20EA0300 		bic	r0, r0, r3
+ 247 019a C4F8A000 		str	r0, [r4, #160]
+ 248 019e D4F88400 		ldr	r0, [r4, #132]
+ 249 01a2 20EA0101 		bic	r1, r0, r1
+ 250 01a6 C4F88410 		str	r1, [r4, #132]
+ 251 01aa D4F89410 		ldr	r1, [r4, #148]
+ 252 01ae 21EA0202 		bic	r2, r1, r2
+ 253 01b2 C4F89420 		str	r2, [r4, #148]
+ 254 01b6 D4F8A420 		ldr	r2, [r4, #164]
+ 255 01ba 22EA0303 		bic	r3, r2, r3
+ 256 01be C4F8A430 		str	r3, [r4, #164]
+ 257 01c2 7BE7     		b	.L22
+ 258              	.L31:
+ 259 01c4 0125     		movs	r5, #1
+ 260 01c6 79E7     		b	.L22
+ 262              		.section	.text.LL_EXTI_StructInit,"ax",%progbits
+ 263              		.align	1
+ 264              		.global	LL_EXTI_StructInit
+ 265              		.syntax unified
+ 266              		.thumb
+ 267              		.thumb_func
+ 268              		.fpu fpv5-d16
+ 270              	LL_EXTI_StructInit:
+ 271              		@ args = 0, pretend = 0, frame = 0
+ 272              		@ frame_needed = 0, uses_anonymous_args = 0
+ 273              		@ link register save eliminated.
+ 274 0000 0023     		movs	r3, #0
+ 275 0002 C0E90033 		strd	r3, r3, [r0]
+ 276 0006 8360     		str	r3, [r0, #8]
+ 277 0008 4FF48073 		mov	r3, #256
+ 278 000c 8381     		strh	r3, [r0, #12]	@ movhi
+ 279 000e 0223     		movs	r3, #2
+ 280 0010 8373     		strb	r3, [r0, #14]
+ 281 0012 7047     		bx	lr
+ 283              		.ident	"GCC: (GNU Arm Embedded Toolchain 9-2020-q2-update) 9.3.1 20200408 (release)"
+ARM GAS  C:\Users\KhanhTD8\AppData\Local\Temp\ccQ05FXZ.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 stm32h7xx_ll_exti.c
+C:\Users\KhanhTD8\AppData\Local\Temp\ccQ05FXZ.s:15     .text.LL_EXTI_DeInit:00000000 $t
+C:\Users\KhanhTD8\AppData\Local\Temp\ccQ05FXZ.s:23     .text.LL_EXTI_DeInit:00000000 LL_EXTI_DeInit
+C:\Users\KhanhTD8\AppData\Local\Temp\ccQ05FXZ.s:63     .text.LL_EXTI_DeInit:0000005c $d
+C:\Users\KhanhTD8\AppData\Local\Temp\ccQ05FXZ.s:66     .text.LL_EXTI_Init:00000000 $t
+C:\Users\KhanhTD8\AppData\Local\Temp\ccQ05FXZ.s:73     .text.LL_EXTI_Init:00000000 LL_EXTI_Init
+C:\Users\KhanhTD8\AppData\Local\Temp\ccQ05FXZ.s:263    .text.LL_EXTI_StructInit:00000000 $t
+C:\Users\KhanhTD8\AppData\Local\Temp\ccQ05FXZ.s:270    .text.LL_EXTI_StructInit:00000000 LL_EXTI_StructInit
+
+NO UNDEFINED SYMBOLS

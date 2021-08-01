@@ -1,0 +1,552 @@
+ARM GAS  C:\Users\KhanhTD8\AppData\Local\Temp\cczwy6bC.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.eabi_attribute 28, 1
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 4
+  10              		.eabi_attribute 34, 1
+  11              		.eabi_attribute 18, 4
+  12              		.file	"main.c"
+  13              		.text
+  14              		.section	.text.LL_AHB4_GRP1_EnableClock,"ax",%progbits
+  15              		.align	1
+  16              		.arch armv7e-m
+  17              		.syntax unified
+  18              		.thumb
+  19              		.thumb_func
+  20              		.fpu fpv5-d16
+  22              	LL_AHB4_GRP1_EnableClock:
+  23              		@ args = 0, pretend = 0, frame = 8
+  24              		@ frame_needed = 0, uses_anonymous_args = 0
+  25              		@ link register save eliminated.
+  26 0000 064B     		ldr	r3, .L2
+  27 0002 82B0     		sub	sp, sp, #8
+  28 0004 D3F8E020 		ldr	r2, [r3, #224]
+  29 0008 0243     		orrs	r2, r2, r0
+  30 000a C3F8E020 		str	r2, [r3, #224]
+  31 000e D3F8E030 		ldr	r3, [r3, #224]
+  32 0012 1840     		ands	r0, r0, r3
+  33 0014 0190     		str	r0, [sp, #4]
+  34 0016 019B     		ldr	r3, [sp, #4]
+  35 0018 02B0     		add	sp, sp, #8
+  36              		@ sp needed
+  37 001a 7047     		bx	lr
+  38              	.L3:
+  39              		.align	2
+  40              	.L2:
+  41 001c 00440258 		.word	1476543488
+  43              		.section	.text.SystemClock_Config,"ax",%progbits
+  44              		.align	1
+  45              		.global	SystemClock_Config
+  46              		.syntax unified
+  47              		.thumb
+  48              		.thumb_func
+  49              		.fpu fpv5-d16
+  51              	SystemClock_Config:
+  52              		@ args = 0, pretend = 0, frame = 0
+  53              		@ frame_needed = 0, uses_anonymous_args = 0
+  54 0000 4A4B     		ldr	r3, .L13
+  55 0002 1A68     		ldr	r2, [r3]
+  56 0004 22F00F02 		bic	r2, r2, #15
+  57 0008 42F00102 		orr	r2, r2, #1
+  58 000c 10B5     		push	{r4, lr}
+  59 000e 1A60     		str	r2, [r3]
+  60              	.L5:
+ARM GAS  C:\Users\KhanhTD8\AppData\Local\Temp\cczwy6bC.s 			page 2
+
+
+  61 0010 1A68     		ldr	r2, [r3]
+  62 0012 02F00F02 		and	r2, r2, #15
+  63 0016 012A     		cmp	r2, #1
+  64 0018 FAD1     		bne	.L5
+  65 001a 454A     		ldr	r2, .L13+4
+  66 001c D368     		ldr	r3, [r2, #12]
+  67 001e 23F00703 		bic	r3, r3, #7
+  68 0022 43F00203 		orr	r3, r3, #2
+  69 0026 D360     		str	r3, [r2, #12]
+  70 0028 9369     		ldr	r3, [r2, #24]
+  71 002a 23F44043 		bic	r3, r3, #49152
+  72 002e 43F48043 		orr	r3, r3, #16384
+  73 0032 9361     		str	r3, [r2, #24]
+  74 0034 3F4B     		ldr	r3, .L13+8
+  75 0036 1A68     		ldr	r2, [r3]
+  76 0038 42F48032 		orr	r2, r2, #65536
+  77 003c 1A60     		str	r2, [r3]
+  78              	.L6:
+  79 003e 1A68     		ldr	r2, [r3]
+  80 0040 9203     		lsls	r2, r2, #14
+  81 0042 FCD5     		bpl	.L6
+  82 0044 1A68     		ldr	r2, [r3]
+  83 0046 3B4C     		ldr	r4, .L13+8
+  84 0048 42F40022 		orr	r2, r2, #524288
+  85 004c 1A60     		str	r2, [r3]
+  86 004e 9A6A     		ldr	r2, [r3, #40]
+  87 0050 22F00302 		bic	r2, r2, #3
+  88 0054 42F00202 		orr	r2, r2, #2
+  89 0058 9A62     		str	r2, [r3, #40]
+  90 005a DA6A     		ldr	r2, [r3, #44]
+  91 005c 42F48032 		orr	r2, r2, #65536
+  92 0060 DA62     		str	r2, [r3, #44]
+  93 0062 DA6A     		ldr	r2, [r3, #44]
+  94 0064 22F00C02 		bic	r2, r2, #12
+  95 0068 42F00802 		orr	r2, r2, #8
+  96 006c DA62     		str	r2, [r3, #44]
+  97 006e DA6A     		ldr	r2, [r3, #44]
+  98 0070 22F00202 		bic	r2, r2, #2
+  99 0074 DA62     		str	r2, [r3, #44]
+ 100 0076 9A6A     		ldr	r2, [r3, #40]
+ 101 0078 22F47C72 		bic	r2, r2, #1008
+ 102 007c 42F05002 		orr	r2, r2, #80
+ 103 0080 9A62     		str	r2, [r3, #40]
+ 104 0082 1A6B     		ldr	r2, [r3, #48]
+ 105 0084 22F4FF72 		bic	r2, r2, #510
+ 106 0088 22F00102 		bic	r2, r2, #1
+ 107 008c 42F02F02 		orr	r2, r2, #47
+ 108 0090 1A63     		str	r2, [r3, #48]
+ 109 0092 1A6B     		ldr	r2, [r3, #48]
+ 110 0094 22F47E42 		bic	r2, r2, #65024
+ 111 0098 42F40072 		orr	r2, r2, #512
+ 112 009c 1A63     		str	r2, [r3, #48]
+ 113 009e 1A6B     		ldr	r2, [r3, #48]
+ 114 00a0 22F4FE02 		bic	r2, r2, #8323072
+ 115 00a4 42F49812 		orr	r2, r2, #1245184
+ 116 00a8 1A63     		str	r2, [r3, #48]
+ 117 00aa 1A6B     		ldr	r2, [r3, #48]
+ARM GAS  C:\Users\KhanhTD8\AppData\Local\Temp\cczwy6bC.s 			page 3
+
+
+ 118 00ac 22F0FE42 		bic	r2, r2, #2130706432
+ 119 00b0 42F08072 		orr	r2, r2, #16777216
+ 120 00b4 1A63     		str	r2, [r3, #48]
+ 121 00b6 1A68     		ldr	r2, [r3]
+ 122 00b8 42F08072 		orr	r2, r2, #16777216
+ 123 00bc 1A60     		str	r2, [r3]
+ 124              	.L7:
+ 125 00be 2368     		ldr	r3, [r4]
+ 126 00c0 9B01     		lsls	r3, r3, #6
+ 127 00c2 FCD5     		bpl	.L7
+ 128 00c4 2369     		ldr	r3, [r4, #16]
+ 129 00c6 1C48     		ldr	r0, .L13+12
+ 130 00c8 23F00703 		bic	r3, r3, #7
+ 131 00cc 43F00303 		orr	r3, r3, #3
+ 132 00d0 2361     		str	r3, [r4, #16]
+ 133 00d2 A369     		ldr	r3, [r4, #24]
+ 134 00d4 23F47063 		bic	r3, r3, #3840
+ 135 00d8 A361     		str	r3, [r4, #24]
+ 136 00da A369     		ldr	r3, [r4, #24]
+ 137 00dc 23F00F03 		bic	r3, r3, #15
+ 138 00e0 43F00803 		orr	r3, r3, #8
+ 139 00e4 A361     		str	r3, [r4, #24]
+ 140 00e6 E369     		ldr	r3, [r4, #28]
+ 141 00e8 23F07003 		bic	r3, r3, #112
+ 142 00ec 43F04003 		orr	r3, r3, #64
+ 143 00f0 E361     		str	r3, [r4, #28]
+ 144 00f2 E369     		ldr	r3, [r4, #28]
+ 145 00f4 23F4E063 		bic	r3, r3, #1792
+ 146 00f8 43F48063 		orr	r3, r3, #1024
+ 147 00fc E361     		str	r3, [r4, #28]
+ 148 00fe A369     		ldr	r3, [r4, #24]
+ 149 0100 23F07003 		bic	r3, r3, #112
+ 150 0104 43F04003 		orr	r3, r3, #64
+ 151 0108 A361     		str	r3, [r4, #24]
+ 152 010a 236A     		ldr	r3, [r4, #32]
+ 153 010c 23F07003 		bic	r3, r3, #112
+ 154 0110 43F04003 		orr	r3, r3, #64
+ 155 0114 2362     		str	r3, [r4, #32]
+ 156 0116 FFF7FEFF 		bl	LL_Init1msTick
+ 157 011a 0748     		ldr	r0, .L13+12
+ 158 011c FFF7FEFF 		bl	LL_SetSystemCoreClock
+ 159 0120 2368     		ldr	r3, [r4]
+ 160 0122 43F40023 		orr	r3, r3, #524288
+ 161 0126 2360     		str	r3, [r4]
+ 162 0128 10BD     		pop	{r4, pc}
+ 163              	.L14:
+ 164 012a 00BF     		.align	2
+ 165              	.L13:
+ 166 012c 00200052 		.word	1375739904
+ 167 0130 00480258 		.word	1476544512
+ 168 0134 00440258 		.word	1476543488
+ 169 0138 000E2707 		.word	120000000
+ 171              		.section	.text.startup.main,"ax",%progbits
+ 172              		.align	1
+ 173              		.global	main
+ 174              		.syntax unified
+ 175              		.thumb
+ARM GAS  C:\Users\KhanhTD8\AppData\Local\Temp\cczwy6bC.s 			page 4
+
+
+ 176              		.thumb_func
+ 177              		.fpu fpv5-d16
+ 179              	main:
+ 180              		@ Volatile: function does not return.
+ 181              		@ args = 0, pretend = 0, frame = 88
+ 182              		@ frame_needed = 0, uses_anonymous_args = 0
+ 183 0000 B64B     		ldr	r3, .L23
+ 184 0002 5A69     		ldr	r2, [r3, #20]
+ 185 0004 12F40032 		ands	r2, r2, #131072
+ 186 0008 2DE98048 		push	{r7, fp, lr}
+ 187 000c 97B0     		sub	sp, sp, #92
+ 188 000e 11D1     		bne	.L16
+ 189              		.syntax unified
+ 190              	@ 946 "Drivers/CMSIS/Include/cmsis_gcc.h" 1
+ 191 0010 BFF34F8F 		dsb 0xF
+ 192              	@ 0 "" 2
+ 193              	@ 935 "Drivers/CMSIS/Include/cmsis_gcc.h" 1
+ 194 0014 BFF36F8F 		isb 0xF
+ 195              	@ 0 "" 2
+ 196              		.thumb
+ 197              		.syntax unified
+ 198 0018 C3F85022 		str	r2, [r3, #592]
+ 199              		.syntax unified
+ 200              	@ 946 "Drivers/CMSIS/Include/cmsis_gcc.h" 1
+ 201 001c BFF34F8F 		dsb 0xF
+ 202              	@ 0 "" 2
+ 203              	@ 935 "Drivers/CMSIS/Include/cmsis_gcc.h" 1
+ 204 0020 BFF36F8F 		isb 0xF
+ 205              	@ 0 "" 2
+ 206              		.thumb
+ 207              		.syntax unified
+ 208 0024 5A69     		ldr	r2, [r3, #20]
+ 209 0026 42F40032 		orr	r2, r2, #131072
+ 210 002a 5A61     		str	r2, [r3, #20]
+ 211              		.syntax unified
+ 212              	@ 946 "Drivers/CMSIS/Include/cmsis_gcc.h" 1
+ 213 002c BFF34F8F 		dsb 0xF
+ 214              	@ 0 "" 2
+ 215              	@ 935 "Drivers/CMSIS/Include/cmsis_gcc.h" 1
+ 216 0030 BFF36F8F 		isb 0xF
+ 217              	@ 0 "" 2
+ 218              		.thumb
+ 219              		.syntax unified
+ 220              	.L16:
+ 221 0034 A94A     		ldr	r2, .L23
+ 222 0036 5369     		ldr	r3, [r2, #20]
+ 223 0038 13F48033 		ands	r3, r3, #65536
+ 224 003c 23D1     		bne	.L17
+ 225 003e C2F88430 		str	r3, [r2, #132]
+ 226              		.syntax unified
+ 227              	@ 946 "Drivers/CMSIS/Include/cmsis_gcc.h" 1
+ 228 0042 BFF34F8F 		dsb 0xF
+ 229              	@ 0 "" 2
+ 230              		.thumb
+ 231              		.syntax unified
+ 232 0046 D2F88030 		ldr	r3, [r2, #128]
+ 233 004a 43F6E074 		movw	r4, #16352
+ARM GAS  C:\Users\KhanhTD8\AppData\Local\Temp\cczwy6bC.s 			page 5
+
+
+ 234 004e C3F3C900 		ubfx	r0, r3, #3, #10
+ 235 0052 C3F34E33 		ubfx	r3, r3, #13, #15
+ 236 0056 5B01     		lsls	r3, r3, #5
+ 237              	.L19:
+ 238 0058 03EA0406 		and	r6, r3, r4
+ 239 005c 0146     		mov	r1, r0
+ 240              	.L18:
+ 241 005e 46EA8175 		orr	r5, r6, r1, lsl #30
+ 242 0062 0139     		subs	r1, r1, #1
+ 243 0064 C2F86052 		str	r5, [r2, #608]
+ 244 0068 F9D2     		bcs	.L18
+ 245 006a 203B     		subs	r3, r3, #32
+ 246 006c 13F1200F 		cmn	r3, #32
+ 247 0070 F2D1     		bne	.L19
+ 248              		.syntax unified
+ 249              	@ 946 "Drivers/CMSIS/Include/cmsis_gcc.h" 1
+ 250 0072 BFF34F8F 		dsb 0xF
+ 251              	@ 0 "" 2
+ 252              		.thumb
+ 253              		.syntax unified
+ 254 0076 5369     		ldr	r3, [r2, #20]
+ 255 0078 43F48033 		orr	r3, r3, #65536
+ 256 007c 5361     		str	r3, [r2, #20]
+ 257              		.syntax unified
+ 258              	@ 946 "Drivers/CMSIS/Include/cmsis_gcc.h" 1
+ 259 007e BFF34F8F 		dsb 0xF
+ 260              	@ 0 "" 2
+ 261              	@ 935 "Drivers/CMSIS/Include/cmsis_gcc.h" 1
+ 262 0082 BFF36F8F 		isb 0xF
+ 263              	@ 0 "" 2
+ 264              		.thumb
+ 265              		.syntax unified
+ 266              	.L17:
+ 267 0086 964E     		ldr	r6, .L23+4
+ 268 0088 4FF00509 		mov	r9, #5
+ 269 008c DFF84CA2 		ldr	r10, .L23
+ 270 0090 0024     		movs	r4, #0
+ 271 0092 D6F8F430 		ldr	r3, [r6, #244]
+ 272 0096 0127     		movs	r7, #1
+ 273 0098 924D     		ldr	r5, .L23+8
+ 274 009a 4FF00308 		mov	r8, #3
+ 275 009e 43F00203 		orr	r3, r3, #2
+ 276 00a2 DFF858B2 		ldr	fp, .L23+32
+ 277 00a6 C6F8F430 		str	r3, [r6, #244]
+ 278 00aa D6F8F430 		ldr	r3, [r6, #244]
+ 279 00ae 03F00203 		and	r3, r3, #2
+ 280 00b2 0193     		str	r3, [sp, #4]
+ 281 00b4 019B     		ldr	r3, [sp, #4]
+ 282 00b6 DAF80C20 		ldr	r2, [r10, #12]
+ 283 00ba 8B4B     		ldr	r3, .L23+12
+ 284 00bc 22F4E062 		bic	r2, r2, #1792
+ 285 00c0 1204     		lsls	r2, r2, #16
+ 286 00c2 120C     		lsrs	r2, r2, #16
+ 287 00c4 1343     		orrs	r3, r3, r2
+ 288 00c6 CAF80C30 		str	r3, [r10, #12]
+ 289 00ca FFF7FEFF 		bl	SystemClock_Config
+ 290 00ce 1822     		movs	r2, #24
+ARM GAS  C:\Users\KhanhTD8\AppData\Local\Temp\cczwy6bC.s 			page 6
+
+
+ 291 00d0 0021     		movs	r1, #0
+ 292 00d2 0EA8     		add	r0, sp, #56
+ 293 00d4 FFF7FEFF 		bl	memset
+ 294 00d8 8020     		movs	r0, #128
+ 295 00da FFF7FEFF 		bl	LL_AHB4_GRP1_EnableClock
+ 296 00de 0420     		movs	r0, #4
+ 297 00e0 FFF7FEFF 		bl	LL_AHB4_GRP1_EnableClock
+ 298 00e4 0120     		movs	r0, #1
+ 299 00e6 FFF7FEFF 		bl	LL_AHB4_GRP1_EnableClock
+ 300 00ea 0220     		movs	r0, #2
+ 301 00ec FFF7FEFF 		bl	LL_AHB4_GRP1_EnableClock
+ 302 00f0 7E48     		ldr	r0, .L23+16
+ 303 00f2 4FF4F813 		mov	r3, #2031616
+ 304 00f6 0EA9     		add	r1, sp, #56
+ 305 00f8 8361     		str	r3, [r0, #24]
+ 306 00fa 03F17E63 		add	r3, r3, #266338304
+ 307 00fe AB61     		str	r3, [r5, #24]
+ 308 0100 1F23     		movs	r3, #31
+ 309 0102 CBF81890 		str	r9, [fp, #24]
+ 310 0106 1294     		str	r4, [sp, #72]
+ 311 0108 CDE90E37 		strd	r3, r7, [sp, #56]
+ 312 010c CDE91084 		strd	r8, r4, [sp, #64]
+ 313 0110 FFF7FEFF 		bl	LL_GPIO_Init
+ 314 0114 0EA9     		add	r1, sp, #56
+ 315 0116 5846     		mov	r0, fp
+ 316 0118 1294     		str	r4, [sp, #72]
+ 317 011a CDE90E97 		strd	r9, r7, [sp, #56]
+ 318 011e CDE91084 		strd	r8, r4, [sp, #64]
+ 319 0122 FFF7FEFF 		bl	LL_GPIO_Init
+ 320 0126 40F6FF73 		movw	r3, #4095
+ 321 012a 0EA9     		add	r1, sp, #56
+ 322 012c 2846     		mov	r0, r5
+ 323 012e 1294     		str	r4, [sp, #72]
+ 324 0130 4FF08045 		mov	r5, #1073741824
+ 325 0134 CDE90E37 		strd	r3, r7, [sp, #56]
+ 326 0138 CDE91084 		strd	r8, r4, [sp, #64]
+ 327 013c FFF7FEFF 		bl	LL_GPIO_Init
+ 328 0140 6B4B     		ldr	r3, .L23+20
+ 329 0142 2146     		mov	r1, r4
+ 330 0144 03A8     		add	r0, sp, #12
+ 331 0146 5A68     		ldr	r2, [r3, #4]
+ 332 0148 42F01002 		orr	r2, r2, #16
+ 333 014c 5A60     		str	r2, [r3, #4]
+ 334 014e 5A68     		ldr	r2, [r3, #4]
+ 335 0150 42F02002 		orr	r2, r2, #32
+ 336 0154 5A60     		str	r2, [r3, #4]
+ 337 0156 5A68     		ldr	r2, [r3, #4]
+ 338 0158 42F04002 		orr	r2, r2, #64
+ 339 015c 5A60     		str	r2, [r3, #4]
+ 340 015e 5A68     		ldr	r2, [r3, #4]
+ 341 0160 42F08002 		orr	r2, r2, #128
+ 342 0164 5A60     		str	r2, [r3, #4]
+ 343 0166 1422     		movs	r2, #20
+ 344 0168 FFF7FEFF 		bl	memset
+ 345 016c 2146     		mov	r1, r4
+ 346 016e 2022     		movs	r2, #32
+ 347 0170 0EA8     		add	r0, sp, #56
+ARM GAS  C:\Users\KhanhTD8\AppData\Local\Temp\cczwy6bC.s 			page 7
+
+
+ 348 0172 FFF7FEFF 		bl	memset
+ 349 0176 1822     		movs	r2, #24
+ 350 0178 2146     		mov	r1, r4
+ 351 017a 08A8     		add	r0, sp, #32
+ 352 017c FFF7FEFF 		bl	memset
+ 353 0180 D6F8E830 		ldr	r3, [r6, #232]
+ 354 0184 03A9     		add	r1, sp, #12
+ 355 0186 4FF08040 		mov	r0, #1073741824
+ 356 018a 3B43     		orrs	r3, r3, r7
+ 357 018c C6F8E830 		str	r3, [r6, #232]
+ 358 0190 D6F8E830 		ldr	r3, [r6, #232]
+ 359 0194 ADF80C40 		strh	r4, [sp, #12]	@ movhi
+ 360 0198 3B40     		ands	r3, r3, r7
+ 361 019a 0494     		str	r4, [sp, #16]
+ 362 019c 0293     		str	r3, [sp, #8]
+ 363 019e 029B     		ldr	r3, [sp, #8]
+ 364 01a0 6423     		movs	r3, #100
+ 365 01a2 CDE90534 		strd	r3, r4, [sp, #20]
+ 366 01a6 FFF7FEFF 		bl	LL_TIM_Init
+ 367 01aa 2B68     		ldr	r3, [r5]
+ 368 01ac 0EAA     		add	r2, sp, #56
+ 369 01ae 1021     		movs	r1, #16
+ 370 01b0 23F08003 		bic	r3, r3, #128
+ 371 01b4 2846     		mov	r0, r5
+ 372 01b6 2B60     		str	r3, [r5]
+ 373 01b8 AB68     		ldr	r3, [r5, #8]
+ 374 01ba 23F4A033 		bic	r3, r3, #81920
+ 375 01be 23F00703 		bic	r3, r3, #7
+ 376 01c2 AB60     		str	r3, [r5, #8]
+ 377 01c4 AB69     		ldr	r3, [r5, #24]
+ 378 01c6 43F40063 		orr	r3, r3, #2048
+ 379 01ca AB61     		str	r3, [r5, #24]
+ 380 01cc 6023     		movs	r3, #96
+ 381 01ce CDE90E34 		strd	r3, r4, [sp, #56]
+ 382 01d2 0223     		movs	r3, #2
+ 383 01d4 CDE91044 		strd	r4, r4, [sp, #64]
+ 384 01d8 1293     		str	r3, [sp, #72]
+ 385 01da FFF7FEFF 		bl	LL_TIM_OC_Init
+ 386 01de AA69     		ldr	r2, [r5, #24]
+ 387 01e0 3846     		mov	r0, r7
+ 388 01e2 22F48062 		bic	r2, r2, #1024
+ 389 01e6 AA61     		str	r2, [r5, #24]
+ 390 01e8 6A68     		ldr	r2, [r5, #4]
+ 391 01ea 22F07002 		bic	r2, r2, #112
+ 392 01ee 6A60     		str	r2, [r5, #4]
+ 393 01f0 AA68     		ldr	r2, [r5, #8]
+ 394 01f2 22F08002 		bic	r2, r2, #128
+ 395 01f6 AA60     		str	r2, [r5, #8]
+ 396 01f8 FFF7FEFF 		bl	LL_AHB4_GRP1_EnableClock
+ 397 01fc 0223     		movs	r3, #2
+ 398 01fe 08A9     		add	r1, sp, #32
+ 399 0200 5846     		mov	r0, fp
+ 400 0202 CDE90833 		strd	r3, r3, [sp, #32]
+ 401 0206 CDE90A84 		strd	r8, r4, [sp, #40]
+ 402 020a CDE90C47 		strd	r4, r7, [sp, #48]
+ 403 020e FFF7FEFF 		bl	LL_GPIO_Init
+ 404 0212 1422     		movs	r2, #20
+ARM GAS  C:\Users\KhanhTD8\AppData\Local\Temp\cczwy6bC.s 			page 8
+
+
+ 405 0214 2146     		mov	r1, r4
+ 406 0216 0EA8     		add	r0, sp, #56
+ 407 0218 FFF7FEFF 		bl	memset
+ 408 021c D6F8E830 		ldr	r3, [r6, #232]
+ 409 0220 43F00403 		orr	r3, r3, #4
+ 410 0224 C6F8E830 		str	r3, [r6, #232]
+ 411 0228 D6F8E830 		ldr	r3, [r6, #232]
+ 412 022c 03F00403 		and	r3, r3, #4
+ 413 0230 0893     		str	r3, [sp, #32]
+ 414 0232 089B     		ldr	r3, [sp, #32]
+ 415 0234 DAF80C30 		ldr	r3, [r10, #12]
+ 416 0238 2E4B     		ldr	r3, .L23+24
+ 417 023a 83F81E43 		strb	r4, [r3, #798]
+ 418 023e 1D60     		str	r5, [r3]
+ 419 0240 2D4E     		ldr	r6, .L23+28
+ 420 0242 3C23     		movs	r3, #60
+ 421 0244 0EA9     		add	r1, sp, #56
+ 422 0246 ADF83840 		strh	r4, [sp, #56]	@ movhi
+ 423 024a 3046     		mov	r0, r6
+ 424 024c 0F94     		str	r4, [sp, #60]
+ 425 024e CDE91034 		strd	r3, r4, [sp, #64]
+ 426 0252 FFF7FEFF 		bl	LL_TIM_Init
+ 427 0256 3368     		ldr	r3, [r6]
+ 428 0258 5A20     		movs	r0, #90
+ 429 025a 23F08003 		bic	r3, r3, #128
+ 430 025e 3360     		str	r3, [r6]
+ 431 0260 B368     		ldr	r3, [r6, #8]
+ 432 0262 23F4A033 		bic	r3, r3, #81920
+ 433 0266 23F00703 		bic	r3, r3, #7
+ 434 026a B360     		str	r3, [r6, #8]
+ 435 026c 7368     		ldr	r3, [r6, #4]
+ 436 026e 23F07003 		bic	r3, r3, #112
+ 437 0272 7360     		str	r3, [r6, #4]
+ 438 0274 B368     		ldr	r3, [r6, #8]
+ 439 0276 23F08003 		bic	r3, r3, #128
+ 440 027a B360     		str	r3, [r6, #8]
+ 441 027c FFF7FEFF 		bl	MATRIX_Init
+ 442 0280 2B6A     		ldr	r3, [r5, #32]
+ 443 0282 43F01003 		orr	r3, r3, #16
+ 444 0286 2B62     		str	r3, [r5, #32]
+ 445 0288 FFF7FEFF 		bl	MATRIX_getBrightness
+ 446 028c A863     		str	r0, [r5, #56]
+ 447 028e 2B68     		ldr	r3, [r5]
+ 448 0290 3846     		mov	r0, r7
+ 449 0292 3B43     		orrs	r3, r3, r7
+ 450 0294 2B60     		str	r3, [r5]
+ 451 0296 F368     		ldr	r3, [r6, #12]
+ 452 0298 3B43     		orrs	r3, r3, r7
+ 453 029a F360     		str	r3, [r6, #12]
+ 454 029c 3368     		ldr	r3, [r6]
+ 455 029e 3B43     		orrs	r3, r3, r7
+ 456 02a0 3360     		str	r3, [r6]
+ 457 02a2 FFF7FEFF 		bl	MATRIX_SetTextSize
+ 458 02a6 4946     		mov	r1, r9
+ 459 02a8 2046     		mov	r0, r4
+ 460 02aa FFF7FEFF 		bl	MATRIX_SetCursor
+ 461 02ae 4FF6FF70 		movw	r0, #65535
+ARM GAS  C:\Users\KhanhTD8\AppData\Local\Temp\cczwy6bC.s 			page 9
+
+
+ 462 02b2 FFF7FEFF 		bl	MATRIX_SetTextColor
+ 463 02b6 4FF61F00 		movw	r0, #63519
+ 464 02ba FFF7FEFF 		bl	MATRIX_FillScreen
+ 465 02be 4FF4FA60 		mov	r0, #2000
+ 466 02c2 FFF7FEFF 		bl	LL_mDelay
+ 467 02c6 41F23420 		movw	r0, #4660
+ 468 02ca FFF7FEFF 		bl	MATRIX_FillScreen
+ 469 02ce 4FF4FA60 		mov	r0, #2000
+ 470 02d2 FFF7FEFF 		bl	LL_mDelay
+ 471 02d6 FFF7FEFF 		bl	plasma
+ 472              	.L20:
+ 473 02da FEE7     		b	.L20
+ 474              	.L24:
+ 475              		.align	2
+ 476              	.L23:
+ 477 02dc 00ED00E0 		.word	-536810240
+ 478 02e0 00440258 		.word	1476543488
+ 479 02e4 00040258 		.word	1476527104
+ 480 02e8 0003FA05 		.word	100270848
+ 481 02ec 00080258 		.word	1476528128
+ 482 02f0 00040058 		.word	1476396032
+ 483 02f4 00E100E0 		.word	-536813312
+ 484 02f8 00080040 		.word	1073743872
+ 485 02fc 00000258 		.word	1476526080
+ 487              		.section	.text.Error_Handler,"ax",%progbits
+ 488              		.align	1
+ 489              		.global	Error_Handler
+ 490              		.syntax unified
+ 491              		.thumb
+ 492              		.thumb_func
+ 493              		.fpu fpv5-d16
+ 495              	Error_Handler:
+ 496              		@ args = 0, pretend = 0, frame = 0
+ 497              		@ frame_needed = 0, uses_anonymous_args = 0
+ 498              		@ link register save eliminated.
+ 499 0000 7047     		bx	lr
+ 501              		.ident	"GCC: (GNU Arm Embedded Toolchain 9-2020-q2-update) 9.3.1 20200408 (release)"
+ARM GAS  C:\Users\KhanhTD8\AppData\Local\Temp\cczwy6bC.s 			page 10
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 main.c
+C:\Users\KhanhTD8\AppData\Local\Temp\cczwy6bC.s:15     .text.LL_AHB4_GRP1_EnableClock:00000000 $t
+C:\Users\KhanhTD8\AppData\Local\Temp\cczwy6bC.s:22     .text.LL_AHB4_GRP1_EnableClock:00000000 LL_AHB4_GRP1_EnableClock
+C:\Users\KhanhTD8\AppData\Local\Temp\cczwy6bC.s:41     .text.LL_AHB4_GRP1_EnableClock:0000001c $d
+C:\Users\KhanhTD8\AppData\Local\Temp\cczwy6bC.s:44     .text.SystemClock_Config:00000000 $t
+C:\Users\KhanhTD8\AppData\Local\Temp\cczwy6bC.s:51     .text.SystemClock_Config:00000000 SystemClock_Config
+C:\Users\KhanhTD8\AppData\Local\Temp\cczwy6bC.s:166    .text.SystemClock_Config:0000012c $d
+C:\Users\KhanhTD8\AppData\Local\Temp\cczwy6bC.s:172    .text.startup.main:00000000 $t
+C:\Users\KhanhTD8\AppData\Local\Temp\cczwy6bC.s:179    .text.startup.main:00000000 main
+C:\Users\KhanhTD8\AppData\Local\Temp\cczwy6bC.s:477    .text.startup.main:000002dc $d
+C:\Users\KhanhTD8\AppData\Local\Temp\cczwy6bC.s:488    .text.Error_Handler:00000000 $t
+C:\Users\KhanhTD8\AppData\Local\Temp\cczwy6bC.s:495    .text.Error_Handler:00000000 Error_Handler
+
+UNDEFINED SYMBOLS
+LL_Init1msTick
+LL_SetSystemCoreClock
+memset
+LL_GPIO_Init
+LL_TIM_Init
+LL_TIM_OC_Init
+MATRIX_Init
+MATRIX_getBrightness
+MATRIX_SetTextSize
+MATRIX_SetCursor
+MATRIX_SetTextColor
+MATRIX_FillScreen
+LL_mDelay
+plasma
