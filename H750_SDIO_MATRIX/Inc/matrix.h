@@ -75,11 +75,11 @@ extern "C"{
 /*==================================================================================================
 *                                      DEFINES AND MACROS
 ==================================================================================================*/
-#define MATRIX_WIDTH    128U
-#define MATRIX_HEIGHT   64U
-#define MATRIX_SCANRATE  32U
+#define MATRIX_WIDTH    64U
+#define MATRIX_HEIGHT   32U
+#define MATRIX_SCANRATE  16U
 #define MATRIX_MASKROWS MATRIX_SCANRATE-1U
-
+#define BRIGHTNESS 10
 #define RGB565
 // #define USE2BUS
 
@@ -155,6 +155,7 @@ extern "C"{
 #define CLK_P       GPIOA
 #define LAT_P       GPIOA
 #define DAT_P       GPIOB
+#define ROW_MASK    0x1F
 
 #define TIM_DAT TIM4
 #define TIM_OE  TIM2
@@ -195,7 +196,6 @@ typedef enum
 /*==================================================================================================
 *                                GLOBAL VARIABLE DECLARATIONS
 ==================================================================================================*/
-
 
 /*==================================================================================================
 *                                    FUNCTION PROTOTYPES

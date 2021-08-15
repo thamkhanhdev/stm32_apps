@@ -28,6 +28,7 @@ extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
+#include "stm32h7xx_ll_dma.h"
 #include "stm32h7xx_ll_rcc.h"
 #include "stm32h7xx_ll_crs.h"
 #include "stm32h7xx_ll_bus.h"
@@ -36,7 +37,6 @@ extern "C" {
 #include "stm32h7xx_ll_cortex.h"
 #include "stm32h7xx_ll_utils.h"
 #include "stm32h7xx_ll_pwr.h"
-#include "stm32h7xx_ll_dma.h"
 #include "stm32h7xx_ll_tim.h"
 #include "stm32h7xx_ll_gpio.h"
 
@@ -80,12 +80,6 @@ void Error_Handler(void);
 #define LC_GPIO_Port GPIOC
 #define LD_Pin LL_GPIO_PIN_3
 #define LD_GPIO_Port GPIOC
-#define LAT_Pin LL_GPIO_PIN_0
-#define LAT_GPIO_Port GPIOA
-#define OE_Pin LL_GPIO_PIN_1
-#define OE_GPIO_Port GPIOA
-#define CLK_Pin LL_GPIO_PIN_2
-#define CLK_GPIO_Port GPIOA
 #define LE_Pin LL_GPIO_PIN_4
 #define LE_GPIO_Port GPIOC
 #define B4_Pin LL_GPIO_PIN_0

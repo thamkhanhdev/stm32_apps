@@ -43,6 +43,10 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
+volatile uint8_t gITBitPos = 0U;
+volatile uint8_t gITRows = 0U;
+volatile uint32_t u32CntTim3;
+volatile uint32_t u32CntTim2;
 
 /* USER CODE END PV */
 
@@ -200,56 +204,54 @@ void SysTick_Handler(void)
 /******************************************************************************/
 
 /**
-  * @brief This function handles EXTI line[9:5] interrupts.
+  * @brief This function handles DMA1 stream0 global interrupt.
   */
-void EXTI9_5_IRQHandler(void)
+void DMA1_Stream0_IRQHandler(void)
 {
-  /* USER CODE BEGIN EXTI9_5_IRQn 0 */
+  /* USER CODE BEGIN DMA1_Stream0_IRQn 0 */
+  /* make sure the interrupt flag is clear */
+  LL_DMA_ClearFlag_TC0(DMA1);
+  /*! If is configured as non-circular mode, then DMA need enabling again. */
+  // LL_DMA_EnableStream(DMA1, LL_DMA_STREAM_0);
 
-  /* USER CODE END EXTI9_5_IRQn 0 */
-  if (LL_EXTI_IsActiveFlag_0_31(LL_EXTI_LINE_9) != RESET)
-  {
-    LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_9);
-    /* USER CODE BEGIN LL_EXTI_LINE_9 */
+  /* USER CODE END DMA1_Stream0_IRQn 0 */
 
-    /* USER CODE END LL_EXTI_LINE_9 */
-  }
-  /* USER CODE BEGIN EXTI9_5_IRQn 1 */
+  /* USER CODE BEGIN DMA1_Stream0_IRQn 1 */
 
-  /* USER CODE END EXTI9_5_IRQn 1 */
+  /* USER CODE END DMA1_Stream0_IRQn 1 */
 }
 
 /**
-  * @brief This function handles TIM4 global interrupt.
+  * @brief This function handles TIM2 global interrupt.
   */
-void TIM4_IRQHandler(void)
+void TIM2_IRQHandler(void)
 {
-  /* USER CODE BEGIN TIM4_IRQn 0 */
-  IRQ_ProcessMonitor();
-  /* USER CODE END TIM4_IRQn 0 */
-  /* USER CODE BEGIN TIM4_IRQn 1 */
+  /* USER CODE BEGIN TIM2_IRQn 0 */
+    /* Clear the interrupt flag right away.
+     * Due to pipelining, the register itself might not get updated for several
+     * cycles. If we wait until the end of the ISR to clear the flag,
+     * it can trigger again immediately */
+    if(TIM2->SR & TIM_SR_UIF)
+    {
+        TIM2->SR = ~TIM_SR_UIF;
 
-  /* USER CODE END TIM4_IRQn 1 */
-}
+        ROW_P->ODR = gITRows;
 
-/**
-  * @brief This function handles EXTI line[15:10] interrupts.
-  */
-void EXTI15_10_IRQHandler(void)
-{
-  /* USER CODE BEGIN EXTI15_10_IRQn 0 */
+        if( ++gITBitPos >= MAX_BIT )
+        {
+            gITBitPos = 0U;
+            if( ++gITRows >= MATRIX_SCANRATE )
+            {
+                gITRows = 0U;
+            }
+        }
+        /*! set the duty cycle of the NEXT ~OE pulse */
+        TIM2->CCR2 = 1280 - (BRIGHTNESS * (1 << gITBitPos));
+    }
+  /* USER CODE END TIM2_IRQn 0 */
+  /* USER CODE BEGIN TIM2_IRQn 1 */
 
-  /* USER CODE END EXTI15_10_IRQn 0 */
-  if (LL_EXTI_IsActiveFlag_0_31(LL_EXTI_LINE_10) != RESET)
-  {
-    LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_10);
-    /* USER CODE BEGIN LL_EXTI_LINE_10 */
-
-    /* USER CODE END LL_EXTI_LINE_10 */
-  }
-  /* USER CODE BEGIN EXTI15_10_IRQn 1 */
-
-  /* USER CODE END EXTI15_10_IRQn 1 */
+  /* USER CODE END TIM2_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */

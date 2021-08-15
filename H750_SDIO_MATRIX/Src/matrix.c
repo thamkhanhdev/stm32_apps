@@ -37,6 +37,7 @@ extern "C"{
 #include "gamma.h"
 #include "gfxfont.h"
 #include "TomThumb.h"
+#include "stm32h7xx.h"
 
 /*==================================================================================================
 *                          LOCAL TYPEDEFS (STRUCTURES, UNIONS, ENUMS)
@@ -114,7 +115,7 @@ static uint8_t gBitPos = 0U;
 static uint8_t gBrightness;
 static bool gCp437 = false;
 static volatile uint32_t gCountBit = 0UL;
-static uint16_t gBuff[MATRIX_WIDTH*MATRIX_HEIGHT*MAX_BIT/2];
+uint16_t gBuff[MATRIX_WIDTH*MATRIX_HEIGHT*MAX_BIT/2];
 static uint16_t gCursorX = 0U;
 static uint16_t gBackupX = 0U;
 static uint16_t gCursorY = 0U;
@@ -570,10 +571,10 @@ const float radius1 =16.3, radius2 =23.0, radius3 =40.8, radius4 =44.2,
             centery1= 8.7, centery2= 6.5, centery3=14.0, centery4=-2.9;
 double       angle1  = 0.0, angle2  = 0.0, angle3  = 0.0, angle4  = 0.0;
 long        hueShift= 0;
-    while (1)
+    /* while (1) */
     {
-        LL_mDelay(100);
-        GPIOD->BSRR = (1<<29);
+        /* LL_mDelay(100);
+        GPIOD->BSRR = (1<<29); */
         sx1 = (int)(cos(angle1) * radius1 + centerx1);
         sx2 = (int)(cos(angle2) * radius2 + centerx2);
         sx3 = (int)(cos(angle3) * radius3 + centerx3);
@@ -601,13 +602,13 @@ long        hueShift= 0;
         }
 
         MATRIX_SwapBuffers();
-        GPIOD->BSRR = (1<<13);
+        /* GPIOD->BSRR = (1<<13); */
         angle1 += 0.03;
         angle2 -= 0.07;
         angle3 += 0.13;
         angle4 -= 0.15;
         hueShift += 2;
-        while(1);
+        /* while(1); */
     }
 }
 /**
