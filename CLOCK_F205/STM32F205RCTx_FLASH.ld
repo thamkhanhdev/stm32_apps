@@ -61,8 +61,9 @@ _Min_Stack_Size = 0x400; /* required amount of stack */
 /* Specify the memory areas */
 MEMORY
 {
-RAM (xrw)      : ORIGIN = 0x20000000, LENGTH = 96K
-FLASH (rx)      : ORIGIN = 0x8000000, LENGTH = 256K
+    RAM (xrw)       : ORIGIN = 0x20000000, LENGTH = 80K
+    RAM1 (xrw)      : ORIGIN = 0x2001C000, LENGTH = 16K
+    FLASH (rx)      : ORIGIN = 0x8000000, LENGTH = 256K
 }
 
 /* Define output sections */
@@ -161,6 +162,11 @@ SECTIONS
     _ebss = .;         /* define a global symbol at bss end */
     __bss_end__ = _ebss;
   } >RAM
+
+    .user_section :
+    {
+        *(.user_ram)
+    } > RAM1
 
   /* User_heap_stack section, used to check that there is enough RAM left */
   ._user_heap_stack :

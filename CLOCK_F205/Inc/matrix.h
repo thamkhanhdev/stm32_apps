@@ -100,6 +100,8 @@ extern "C"{
 
 #define MATRIX_WIDTH     128U
 #define MATRIX_HEIGHT    64U
+#define MATRIX_TOLTAL    ((MATRIX_WIDTH)*(MATRIX_HEIGHT))
+
 #ifdef USE2BUS
 #define MATRIX_SCANRATE  (MATRIX_HEIGHT/4U)
 #else
@@ -158,11 +160,11 @@ extern "C"{
 
 #ifdef USE2BUS
 #define R3        6
-#define B3        8
 #define G3        7
+#define B3        8
 #define R4        9
-#define G4        13
 #define B4        12
+#define G4        13
 
 #define R3_MASK     (uint16_t) (1 << R3)
 #define G3_MASK     (uint16_t) (1 << G3)
@@ -173,7 +175,7 @@ extern "C"{
 #define G4_MASK     (uint16_t) (1 << G4)
 #define B4_MASK     (uint16_t) (1 << B4)
 #define RGB4_MASK   (uint16_t) (R4_MASK | G4_MASK | B4_MASK)
-#endif /* USE2BUS */
+#endif /* #ifdef USE2BUS */
 
 #define CLK_P       GPIOA
 #define LAT_P       GPIOA
@@ -206,7 +208,7 @@ extern "C"{
  #define pgm_read_pointer(addr) ((void *)pgm_read_dword(addr))
 #else
  #define pgm_read_pointer(addr) ((void *)pgm_read_word(addr))
-#endif
+#endif /* #if !defined(__INT_MAX__) || (__INT_MAX__ > 0xFFFF) */
 /*==================================================================================================
 *                                             ENUMS
 ==================================================================================================*/
@@ -217,7 +219,6 @@ typedef enum
     FONT_FREESERIF9PT7B,
     FONR_FREESERIFBOLDITALIC18PT7B,
     FONR_FREESERIFBOLDITALIC12PT7B,
-    FONR_FREESANOBLIQUE9PT7B,
     FONR_FREESAN9PT7B,
     FONT_FREEMONO9PT7B,
     FONT_ORG_01
@@ -225,13 +226,13 @@ typedef enum
 
 typedef enum
 {
-    MONITOR_DISPLAY_ANALOG_CLOCK0,
     MONITOR_DISPLAY_MON0,
     MONITOR_DISPLAY_MON1,
+    MONITOR_DISPLAY_ANALOG0,
     MONITOR_DISPLAY_MON2,
     MONITOR_DISPLAY_MON3,
     MONITOR_DISPLAY_RANDOM,
-    MONITOR_DISPLAY_RESERVED,
+    MONITOR_SETTING,
     MONITOR_SET_KEY,
     MONITOR_SET_TIME,
     MONITOR_SET_COLOR,
@@ -262,6 +263,15 @@ typedef enum
 
 typedef enum
 {
+    CURSOR_RESERVED,
+    CURSOR_UP,
+    CURSOR_DOWN,
+    CURSOR_LEFT,
+    CURSOR_RIGHT
+} MATRIX_DirectionalCursor_Types;
+
+typedef enum
+{
     FLUTTER_LEFT_TO_RIGHT,
     FLUTTER_RIGHT_TO_LEFT,
     FLUTTER_RESERVED
@@ -283,9 +293,13 @@ uint8_t MATRIX_getBrightness( void );
 
 StdReturnType MATRIX_setBrightness( uint8_t bri );
 
-void MATRIX_TransitionEffect( MATRIX_TransitionTypes nTransition, MATRIX_EffectTypes nEffect );
+void MATRIX_TransitionEffect(uint16_t u16xStart, uint16_t u16yStart,
+                             uint16_t u16Width, uint16_t u16Height,
+                             MATRIX_TransitionTypes nTransition, MATRIX_EffectTypes nEffect);
 void MATRIX_ShiftLeft(uint16_t u16xStartedPos, uint16_t u16yStartedPos, uint8_t u8Width, uint8_t u8Height);
+void MATRIX_ShiftRight(uint16_t u16xStartedPos, uint16_t u16yStartedPos, uint8_t u8Width, uint8_t u8Height);
 void MATRIX_FlutterLeftRight(uint16_t u16xStartedPos, uint16_t u16yStartedPos, uint8_t u8Width, uint8_t u8Height);
+void MATRIX_MoveRegion(uint16_t u16xStart, uint16_t u16yStart, uint16_t u16xEnd, uint16_t u16yEnd, uint8_t u8Width, uint8_t u8Height);
 void MATRIX_DispImage( const uint8_t * pData, uint16_t u16xStartedPos, uint16_t u16yStartedPos, uint8_t u8Width, uint8_t u8Height);
 void MATRIX_DrawCircle( int16_t x0, int16_t y0, int16_t r, uint16_t u16Color );
 void MATRIX_WriteLine( int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t u16Color );
@@ -306,7 +320,11 @@ void MATRIX_WritePixel( uint16_t x, uint16_t y, uint16_t c, uint8_t u8LockPos );
 void MATRIX_DrawChar( int16_t x, int16_t y, unsigned char c, uint8_t size_x, uint8_t size_y, MATRIX_FontTypes nFontType, uint16_t u16Color );
 size_t MATRIX_Write( uint8_t c, MATRIX_FontTypes nFontType, uint16_t u16Color );
 void MATRIX_Printf( MATRIX_FontTypes nFontType, uint8_t u8TextSize, uint16_t u16XPos, uint16_t u16YPos, uint16_t u16Color, char *fmt, ... );
-void MATRIX_UpdateScreen( void );
+void MATRIX_UpdateScreen(uint8_t u8xStart, uint8_t u8yStart, uint8_t u8xEnd, uint8_t u8yEnd);
+void MATRIX_DrawCursor(uint8_t u8xPos, uint8_t u8yPos, uint16_t u16Color, MATRIX_DirectionalCursor_Types nCursor);
+uint16_t MATRIX_Hsv2Rgb( int16_t s16Hue, uint8_t u8Sat, uint8_t u8Val, char gflag);
+uint8_t MATRIX_IsPixelColored(uint16_t u16xPos, uint16_t u16yPos);
+void MATRIX_FillRainbowColorToRegion(uint8_t u8xStart, uint8_t u8yStart, uint8_t u8xEnd, uint8_t u8yEnd, uint16_t u16ColorStart, uint16_t u16ColorEnd, float fTilt, uint8_t u8GammaFlag);
 void plasma( void );
 
 void IRQ_ProcessMonitor( void );

@@ -24,12 +24,12 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "matrix.h"
+#include "avistream.h"
 #include "ir1838.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN TD */
-extern void IRQ_DAC_ProcessAudio(void);
 /* USER CODE END TD */
 
 /* Private define ------------------------------------------------------------*/
@@ -257,7 +257,7 @@ void TIM6_DAC_IRQHandler(void)
   /* USER CODE BEGIN TIM6_DAC_IRQn 0 */
 
   /* USER CODE END TIM6_DAC_IRQn 0 */
-  IRQ_DAC_ProcessAudio();
+  MEDIA_IRQ_ProcessAudioDac();
   /* USER CODE BEGIN TIM6_DAC_IRQn 1 */
 
   /* USER CODE END TIM6_DAC_IRQn 1 */
