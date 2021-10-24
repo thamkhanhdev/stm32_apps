@@ -1,0 +1,13 @@
+Output: NC Drill Files
+Type  : NC Drill
+From  : Project [Evb board STM32H7 Fullcolor V1l0.PrjPcb]
+   Generated File[Evb board STM32H7 Fullcolor V1l0-RoundHoles.TXT]
+   Generated File[Evb board STM32H7 Fullcolor V1l0-SlotHoles.TXT]
+   Generated File[Evb board STM32H7 Fullcolor V1l0.LDP]
+   Generated File[Evb board STM32H7 Fullcolor V1l0.DRR]
+
+
+Files Generated   : 4
+Documents Printed : 0
+
+Finished Output Generation At 22:53:28 On 12-Jan-21
