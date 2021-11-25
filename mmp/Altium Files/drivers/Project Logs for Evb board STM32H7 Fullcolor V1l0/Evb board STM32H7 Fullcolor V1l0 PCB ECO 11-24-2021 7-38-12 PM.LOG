@@ -1,0 +1,221 @@
+Removed Pin From Net: NetName=G7 Pin=J3-9
+Removed Pin From Net: NetName=G8 Pin=J3-11
+Removed Pin From Net: NetName=LD Pin=J3-14
+Removed Pin From Net: NetName=LAT Pin=J3-15
+Removed Pin From Net: NetName=GND Pin=J3-16
+Removed Pin From Net: NetName=G5 Pin=J4-9
+Removed Pin From Net: NetName=G6 Pin=J4-11
+Removed Pin From Net: NetName=LD Pin=J4-14
+Removed Pin From Net: NetName=LAT Pin=J4-15
+Removed Pin From Net: NetName=GND Pin=J4-16
+Removed Pin From Net: NetName=G3 Pin=J5-9
+Removed Pin From Net: NetName=G4 Pin=J5-11
+Removed Pin From Net: NetName=LD Pin=J5-14
+Removed Pin From Net: NetName=LAT Pin=J5-15
+Removed Pin From Net: NetName=GND Pin=J5-16
+Removed Pin From Net: NetName=G1 Pin=J6-9
+Removed Pin From Net: NetName=G2 Pin=J6-11
+Removed Pin From Net: NetName=LD Pin=J6-14
+Removed Pin From Net: NetName=LAT Pin=J6-15
+Removed Pin From Net: NetName=GND Pin=J6-16
+Removed Pin From Net: NetName=LB Pin=U1-16
+Removed Pin From Net: NetName=LE Pin=U1-32
+Change Component Footprint: Designator=J3 Old Footprint=61301621821 New Footprint=66101621622
+Change Component Footprint: Designator=J4 Old Footprint=61301621821 New Footprint=66101621622
+Change Component Footprint: Designator=J5 Old Footprint=61301621821 New Footprint=66101621622
+Change Component Footprint: Designator=J6 Old Footprint=61301621821 New Footprint=66101621622
+Change Component Comment : Designator=J3 Old Comment=61301621821 New Comment=66101621622
+Change Component Comment : Designator=J4 Old Comment=61301621821 New Comment=66101621622
+Change Component Comment : Designator=J5 Old Comment=61301621821 New Comment=66101621622
+Change Component Comment : Designator=J6 Old Comment=61301621821 New Comment=66101621622
+Change component parameters: Designator = "J3" ("J3"); Footprint = "61301621821"; UniqueID = "\ZVWYCPRJ" ("\ZVWYCPRJ")
+Change component parameters (AddParameter): Name = "ComponentLink1 Description"; Value = "Manufacturer"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "ComponentLink1URL"; Value = "http://www.we-online.com"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "ComponentLink2 Description"; Value = "Datasheet"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "ComponentLink2URL"; Value = "http://katalog.we-online.de/em/datasheet/6610XX11622.pdf"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Created by"; Value = "Baojun Chen"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Created Date"; Value = "March 2016"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Manufacturer"; Value = "Wurth Elektronik"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "NoPins"; Value = "16"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "partNo"; Value = "66101621622"; VariantName = "[No Variations]"
+Change component parameters: Designator = "J4" ("J4"); Footprint = "61301621821"; UniqueID = "\NZAACWZQ" ("\NZAACWZQ")
+Change component parameters (AddParameter): Name = "ComponentLink1 Description"; Value = "Manufacturer"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "ComponentLink1URL"; Value = "http://www.we-online.com"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "ComponentLink2 Description"; Value = "Datasheet"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "ComponentLink2URL"; Value = "http://katalog.we-online.de/em/datasheet/6610XX11622.pdf"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Created by"; Value = "Baojun Chen"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Created Date"; Value = "March 2016"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Manufacturer"; Value = "Wurth Elektronik"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "NoPins"; Value = "16"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "partNo"; Value = "66101621622"; VariantName = "[No Variations]"
+Change component parameters: Designator = "J5" ("J5"); Footprint = "61301621821"; UniqueID = "\KFEIURVX" ("\KFEIURVX")
+Change component parameters (AddParameter): Name = "ComponentLink1 Description"; Value = "Manufacturer"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "ComponentLink1URL"; Value = "http://www.we-online.com"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "ComponentLink2 Description"; Value = "Datasheet"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "ComponentLink2URL"; Value = "http://katalog.we-online.de/em/datasheet/6610XX11622.pdf"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Created by"; Value = "Baojun Chen"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Created Date"; Value = "March 2016"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Manufacturer"; Value = "Wurth Elektronik"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "NoPins"; Value = "16"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "partNo"; Value = "66101621622"; VariantName = "[No Variations]"
+Change component parameters: Designator = "J6" ("J6"); Footprint = "61301621821"; UniqueID = "\YMQLHYVT" ("\YMQLHYVT")
+Change component parameters (AddParameter): Name = "ComponentLink1 Description"; Value = "Manufacturer"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "ComponentLink1URL"; Value = "http://www.we-online.com"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "ComponentLink2 Description"; Value = "Datasheet"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "ComponentLink2URL"; Value = "http://katalog.we-online.de/em/datasheet/6610XX11622.pdf"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Created by"; Value = "Baojun Chen"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Created Date"; Value = "March 2016"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Manufacturer"; Value = "Wurth Elektronik"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "NoPins"; Value = "16"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "partNo"; Value = "66101621622"; VariantName = "[No Variations]"
+Added Component: Designator=C1(C0603)
+Add component (AddParameter): Name = ".Checked PCB"; Value = "RF"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = ".Checked SCH"; Value = "RF"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Applications"; Value = "General Purpose"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Capacitance"; Value = "22pF"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Category"; Value = "Capacitors"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink1Description"; Value = "http://www.tdk.com/pdf/general_B11.pdf"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink1URL"; Value = "http://www.tdk.com/pdf/general_B11.pdf"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Features"; Value = "-"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Height - Seated (Max)"; Value = "-"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Lead Spacing"; Value = "-"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Lead Style"; Value = "-"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer"; Value = "TDK Corporation"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer Part Number"; Value = "C2012X5R1C226K"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Mounting Type"; Value = "Surface Mount, MLCC"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Operating Temperature"; Value = "-55°C ~ 85°C"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Package / Case"; Value = "0805 (2012 Metric)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Packaging"; Value = "Cut Tape (CT)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Ratings"; Value = "-"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "RoHS"; Value = "RoHS Compliant"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Size / Dimension"; Value = "0.079" L x 0.049" W (2.00mm x 1.25mm)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Temperature Coefficient"; Value = "X5R"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Thickness (Max)"; Value = "0.057" (1.45mm)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Tolerance"; Value = "±10%"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Voltage - Rated"; Value = "16V"; VariantName = "[No Variations]"
+Added Component: Designator=C4(C0603)
+Add component (AddParameter): Name = ".Checked PCB"; Value = "RF"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = ".Checked SCH"; Value = "RF"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Applications"; Value = "General Purpose"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Capacitance"; Value = "22pF"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Category"; Value = "Capacitors"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink1Description"; Value = "http://www.tdk.com/pdf/general_B11.pdf"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink1URL"; Value = "http://www.tdk.com/pdf/general_B11.pdf"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Features"; Value = "-"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Height - Seated (Max)"; Value = "-"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Lead Spacing"; Value = "-"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Lead Style"; Value = "-"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer"; Value = "TDK Corporation"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer Part Number"; Value = "C2012X5R1C226K"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Mounting Type"; Value = "Surface Mount, MLCC"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Operating Temperature"; Value = "-55°C ~ 85°C"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Package / Case"; Value = "0805 (2012 Metric)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Packaging"; Value = "Cut Tape (CT)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Ratings"; Value = "-"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "RoHS"; Value = "RoHS Compliant"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Size / Dimension"; Value = "0.079" L x 0.049" W (2.00mm x 1.25mm)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Temperature Coefficient"; Value = "X5R"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Thickness (Max)"; Value = "0.057" (1.45mm)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Tolerance"; Value = "±10%"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Voltage - Rated"; Value = "16V"; VariantName = "[No Variations]"
+Added Component: Designator=C6(C0603)
+Add component (AddParameter): Name = ".Checked PCB"; Value = "RF"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = ".Checked SCH"; Value = "RF"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Applications"; Value = "General Purpose"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Capacitance"; Value = "22pF"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Category"; Value = "Capacitors"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink1Description"; Value = "http://www.tdk.com/pdf/general_B11.pdf"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink1URL"; Value = "http://www.tdk.com/pdf/general_B11.pdf"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Features"; Value = "-"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Height - Seated (Max)"; Value = "-"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Lead Spacing"; Value = "-"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Lead Style"; Value = "-"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer"; Value = "TDK Corporation"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer Part Number"; Value = "C2012X5R1C226K"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Mounting Type"; Value = "Surface Mount, MLCC"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Operating Temperature"; Value = "-55°C ~ 85°C"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Package / Case"; Value = "0805 (2012 Metric)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Packaging"; Value = "Cut Tape (CT)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Ratings"; Value = "-"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "RoHS"; Value = "RoHS Compliant"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Size / Dimension"; Value = "0.079" L x 0.049" W (2.00mm x 1.25mm)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Temperature Coefficient"; Value = "X5R"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Thickness (Max)"; Value = "0.057" (1.45mm)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Tolerance"; Value = "±10%"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Voltage - Rated"; Value = "16V"; VariantName = "[No Variations]"
+Added Component: Designator=C8(C0603)
+Add component (AddParameter): Name = ".Checked PCB"; Value = "RF"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = ".Checked SCH"; Value = "RF"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Applications"; Value = "General Purpose"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Capacitance"; Value = "22pF"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Category"; Value = "Capacitors"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink1Description"; Value = "http://www.tdk.com/pdf/general_B11.pdf"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink1URL"; Value = "http://www.tdk.com/pdf/general_B11.pdf"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Features"; Value = "-"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Height - Seated (Max)"; Value = "-"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Lead Spacing"; Value = "-"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Lead Style"; Value = "-"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer"; Value = "TDK Corporation"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer Part Number"; Value = "C2012X5R1C226K"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Mounting Type"; Value = "Surface Mount, MLCC"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Operating Temperature"; Value = "-55°C ~ 85°C"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Package / Case"; Value = "0805 (2012 Metric)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Packaging"; Value = "Cut Tape (CT)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Ratings"; Value = "-"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "RoHS"; Value = "RoHS Compliant"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Size / Dimension"; Value = "0.079" L x 0.049" W (2.00mm x 1.25mm)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Temperature Coefficient"; Value = "X5R"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Thickness (Max)"; Value = "0.057" (1.45mm)"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Tolerance"; Value = "±10%"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Voltage - Rated"; Value = "16V"; VariantName = "[No Variations]"
+Added Pin To Net: NetName=+3.3V Pin=C1-1
+Added Pin To Net: NetName=GND Pin=C1-2
+Added Pin To Net: NetName=+3.3V Pin=C4-1
+Added Pin To Net: NetName=GND Pin=C4-2
+Added Pin To Net: NetName=+3.3V Pin=C6-1
+Added Pin To Net: NetName=GND Pin=C6-2
+Added Pin To Net: NetName=+3.3V Pin=C8-1
+Added Pin To Net: NetName=GND Pin=C8-2
+Added Pin To Net: NetName=GND Pin=J3-9
+Added Pin To Net: NetName=LAT Pin=J3-10
+Added Pin To Net: NetName=LD Pin=J3-11
+Added Pin To Net: NetName=G8 Pin=J3-14
+Added Pin To Net: NetName=G7 Pin=J3-16
+Added Pin To Net: NetName=GND Pin=J4-9
+Added Pin To Net: NetName=LAT Pin=J4-10
+Added Pin To Net: NetName=LD Pin=J4-11
+Added Pin To Net: NetName=G6 Pin=J4-14
+Added Pin To Net: NetName=G5 Pin=J4-16
+Added Pin To Net: NetName=GND Pin=J5-9
+Added Pin To Net: NetName=LAT Pin=J5-10
+Added Pin To Net: NetName=LD Pin=J5-11
+Added Pin To Net: NetName=G4 Pin=J5-14
+Added Pin To Net: NetName=G3 Pin=J5-16
+Added Pin To Net: NetName=GND Pin=J6-9
+Added Pin To Net: NetName=LAT Pin=J6-10
+Added Pin To Net: NetName=LD Pin=J6-11
+Added Pin To Net: NetName=G2 Pin=J6-14
+Added Pin To Net: NetName=G1 Pin=J6-16
+Added Pin To Net: NetName=LE Pin=U1-16
+Added Pin To Net: NetName=LB Pin=U1-32
+Change Net Name : Old Net Name=LB New Net Name=LE
+Change Net Name : Old Net Name=LE New Net Name=LB
+Change Class Name : Old Net Name=[03] - POWER.SchDoc New Net Name=[03] - POWER
+Change Class Name : Old Net Name=[04] - MCU.SchDoc New Net Name=[04] - MCU
+Change Class Name : Old Net Name=[05] - FLASH, MICROSD.SchDoc New Net Name=[05] - FLASH, MICROSD
+Change Class Name : Old Net Name=[06] - AUDIO.SchDoc New Net Name=[06] - AUDIO
+Change Class Name : Old Net Name=[07] - OTHER.SchDoc New Net Name=[07] - OTHER
+Change Class Name : Old Net Name=[08] - DISPLAY.SchDoc New Net Name=[08] - DISPLAY
+Added Member To Class: ClassName=[03] - POWER Member=Component C1 104
+Added Member To Class: ClassName=[03] - POWER Member=Component C4 104
+Added Member To Class: ClassName=[03] - POWER Member=Component C6 104
+Added Member To Class: ClassName=[03] - POWER Member=Component C8 104
+Change Room Name: Old Name=[06] - AUDIO.SchDoc New Name=[06] - AUDIO
+Change Room Scope: Old Scope=InComponentClass('[06] - AUDIO.SchDoc') New Scope=InComponentClass('[06] - AUDIO')
+Change Room Name: Old Name=[07] - OTHER.SchDoc New Name=[07] - OTHER
+Change Room Scope: Old Scope=InComponentClass('[07] - OTHER.SchDoc') New Scope=InComponentClass('[07] - OTHER')
+Change Room Name: Old Name=[08] - DISPLAY.SchDoc New Name=[08] - DISPLAY
+Change Room Scope: Old Scope=InComponentClass('[08] - DISPLAY.SchDoc') New Scope=InComponentClass('[08] - DISPLAY')
+Added Room: Name=[03] - POWER
+Added Room: Name=[04] - MCU
+Added Room: Name=[05] - FLASH, MICROSD

@@ -1,0 +1,26 @@
+Removed Pin From Net: NetName=G1 Pin=J6-9
+Removed Pin From Net: NetName=G2 Pin=J6-11
+Removed Pin From Net: NetName=LE Pin=J6-12
+Removed Pin From Net: NetName=LB Pin=J6-13
+Removed Pin From Net: NetName=LD Pin=J6-14
+Removed Pin From Net: NetName=LAT Pin=J6-15
+Removed Pin From Net: NetName=GND Pin=J6-16
+Change Component Footprint: Designator=J6 Old Footprint=61301621821 New Footprint=66101621622
+Change Component Comment : Designator=J6 Old Comment=61301621821 New Comment=66101621622
+Change component parameters: Designator = "J6" ("J6"); Footprint = "61301621821"; UniqueID = "\EJZTKDGN" ("\EJZTKDGN")
+Change component parameters (AddParameter): Name = "ComponentLink1 Description"; Value = "Manufacturer"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "ComponentLink1URL"; Value = "http://www.we-online.com"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "ComponentLink2 Description"; Value = "Datasheet"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "ComponentLink2URL"; Value = "http://katalog.we-online.de/em/datasheet/6610XX11622.pdf"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Created by"; Value = "Baojun Chen"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Created Date"; Value = "March 2016"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "Manufacturer"; Value = "Wurth Elektronik"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "NoPins"; Value = "16"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "partNo"; Value = "66101621622"; VariantName = "[No Variations]"
+Added Pin To Net: NetName=GND Pin=J6-9
+Added Pin To Net: NetName=LAT Pin=J6-10
+Added Pin To Net: NetName=LD Pin=J6-11
+Added Pin To Net: NetName=LB Pin=J6-12
+Added Pin To Net: NetName=LE Pin=J6-13
+Added Pin To Net: NetName=G2 Pin=J6-14
+Added Pin To Net: NetName=G1 Pin=J6-16

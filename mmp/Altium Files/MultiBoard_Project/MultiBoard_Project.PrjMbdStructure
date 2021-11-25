@@ -1,0 +1,4 @@
+Record=DiagramHierarchy|SourceDocument=MultiBoardSchematic.MbsDoc|Kind=Multi-board Schematic Module|Designator=2|Source=..\convert\Convert_Board.PrjPcb
+Record=SubProject|SourceDocument=MultiBoardSchematic.MbsDoc|ProjectPath=..\convert\Convert_Board.PrjPcb
+Record=DiagramHierarchy|SourceDocument=MultiBoardSchematic.MbsDoc|Kind=Multi-board Schematic Module|Designator=1|Source=..\drivers\Evb board STM32H7 Fullcolor V1l0.PrjPcb
+Record=SubProject|SourceDocument=MultiBoardSchematic.MbsDoc|ProjectPath=..\drivers\Evb board STM32H7 Fullcolor V1l0.PrjPcb
