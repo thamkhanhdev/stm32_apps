@@ -72,7 +72,7 @@ ClassGenCCAutoRoomEnabled=1
 ClassGenNCAutoScope=None
 DItemRevisionGUID=
 GenerateClassCluster=0
-DocumentUniqueId=09652e7e-7d66-4b43-bc51-8cde85beea2d
+DocumentUniqueId=3a7bc753-bd37-46b5-884c-34aa6946c0f5
 
 [Document3]
 DocumentPath=..\drivers\Evb board STM32H7 Fullcolor V1l0.PrjPcb
