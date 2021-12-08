@@ -54,8 +54,8 @@ extern "C"{
 // static uint16_t const gTimeCount[8]={10, 20, 40, 80, 160, 240, 320}; // he so chia nap vao timer ok with 256x64 47.9Hz
 // static uint16_t const gTimeCount[8]={15, 30, 60, 120, 160, 240, 320}; // he so chia nap vao timer ok with 256x64 47.9Hz
 const uint16_t scan_PWM_duty[]={4,8,16,32,64,128,256,512,1024};   //he so chia nạp vao time pwm chan OE
-uint16_t const gTimeCount[8]={14, 28, 56, 112, 224, 448, 480, 600}; // he so chia nap vao timer ok with 256x64 47.9Hz
-// uint16_t const gTimeCount[8]={ 40, 80, 160, 240, 360, 480, 600, 1000}; // he so chia nap vao timer ok with 256x64 47.9Hz
+// uint16_t const gTimeCount[8]={14, 28, 56, 112, 224, 448, 480, 600}; // he so chia nap vao timer ok with 256x64 47.9Hz
+uint16_t const gTimeCount[8]={ 40, 80, 160, 240, 360, 480, 600, 1000}; // he so chia nap vao timer ok with 256x64 47.9Hz
 // uint16_t const gTimeCount[8]={ 160, 240, 360, 480, 600, 1000, 1500}; // he so chia nap vao timer ok with 256x64 47.9Hz
 
 static const int8_t sinetab[256] = {
@@ -432,6 +432,14 @@ void IRQ_ProcessMonitor( void )
         __asm("nop\n");
         __asm("nop\n");
         __asm("nop\n");
+        __asm("nop\n");
+        __asm("nop\n");
+        __asm("nop\n");
+        __asm("nop\n");
+        __asm("nop\n");
+        __asm("nop\n");
+        __asm("nop\n");
+        __asm("nop\n");
         CLK_P->BSRR=CLK_OFF;
         __asm("nop\n");
         __asm("nop\n");
@@ -447,7 +455,16 @@ void IRQ_ProcessMonitor( void )
         __asm("nop\n");
         __asm("nop\n");
         __asm("nop\n");
+        __asm("nop\n");
+        __asm("nop\n");
+        __asm("nop\n");
+        __asm("nop\n");
+        __asm("nop\n");
         CLK_P->BSRR=CLK_ON;
+        __asm("nop\n");
+        __asm("nop\n");
+        __asm("nop\n");
+        __asm("nop\n");
         __asm("nop\n");
         __asm("nop\n");
         __asm("nop\n");

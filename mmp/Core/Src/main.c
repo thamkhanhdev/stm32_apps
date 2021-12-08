@@ -527,7 +527,7 @@ int main(void)
   MX_DAC1_Init();
   MX_I2C4_Init();
   /* USER CODE BEGIN 2 */
-    MATRIX_Init( 70 );
+    MATRIX_Init( 40 );
 
     HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_2);
     HAL_TIM_Base_Start_IT(&htim4);
@@ -538,18 +538,18 @@ int main(void)
     MATRIX_SetTextColor(0xFFFF);
 
 
-    MATRIX_disImage(gImage_Phung, 256, 128, 0, 0, RGB_888);
-    HAL_Delay(3000);
-    MATRIX_FillScreen(0x0);
-    MATRIX_disImage(gImage_Anime, 256, 128, 0, 25, RGB_888);
-    HAL_Delay(3000);
-    MATRIX_FillScreen(0x0);
-    MATRIX_disImage(gImage_Nature, 256, 128, 0, 0, RGB_888);
-    HAL_Delay(3000);
-    MATRIX_FillScreen(0x0);
-    MATRIX_disImage(gImage_256_192, 256, 192, 0, 0, RGB_888);
-    HAL_Delay(3000);
-    MATRIX_FillScreen(0x0);
+    // MATRIX_disImage(gImage_Phung, 256, 128, 0, 0, RGB_888);
+    // HAL_Delay(3000);
+    // MATRIX_FillScreen(0x0);
+    // MATRIX_disImage(gImage_Anime, 256, 128, 0, 25, RGB_888);
+    // HAL_Delay(3000);
+    // MATRIX_FillScreen(0x0);
+    // MATRIX_disImage(gImage_Nature, 256, 128, 0, 0, RGB_888);
+    // HAL_Delay(3000);
+    // MATRIX_FillScreen(0x0);
+    // MATRIX_disImage(gImage_256_192, 256, 192, 0, 0, RGB_888);
+    // HAL_Delay(5000);
+    // MATRIX_FillScreen(0x0);
     // MATRIX_disImage(gImage_NEU, 128, 128, 0, 0, RGB_888);
     // MATRIX_disImage(gImage_NEU, 128, 128, 128, 0, RGB_888);
     // HAL_Delay(3000);
@@ -557,13 +557,13 @@ int main(void)
     // MATRIX_disImage(gImage_PIC1, 256, 64, 0, 64, RGB_888);
     // HAL_Delay(5000);
     // MATRIX_FillCircle( 128, 31, 30, 0x7E0 );
-    MATRIX_FillScreen(0xF800);
-    HAL_Delay(1000);
-    MATRIX_FillScreen(0xCE0);
-    HAL_Delay(1000);
-    MATRIX_FillScreen(0x1F);
-    HAL_Delay(1000);
-    MATRIX_FillScreen(0x0);
+    // MATRIX_FillScreen(0xF800);
+    // HAL_Delay(5000);
+    // MATRIX_FillScreen(0xCE0);
+    // HAL_Delay(5000);
+    // MATRIX_FillScreen(0x1F);
+    // HAL_Delay(5000);
+    // MATRIX_FillScreen(0x0);
     // plasma();
 
   /* USER CODE END 2 */
@@ -582,6 +582,7 @@ int main(void)
         MATRIX_Printf( FONT_DEFAULT, " - Type:  %7u\n - Ver:   %7u\n - Class: %7u\n - Add:   %7u\n - BNbr:  %7u\n - Bsize: %7u\n - LNbr:  %7u\n - LSize: %7u\n", CardInfo.CardType, CardInfo.CardVersion, CardInfo.Class, CardInfo.RelCardAdd, CardInfo.BlockNbr, CardInfo.BlockSize, CardInfo.LogBlockNbr, CardInfo.LogBlockSize);
         MATRIX_SetTextColor(0x07E0);
         HAL_Delay(1000);
+        MATRIX_disImage(gImage_256_192, 256, 192, 0, 0, RGB_888);
         // if (f_mount(&SDFatFS, (TCHAR const*) SDPath, 1) == FR_OK)
         // {
         //     MATRIX_Printf( FONT_DEFAULT, "MicroSD Mounted! \n");
@@ -674,15 +675,15 @@ int main(void)
                 // HAL_Delay(2000);
                 while(1)
                 {
-                    MATRIX_FillScreen(0x0);
-                    MATRIX_SetCursor(0, 0);
-                    MATRIX_SetTextColor(0x7FF);
-                    MEDIA_DisplayJpeg("test/1.jpg");
-                    HAL_Delay(1000);
-                    MEDIA_DisplayJpeg("test/2.jpg");
-                    HAL_Delay(1000);
-                    MEDIA_DisplayJpeg("test/3.jpg");
-                    HAL_Delay(1000);
+                    // MATRIX_FillScreen(0x0);
+                    // MATRIX_SetCursor(0, 0);
+                    // MATRIX_SetTextColor(0x7FF);
+                    // MEDIA_DisplayJpeg("test/1.jpg");
+                    // HAL_Delay(1000);
+                    // MEDIA_DisplayJpeg("test/2.jpg");
+                    // HAL_Delay(1000);
+                    // MEDIA_DisplayJpeg("test/3.jpg");
+                    // HAL_Delay(1000);
                 }
                 // if( f_opendir(&dir,"/test") == FR_OK )
                 // {
