@@ -265,13 +265,14 @@ void MATRIX_DrawTriangle( int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_
 void MATRIX_FillTriangle( int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color );
 void MATRIX_WritePixel( uint16_t x, uint16_t y, uint32_t c );
 void MATRIX_DrawChar( int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_t bg, uint8_t size_x, uint8_t size_y, MATRIX_FontTypes fontType );
-size_t MATRIX_Write( uint8_t c, MATRIX_FontTypes fontType );
+size_t MATRIX_Write( uint8_t c, MATRIX_FontTypes nFontType, uint16_t u16Color );
 void MATRIX_SetTextSize( uint8_t s );
 void MATRIX_SetRotation( uint8_t x );
 void MATRIX_SetCursor( int16_t x, int16_t y );
 void MATRIX_SetTextColor( uint16_t c );
-void MATRIX_Print( uint8_t *s, MATRIX_FontTypes fontType );
-void MATRIX_Printf( MATRIX_FontTypes fontType, char *fmt, ... );
+void MATRIX_Print( char *s, MATRIX_FontTypes nFontType, uint16_t u16Color );
+void MATRIX_Printf( MATRIX_FontTypes nFontType, uint8_t u8TextSize,
+                    uint16_t u16XPos, uint16_t u16YPos, uint16_t u16Color, char *fmt, ... );
 void plasma( void );
 #ifdef __cplusplus
 }

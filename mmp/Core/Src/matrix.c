@@ -55,7 +55,7 @@ extern "C"{
 // static uint16_t const gTimeCount[8]={15, 30, 60, 120, 160, 240, 320}; // he so chia nap vao timer ok with 256x64 47.9Hz
 const uint16_t scan_PWM_duty[]={4,8,16,32,64,128,256,512,1024};   //he so chia nạp vao time pwm chan OE
 // uint16_t const gTimeCount[8]={14, 28, 56, 112, 224, 448, 480, 600}; // he so chia nap vao timer ok with 256x64 47.9Hz
-uint16_t const gTimeCount[8]={ 40, 80, 160, 240, 360, 480, 600, 1000}; // he so chia nap vao timer ok with 256x64 47.9Hz
+uint16_t const gTimeCount[8]={ 40, 80, 160, 240, 360, 480, 720, 1200}; // he so chia nap vao timer ok with 256x64 47.9Hz
 // uint16_t const gTimeCount[8]={ 160, 240, 360, 480, 600, 1000, 1500}; // he so chia nap vao timer ok with 256x64 47.9Hz
 
 static const int8_t sinetab[256] = {
@@ -112,12 +112,6 @@ static uint8_t gBitPos = 0U;
 static uint8_t gBrightness;
 static bool gCp437 = false;
 static volatile uint32_t gCountBit = 0UL;
-#ifdef MAXTRIX_MAX_BUFFER
-static uint16_t gBuff0[MATRIX_WIDTH*(MAXTRIX_MAX_BUFFER)*MAX_BIT/2];
-static uint16_t gBuff1[MATRIX_WIDTH*(MATRIX_HEIGHT - MAXTRIX_MAX_BUFFER)*MAX_BIT/2];
-#else
-static uint16_t gBuff0[MATRIX_WIDTH*(MATRIX_HEIGHT)*MAX_BIT/2];
-#endif /* #ifdef MAXTRIX_MAX_BUFFER */
 static uint16_t gCursorX = 0U;
 static uint16_t gCursorY = 0U;
 static uint8_t  gTextSizeX = 1U;
@@ -125,6 +119,12 @@ static uint8_t  gTextSizeY = 1U;
 static uint16_t gTextColor = 0xFFFFU;
 static uint16_t gTextBgColor = 0xFFFFU;
 static const GFXfont *gfxFont = &TomThumb;       ///< Pointer to special font
+#ifdef MAXTRIX_MAX_BUFFER
+uint16_t gBuff0[MATRIX_WIDTH*(MAXTRIX_MAX_BUFFER)*MAX_BIT/2] __attribute__((section (".ram_cacheable"))); //;
+uint16_t gBuff1[MATRIX_WIDTH*(MATRIX_HEIGHT - MAXTRIX_MAX_BUFFER)*MAX_BIT/2] __attribute__((section (".ram_cacheable")));;
+#else
+uint16_t gBuff0[MATRIX_WIDTH*(MATRIX_HEIGHT)*MAX_BIT/2] __attribute__((section (".ram_cacheable")));
+#endif /* #ifdef MAXTRIX_MAX_BUFFER */
 // static const GFXfont *gfxFont = NULL;       ///< Pointer to special font
 /*==================================================================================================
 *                                      GLOBAL CONSTANTS
@@ -162,14 +162,14 @@ static inline GFXglyph * pgm_read_glyph_ptr(const GFXfont *gfxFont, uint8_t c)
     return &(((GFXglyph *)pgm_read_pointer(&gfxFont->glyph))[c]);
 }
 
-inline static void MATRIX_Vprint( MATRIX_FontTypes fontType, const char *fmt, va_list argp )
+/* inline static void MATRIX_Vprint( MATRIX_FontTypes fontType, const char *fmt, va_list argp )
 {
     char string[200];
     if(0 < vsprintf(string,fmt,argp)) // build string
     {
         MATRIX_Print( (uint8_t *) string, fontType);
     }
-}
+} */
 /**
  * @brief   Write a pixel, overwrite in subclasses if startWrite is defined!
  * @details
@@ -420,63 +420,10 @@ void IRQ_ProcessMonitor( void )
         gCountBit++;
         __asm("nop\n");
         __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
         CLK_P->BSRR=CLK_OFF;
         __asm("nop\n");
         __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
         CLK_P->BSRR=CLK_ON;
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
         __asm("nop\n");
         __asm("nop\n");
     }
@@ -1291,9 +1238,9 @@ void MATRIX_DrawChar( int16_t x, int16_t y, unsigned char c, uint16_t color, uin
  *
  *  @param  c  The 8-bit ascii character to write
  */
-size_t MATRIX_Write( uint8_t c, MATRIX_FontTypes fontType )
+size_t MATRIX_Write( uint8_t c, MATRIX_FontTypes nFontType, uint16_t u16Color )
 {
-    if( FONT_DEFAULT == fontType ) // 'Classic' built-in font
+    if( FONT_DEFAULT == nFontType ) // 'Classic' built-in font
     {
         if(c == '\n') {                        // Newline?
             gCursorX  = 0;                     // Reset x to zero,
@@ -1303,7 +1250,7 @@ size_t MATRIX_Write( uint8_t c, MATRIX_FontTypes fontType )
                 gCursorX  = 0;                 // Reset x to zero,
                 gCursorY += gTextSizeY * 8;    // advance y one line
             }
-            MATRIX_DrawChar(gCursorX, gCursorY, c, gTextColor, gTextBgColor, gTextSizeX, gTextSizeY, fontType );
+            MATRIX_DrawChar(gCursorX, gCursorY, c, gTextColor, gTextBgColor, gTextSizeX, gTextSizeY, nFontType );
             gCursorX += gTextSizeX * 6;          // Advance x one char
         }
     } else
@@ -1330,7 +1277,7 @@ size_t MATRIX_Write( uint8_t c, MATRIX_FontTypes fontType )
                           (uint8_t)pgm_read_byte(&gfxFont->yAdvance);
                         }
                     }
-                    MATRIX_DrawChar(gCursorX, gCursorY, c, gTextColor, gTextBgColor, gTextSizeX, gTextSizeY, fontType );
+                    MATRIX_DrawChar(gCursorX, gCursorY, c, gTextColor, gTextBgColor, gTextSizeX, gTextSizeY, nFontType );
                 }
                 gCursorX += (uint8_t)pgm_read_byte(&glyph->xAdvance) * (int16_t)gTextSizeX;
             }
@@ -1372,19 +1319,69 @@ void MATRIX_SetRotation( uint8_t x )
     // }
 }
 
-void MATRIX_Print( uint8_t *s, MATRIX_FontTypes fontType )
+void MATRIX_Print( char *s, MATRIX_FontTypes nFontType, uint16_t u16Color )
 {
     while (*s)
     {
-        MATRIX_Write(*s++, fontType );
+        MATRIX_Write( *s++, nFontType, u16Color );
     }
 }
 
-void MATRIX_Printf( MATRIX_FontTypes fontType, char *fmt, ... )
+void MATRIX_Printf( MATRIX_FontTypes nFontType, uint8_t u8TextSize,
+                    uint16_t u16XPos, uint16_t u16YPos, uint16_t u16Color, char *fmt, ... )
 {
     va_list argp;
+    char string[200];
+
     va_start(argp, fmt);
-    MATRIX_Vprint( fontType, fmt, argp );
+
+    if( 0U < vsprintf( string, fmt, argp ) )
+    {
+        gTextSizeX = (u8TextSize > 0) ? u8TextSize : 1;
+        gTextSizeY = (u8TextSize > 0) ? u8TextSize : 1;
+
+        if( (0xFFFFU != u16XPos) && (0xFFFFU != u16YPos) )
+        {
+            gCursorX = u16XPos;
+            gCursorY = u16YPos;
+        }
+/*
+        if( FONT_TOMTHUMB == nFontType)
+        {
+            gfxFont = &TomThumb;
+        }
+        else if( FONT_FREESERIF9PT7B == nFontType )
+        {
+            gfxFont = &FreeSerif9pt7b;
+        }
+        else if ( FONR_FREESERIFBOLDITALIC18PT7B == nFontType )
+        {
+            gfxFont = &FreeSerifBoldItalic18pt7b;
+        }
+        else if ( FONR_FREESERIFBOLDITALIC12PT7B == nFontType )
+        {
+            gfxFont = &FreeSerifBoldItalic12pt7b;
+        }
+        else if ( FONR_FREESANOBLIQUE9PT7B == nFontType )
+        {
+            gfxFont = &FreeSansOblique9pt7b;
+        }
+        else if ( FONT_FREEMONO9PT7B == nFontType )
+        {
+            gfxFont = &FreeMono9pt7b;
+        }
+        else if ( FONR_FREESAN9PT7B == nFontType )
+        {
+            gfxFont = &FreeSans9pt7b;
+        }
+        else if ( FONT_ORG_01 == nFontType )
+        {
+            gfxFont = &Org_01;
+        } */
+
+        MATRIX_Print( string, nFontType, u16Color );
+    }
+
     va_end(argp);
 }
 /**
