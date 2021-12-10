@@ -244,7 +244,7 @@ static inline GFXglyph * pgm_read_glyph_ptr(const GFXfont *gfxFont, uint8_t c)
         else
         {
             /* Data for the lower half of the display is stored in the upper bits */
-            _curPos = (y - MATRIX_SCANRATE) * MATRIX_WIDTH * MAX_BIT + x;
+            _curPos = ((y - MATRIX_SCANRATE)<<MATRIX_WIDTH_BIT) * MAX_BIT + x;
 
             while( bit < limit )
             {
@@ -294,7 +294,7 @@ static inline GFXglyph * pgm_read_glyph_ptr(const GFXfont *gfxFont, uint8_t c)
         else
         {
             /* Data for the lower half of the display is stored in the upper bits */
-            _curPos = (y - MATRIX_SCANRATE) * MATRIX_WIDTH * MAX_BIT + x;
+            _curPos = ((y - MATRIX_SCANRATE)<<MATRIX_WIDTH_BIT) * MAX_BIT + x;
 
             while( bit < limit )
             {
@@ -339,7 +339,7 @@ static inline GFXglyph * pgm_read_glyph_ptr(const GFXfont *gfxFont, uint8_t c)
    else
    {
        /* Data for the lower half of the display is stored in the upper bits */
-       _curPos = (y - MATRIX_SCANRATE) * MATRIX_WIDTH * MAX_BIT + x;
+       _curPos = ((y - MATRIX_SCANRATE)<<MATRIX_WIDTH_BIT) * MAX_BIT + x;
 
        while( bit < limit )
        {
@@ -403,14 +403,8 @@ void IRQ_ProcessMonitor( void )
         DAT1_P->ODR= gBuff1[ gCountBit ];
 #endif /* #if defined(USE_BUS_3) || defined(USE_BUS_4) */
         gCountBit++;
-        __asm("nop\n");
-        __asm("nop\n");
         CLK_P->BSRR=CLK_OFF;
-        __asm("nop\n");
-        __asm("nop\n");
         CLK_P->BSRR=CLK_ON;
-        __asm("nop\n");
-        __asm("nop\n");
     }
 
     TIM2->CCR2 = gBrightness;

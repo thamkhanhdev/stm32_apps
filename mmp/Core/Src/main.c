@@ -2146,23 +2146,6 @@ void SD_PlayAviVideo(void)
                 frame_count = 0;
                 Video_End_Flag = SET;
                 Audio_End_Flag = SET;
-                fCurrkFps = 0;
-                u32PreFrame = 0UL;
-                u32CurrTick = 0UL;
-                u32PreTick = 0UL;
-                u16VideoHeight = playlist[track_count].avi_info.avi_height;
-                u16VideoHeightDiv2 = u16VideoHeight >> 1;
-                u16VideoWidth = playlist[track_count].avi_info.avi_width;
-                u16VideoWidthDiv2 = u16VideoWidth >> 1;
-                u16xTmp;
-                u16yTmp;
-                u8HeightStart = (MATRIX_HEIGHT - u16VideoHeight) >> 1;
-                u8WidthStart = (MATRIX_WIDTH - u16VideoWidth) >> 1;
-
-                MATRIX_Printf( FONT_DEFAULT, 1, 0x0, 0x0, 0xF81F, "Playing next video...");
-                HAL_Delay(1000);
-                MATRIX_FillScreen(0x0);
-                MATRIX_SetCursor(0, 0);
             }
         } else if(PAUSE == Status)
         {
@@ -2204,6 +2187,24 @@ void SD_PlayAviVideo(void)
                 // snprintf(display_text_buffer, DISPLAY_TEXT_MAX, "Stop");
                 break;
             }
+
+            fCurrkFps = 0;
+            u32PreFrame = 0UL;
+            u32CurrTick = 0UL;
+            u32PreTick = 0UL;
+            u16VideoHeight = playlist[track_count].avi_info.avi_height;
+            u16VideoHeightDiv2 = u16VideoHeight >> 1;
+            u16VideoWidth = playlist[track_count].avi_info.avi_width;
+            u16VideoWidthDiv2 = u16VideoWidth >> 1;
+            u16xTmp;
+            u16yTmp;
+            u8HeightStart = (MATRIX_HEIGHT - u16VideoHeight) >> 1;
+            u8WidthStart = (MATRIX_WIDTH - u16VideoWidth) >> 1;
+
+            MATRIX_Printf( FONT_DEFAULT, 1, 0x0, 0x0, 0xF81F, "Playing next video...");
+            HAL_Delay(1000);
+            MATRIX_FillScreen(0x0);
+            MATRIX_SetCursor(0, 0);
 
             Video_End_Flag = RESET;
             Audio_End_Flag = RESET;
