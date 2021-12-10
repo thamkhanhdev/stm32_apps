@@ -592,7 +592,7 @@ typedef struct
 #define LINKMAP_TABLE_SIZE 0x14
 
 #define MATRIXLED_X_COUNT 256
-#define MATRIXLED_Y_COUNT 128
+#define MATRIXLED_Y_COUNT 192
 
 #define MATRIXLED_COLOR_COUNT 2
 #define MATRIXLED_PWM_RESOLUTION 256
@@ -829,20 +829,21 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
         goto FATFS_ERROR_PROCESS;
     }
 
-    // MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U,  7U, 0xFFF, "1. %.4s", avi_main_header->fcc.fcc);
-    // MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U, 14U, 0xFFF, "2. %u", avi_main_header->cb );
-    // MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U, 21U, 0xFFF, "3. %u", avi_main_header->dwMicroSecPerFrame);
-    // MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U, 28U, 0xFFF, "4. %u", avi_main_header->dwMaxBytesPerSec );
-    // MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U, 35U, 0xFFF, "5. %u", avi_main_header->dwPaddingGranularity);
-    // MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U, 42U, 0xFFF, "6. %i", avi_main_header->dwFlags);
-    // MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U, 49U, 0xFFF, "7. %u", avi_main_header->dwTotalFrames);
-    // MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U, 56U, 0xFFF, "8. %u", avi_main_header->dwInitialFrames);
-    // MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U, 63U, 0xFFF, "9. %u", avi_main_header->dwStreams);
-    // MATRIX_Printf( FONT_TOMTHUMB, 1U, 42U,  7U, 0xFFF, "1. %u", avi_main_header->dwSuggestedBufferSize);
-    // MATRIX_Printf( FONT_TOMTHUMB, 1U, 42U, 14U, 0xFFF, "2. %u", avi_main_header->dwWidth);
-    // MATRIX_Printf( FONT_TOMTHUMB, 1U, 42U, 21U, 0xFFF, "3. %u", avi_main_header->dwHeight);
-    // MATRIX_Printf( FONT_TOMTHUMB, 1U, 42U, 28U, 0xFFF, "4. %u", read_data_byte_result);
-    // HAL_Delay(400);
+    // MATRIX_FillScreen(0x0);
+    // MATRIX_Printf( FONT_DEFAULT, 1U,  0U,  9U, 0xFFF, "1. %.4s", avi_main_header->fcc.fcc);
+    // MATRIX_Printf( FONT_DEFAULT, 1U,  0U, 18U, 0xFFF, "2. %u", avi_main_header->cb );
+    // MATRIX_Printf( FONT_DEFAULT, 1U,  0U, 27U, 0xFFF, "3. %u", avi_main_header->dwMicroSecPerFrame);
+    // MATRIX_Printf( FONT_DEFAULT, 1U,  0U, 36U, 0xFFF, "4. %u", avi_main_header->dwMaxBytesPerSec );
+    // MATRIX_Printf( FONT_DEFAULT, 1U,  0U, 45U, 0xFFF, "5. %u", avi_main_header->dwPaddingGranularity);
+    // MATRIX_Printf( FONT_DEFAULT, 1U,  0U, 54U, 0xFFF, "6. %i", avi_main_header->dwFlags);
+    // MATRIX_Printf( FONT_DEFAULT, 1U,  0U, 63U, 0xFFF, "7. %u", avi_main_header->dwTotalFrames);
+    // MATRIX_Printf( FONT_DEFAULT, 1U,  0U, 72U, 0xFFF, "8. %u", avi_main_header->dwInitialFrames);
+    // MATRIX_Printf( FONT_DEFAULT, 1U,  0U, 81U, 0xFFF, "9. %u", avi_main_header->dwStreams);
+    // MATRIX_Printf( FONT_DEFAULT, 1U, 64,  9U, 0xFFF, "1. %u", avi_main_header->dwSuggestedBufferSize);
+    // MATRIX_Printf( FONT_DEFAULT, 1U, 64, 18U, 0xFFF, "2. %u", avi_main_header->dwWidth);
+    // MATRIX_Printf( FONT_DEFAULT, 1U, 64, 27U, 0xFFF, "3. %u", avi_main_header->dwHeight);
+    // MATRIX_Printf( FONT_DEFAULT, 1U, 64, 36U, 0xFFF, "4. %u", read_data_byte_result);
+    // HAL_Delay(4000);
     // MATRIX_FillScreen(0x0);
 
     if(strncmp((char*)avi_main_header->fcc.fcc, "avih", sizeof(FOURCC)) != 0)
@@ -857,12 +858,18 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
         // printf("avi file does not have index\r\n");
         goto FILE_ERROR_PROCESS;
     }
-    if((MATRIXLED_X_COUNT != avi_main_header->dwWidth) && (MATRIXLED_Y_COUNT != avi_main_header->dwHeight))
+    if((MATRIXLED_X_COUNT < avi_main_header->dwWidth) || (MATRIXLED_Y_COUNT < avi_main_header->dwHeight))
     {
         MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "wrong size");
         // printf("wrong size avi file\r\n");
         goto FILE_ERROR_PROCESS;
     }
+    else
+    {
+        video_width = avi_main_header->dwWidth;
+        video_height = avi_main_header->dwHeight;
+    }
+
     /*
      if(2 != avi_main_header->dwStreams){
         printf("avi file has too few or too many streams\r\n");
@@ -990,7 +997,7 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
                                 HAL_Delay(400);
                                 MATRIX_FillScreen(0x0); */
 
-                                if((MATRIXLED_X_COUNT == bitmap_info_header->biWidth) && (MATRIXLED_Y_COUNT == bitmap_info_header->biHeight))
+                                if((video_width == bitmap_info_header->biWidth) && (video_height == bitmap_info_header->biHeight))
                                 {
                                     if(BPP24 == bitmap_info_header->biBitCount)
                                     {
@@ -1370,6 +1377,7 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
     play_info->avi_info.avi_old_index_size = avi_old_index_size;
     play_info->avi_info.avi_file_size = avi_file_size;
 
+    // MATRIX_FillScreen(0x0);
     // MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U,  7U,  0xFFF, "1. %u\r\n", (uint32_t) play_info->avi_info.video_frame_rate);
     // MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U, 14U,  0xFFF, "2. %u\r\n", play_info->avi_info.video_length);
     // MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U, 21U,  0xFFF, "3. %.4s\r\n", play_info->avi_info.video_data_chunk_name.fcc);
@@ -1382,7 +1390,9 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
     // MATRIX_Printf( FONT_TOMTHUMB, 1U, 42U,  7U,  0xFFF, "1. %u\r\n", play_info->avi_info.avi_old_index_position);
     // MATRIX_Printf( FONT_TOMTHUMB, 1U, 42U, 14U,  0xFFF, "2. %u\r\n", play_info->avi_info.avi_old_index_size);
     // MATRIX_Printf( FONT_TOMTHUMB, 1U, 42U, 21U,  0xFFF, "3. %u\r\n", play_info->avi_info.avi_file_size);
-    // HAL_Delay(400);
+    // MATRIX_Printf( FONT_TOMTHUMB, 1U, 42U, 28U,  0xFFF, "4. %u\r\n", play_info->avi_info.avi_width);
+    // MATRIX_Printf( FONT_TOMTHUMB, 1U, 42U, 35U,  0xFFF, "5. %u\r\n", play_info->avi_info.avi_height);
+    // HAL_Delay(4000);
     // MATRIX_FillScreen(0x0);
 
     f_close(&avi_fileobject);
@@ -1605,7 +1615,6 @@ READ_FILE_RESULT SD_GetPlayList(char *playlist_filename, PLAY_INFO **playlist, u
     MATRIX_FillScreen(0U);
     MATRIX_SetCursor(0U, 0U);
     MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "Track: %i\r\n", track_count_temp);
-    HAL_Delay(400);
 
     //  for(int testloop = 0;testloop < track_count_temp;testloop++)
     //  {
@@ -1623,7 +1632,7 @@ READ_FILE_RESULT SD_GetPlayList(char *playlist_filename, PLAY_INFO **playlist, u
     //     MATRIX_Printf( FONT_DEFAULT, 1U, 60U, 18U,  0xFFF, "idx1:0x%08lx\r\n", playlist_temp1[testloop].avi_info.avi_old_index_position);
     //     MATRIX_Printf( FONT_DEFAULT, 1U, 60U, 27U,  0xFFF, "idx1:0x%08lx\r\n", playlist_temp1[testloop].avi_info.avi_old_index_size);
     //     MATRIX_Printf( FONT_DEFAULT, 1U, 60U, 36U,  0xFFF, "AVI:%luB\r\n", playlist_temp1[testloop].avi_info.avi_file_size);
-    //     HAL_Delay(1000);
+    //     HAL_Delay(5000);
     //     MATRIX_FillScreen(0x0);
     // }
 
@@ -1803,7 +1812,7 @@ READ_FILE_RESULT SD_ReadAviStream(PLAY_INFO *play_info, uint32_t read_frame_coun
             //*/
             if(strncmp((char*)stream_chunk_header.chunkID , (char*)play_info->avi_info.video_data_chunk_name.fcc, sizeof(FOURCC)) == 0)
             {
-                fatfs_result = f_read(&avi_fileobject, Flame_Buffer, (MATRIXLED_Y_COUNT * MATRIXLED_X_COUNT * MATRIXLED_COLOR_COUNT), &read_data_byte_result);
+                fatfs_result = f_read(&avi_fileobject, Flame_Buffer, (play_info->avi_info.avi_height * play_info->avi_info.avi_width * MATRIXLED_COLOR_COUNT), &read_data_byte_result);
                 if(FR_OK != fatfs_result)
                 {
                     MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "read vid flame f_read\r\n");
@@ -2109,14 +2118,12 @@ void SD_PlayAviVideo(void)
     uint32_t u32PreFrame = 0UL;
     uint32_t u32CurrTick = 0UL;
     uint32_t u32PreTick = 0UL;
-    uint16_t u16VideoHeightDiv2 = 128 >> 1;
-    uint16_t u16VideoHeight = 128;
-    // uint16_t u16VideoHeightDiv2 = playlist[track_count].avi_info.avi_height;
-    uint16_t u16VideoWidthDiv2 = 256 >> 1;
-    uint16_t u16VideoWidth = 256;
+    uint16_t u16VideoHeight = playlist[track_count].avi_info.avi_height;
+    uint16_t u16VideoHeightDiv2 = u16VideoHeight >> 1;
+    uint16_t u16VideoWidth = playlist[track_count].avi_info.avi_width;
+    uint16_t u16VideoWidthDiv2 = u16VideoWidth >> 1;
     uint16_t u16xTmp;
     uint16_t u16yTmp;
-    // uint16_t u16VideoWidthDiv2 = playlist[track_count].avi_info.avi_width;
     uint8_t u8HeightStart = (MATRIX_HEIGHT - u16VideoHeight) >> 1;
     uint8_t u8WidthStart = (MATRIX_WIDTH - u16VideoWidth) >> 1;
     MATRIX_Printf( FONT_DEFAULT, 1, 0x0, 0x0, 0xF81F, "Starting... W: %d, H: %d", u16VideoWidth, u16VideoHeight );
@@ -2139,6 +2146,23 @@ void SD_PlayAviVideo(void)
                 frame_count = 0;
                 Video_End_Flag = SET;
                 Audio_End_Flag = SET;
+                fCurrkFps = 0;
+                u32PreFrame = 0UL;
+                u32CurrTick = 0UL;
+                u32PreTick = 0UL;
+                u16VideoHeight = playlist[track_count].avi_info.avi_height;
+                u16VideoHeightDiv2 = u16VideoHeight >> 1;
+                u16VideoWidth = playlist[track_count].avi_info.avi_width;
+                u16VideoWidthDiv2 = u16VideoWidth >> 1;
+                u16xTmp;
+                u16yTmp;
+                u8HeightStart = (MATRIX_HEIGHT - u16VideoHeight) >> 1;
+                u8WidthStart = (MATRIX_WIDTH - u16VideoWidth) >> 1;
+
+                MATRIX_Printf( FONT_DEFAULT, 1, 0x0, 0x0, 0xF81F, "Playing next video...");
+                HAL_Delay(1000);
+                MATRIX_FillScreen(0x0);
+                MATRIX_SetCursor(0, 0);
             }
         } else if(PAUSE == Status)
         {
