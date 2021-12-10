@@ -99,31 +99,32 @@ static const int8_t sinetab[256] = {
 /**
  * @brief Number of multiplexed rows; actual MATRIX_HEIGHT is 2X this.
  */
-static uint8_t gRows = 0;
+static uint8_t gRows __attribute__((section (".ram_d1_cacheable")));
 
 /**
  * @brief The actual postion bit is handling.
  */
-static uint8_t gBitPos = 0U;
+static uint8_t gBitPos __attribute__((section (".ram_d1_cacheable")));
 
 /**
  * @brief The current brightness value
  */
-static uint8_t gBrightness;
-static bool gCp437 = false;
-static volatile uint32_t gCountBit = 0UL;
-static uint16_t gCursorX = 0U;
-static uint16_t gCursorY = 0U;
-static uint8_t  gTextSizeX = 1U;
-static uint8_t  gTextSizeY = 1U;
-static uint16_t gTextColor = 0xFFFFU;
-static uint16_t gTextBgColor = 0xFFFFU;
+static uint8_t gBrightness __attribute__((section (".ram_d1_cacheable")));
+static bool gCp437 __attribute__((section (".ram_d1_cacheable")));
+static volatile uint32_t gCountBit __attribute__((section (".ram_d1_cacheable")));
+static uint16_t gCursorX __attribute__((section (".ram_d1_cacheable")));
+static uint16_t gCursorY __attribute__((section (".ram_d1_cacheable")));
+static uint8_t  gTextSizeX __attribute__((section (".ram_d1_cacheable")));
+static uint8_t  gTextSizeY __attribute__((section (".ram_d1_cacheable")));
+static uint16_t gTextColor __attribute__((section (".ram_d1_cacheable")));
+static uint16_t gTextBgColor __attribute__((section (".ram_d1_cacheable")));
+
 static const GFXfont *gfxFont = &TomThumb;       ///< Pointer to special font
 #ifdef MAXTRIX_MAX_BUFFER
-uint16_t gBuff0[MATRIX_WIDTH*(MAXTRIX_MAX_BUFFER)*MAX_BIT/2] __attribute__((section (".ram_cacheable"))); //;
-uint16_t gBuff1[MATRIX_WIDTH*(MATRIX_HEIGHT - MAXTRIX_MAX_BUFFER)*MAX_BIT/2] __attribute__((section (".ram_cacheable")));;
+uint16_t gBuff0[MATRIX_WIDTH*(MAXTRIX_MAX_BUFFER)*MAX_BIT/2] __attribute__((section (".ram_d2_cacheable"))); //;
+uint16_t gBuff1[MATRIX_WIDTH*(MATRIX_HEIGHT - MAXTRIX_MAX_BUFFER)*MAX_BIT/2] __attribute__((section (".ram_d2_cacheable")));;
 #else
-uint16_t gBuff0[MATRIX_WIDTH*(MATRIX_HEIGHT)*MAX_BIT/2] __attribute__((section (".ram_cacheable")));
+uint16_t gBuff0[MATRIX_WIDTH*(MATRIX_HEIGHT)*MAX_BIT/2] __attribute__((section (".ram_d1_cacheable")));
 #endif /* #ifdef MAXTRIX_MAX_BUFFER */
 // static const GFXfont *gfxFont = NULL;       ///< Pointer to special font
 /*==================================================================================================
@@ -135,10 +136,6 @@ uint16_t gBuff0[MATRIX_WIDTH*(MATRIX_HEIGHT)*MAX_BIT/2] __attribute__((section (
 *                                      GLOBAL VARIABLES
 ==================================================================================================*/
 
-/**
-  * @brief The array store image data.
-  */
-extern const uint8_t gImage_test[];
 
 /*==================================================================================================
 *                                   LOCAL FUNCTION PROTOTYPES
@@ -162,14 +159,6 @@ static inline GFXglyph * pgm_read_glyph_ptr(const GFXfont *gfxFont, uint8_t c)
     return &(((GFXglyph *)pgm_read_pointer(&gfxFont->glyph))[c]);
 }
 
-/* inline static void MATRIX_Vprint( MATRIX_FontTypes fontType, const char *fmt, va_list argp )
-{
-    char string[200];
-    if(0 < vsprintf(string,fmt,argp)) // build string
-    {
-        MATRIX_Print( (uint8_t *) string, fontType);
-    }
-} */
 /**
  * @brief   Write a pixel, overwrite in subclasses if startWrite is defined!
  * @details
@@ -365,20 +354,6 @@ static inline GFXglyph * pgm_read_glyph_ptr(const GFXfont *gfxFont, uint8_t c)
 #endif /* #ifdef USE_BUS_1 */
 }
 
-static inline uint16_t MATRIX_Color888( uint8_t r, uint8_t g, uint8_t b, bool gflag )
-{
-    if( gflag )
-    { // Gamma-corrected color?
-        r = pgm_read_byte(&gamma_table[r]); // Gamma correction table maps
-        g = pgm_read_byte(&gamma_table[g]); // 8-bit input to 4-bit output
-        b = pgm_read_byte(&gamma_table[b]);
-        return  ((uint16_t)r << 12) | ((uint16_t)(r & 0x8) << 8) | // 4/4/4->5/6/5
-                ((uint16_t)g <<  7) | ((uint16_t)(g & 0xC) << 3) |
-                (          b <<  1) | (           b        >> 3);
-    } // else linear (uncorrected) color
-    return ((uint16_t)(r & 0xF8) << 8) | ((uint16_t)(g & 0xFC) << 3) | (b >> 3);
-}
-
 /*==================================================================================================
 *                                       GLOBAL FUNCTIONS
 ==================================================================================================*/
@@ -391,6 +366,16 @@ static inline uint16_t MATRIX_Color888( uint8_t r, uint8_t g, uint8_t b, bool gf
 StdReturnType MATRIX_Init( uint8_t bri )
 {
     gBrightness = bri;
+    gRows = 0U;
+    gBitPos = 0U;
+    gCp437 = false;
+    gCountBit = 0U;
+    gCursorX = 0U;
+    gCursorY = 0U;
+    gTextSizeX = 1U;
+    gTextSizeY = 1U;
+    gTextColor = 0xFFFFU;
+    gTextBgColor = 0x0U;
 
     return E_OK;
 }
@@ -509,10 +494,6 @@ StdReturnType MATRIX_disImage( const uint8_t arr[], uint16_t nCols, uint16_t nRo
         {
             p1 = row * nCols*3;
 #if   defined(RGB888) || defined(RGB666)
-            /**
-             * In the case use RGB888 format, we didnt want to down quality
-             * of the pixels.
-             */
             r = arr[p1+col*3+2];
             g = arr[p1+col*3+1];
             b = arr[p1+col*3+0];
@@ -1250,7 +1231,7 @@ size_t MATRIX_Write( uint8_t c, MATRIX_FontTypes nFontType, uint16_t u16Color )
                 gCursorX  = 0;                 // Reset x to zero,
                 gCursorY += gTextSizeY * 8;    // advance y one line
             }
-            MATRIX_DrawChar(gCursorX, gCursorY, c, gTextColor, gTextBgColor, gTextSizeX, gTextSizeY, nFontType );
+            MATRIX_DrawChar(gCursorX, gCursorY, c, u16Color, gTextBgColor, gTextSizeX, gTextSizeY, nFontType );
             gCursorX += gTextSizeX * 6;          // Advance x one char
         }
     } else
@@ -1277,7 +1258,7 @@ size_t MATRIX_Write( uint8_t c, MATRIX_FontTypes nFontType, uint16_t u16Color )
                           (uint8_t)pgm_read_byte(&gfxFont->yAdvance);
                         }
                     }
-                    MATRIX_DrawChar(gCursorX, gCursorY, c, gTextColor, gTextBgColor, gTextSizeX, gTextSizeY, nFontType );
+                    MATRIX_DrawChar(gCursorX, gCursorY, c, u16Color, gTextBgColor, gTextSizeX, gTextSizeY, nFontType );
                 }
                 gCursorX += (uint8_t)pgm_read_byte(&glyph->xAdvance) * (int16_t)gTextSizeX;
             }

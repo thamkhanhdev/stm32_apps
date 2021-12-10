@@ -24,8 +24,8 @@
 
 /* USER CODE END 0 */
 
-TIM_HandleTypeDef htim2;
-TIM_HandleTypeDef htim4;
+TIM_HandleTypeDef htim2 __attribute__((section (".ram_d1_cacheable")));
+TIM_HandleTypeDef htim4 __attribute__((section (".ram_d1_cacheable")));
 
 /* TIM2 init function */
 void MX_TIM2_Init(void)

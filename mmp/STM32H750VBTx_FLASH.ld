@@ -53,7 +53,7 @@
 ENTRY(Reset_Handler)
 
 /* Highest address of the user mode stack */
-_estack = 0x3800FFFF;    /* end of RAM */
+_estack = 0x2407FFFF;    /* end of RAM */
 /* Generate a link error if heap and stack don't fit into RAM */
 _Min_Heap_Size = 0x1000;      /* required amount of heap  */
 _Min_Stack_Size = 0x1000; /* required amount of stack */
@@ -62,7 +62,8 @@ _Min_Stack_Size = 0x1000; /* required amount of stack */
 MEMORY
 {
   DTCMRAM (xrw)      : ORIGIN = 0x20000000, LENGTH = 128K
-  RAM_D1 (xrw)      : ORIGIN = 0x24000000, LENGTH = 512K
+  RAM_D1_C (xrw)     : ORIGIN = 0x24000000, LENGTH = 384K
+  RAM_D1_NC (xrw)      : ORIGIN = 0x24060000, LENGTH = 128K
   RAM_D2 (xrw)      : ORIGIN = 0x30000000, LENGTH = 288K
   RAM_D3 (xrw)      : ORIGIN = 0x38000000, LENGTH = 64K
   ITCMRAM (xrw)      : ORIGIN = 0x00000000, LENGTH = 64K
@@ -147,7 +148,7 @@ SECTIONS
 
     . = ALIGN(4);
     _edata = .;        /* define a global symbol at data end */
-  } >RAM_D1 AT> FLASH
+  } >RAM_D1_NC AT> FLASH
 
 
   /* Uninitialized data section */
@@ -164,13 +165,24 @@ SECTIONS
     . = ALIGN(4);
     _ebss = .;         /* define a global symbol at bss end */
     __bss_end__ = _ebss;
-  } >RAM_D1
+  } >RAM_D1_NC
 
   . = ALIGN(4);
-  .ram_cacheable_a :
+  .ram_d1_cacheable_a :
   {
-    *(.ram_cacheable)
-    *(.ram_cacheable*)
+    _d1_c_sbss = .;
+    *(.ram_d1_cacheable)
+    *(.ram_d1_cacheable*)
+    _d1_c_ebss = .;
+  } >RAM_D1_C
+
+  . = ALIGN(4);
+  .ram_d2_cacheable_a :
+  {
+    _d2_c_sbss = .;
+    *(.ram_d2_cacheable)
+    *(.ram_d2_cacheable*)
+    _d2_c_ebss = .;
   } >RAM_D2
 
 
@@ -184,7 +196,7 @@ SECTIONS
     . = . + _Min_Heap_Size;
     . = . + _Min_Stack_Size;
     . = ALIGN(8);
-  } >RAM_D1
+  } >RAM_D1_NC
 
 
 

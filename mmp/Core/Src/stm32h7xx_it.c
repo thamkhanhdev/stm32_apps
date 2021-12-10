@@ -56,8 +56,8 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
-extern SD_HandleTypeDef hsd1;
-extern TIM_HandleTypeDef htim4;
+extern SD_HandleTypeDef hsd1 __attribute__((section (".ram_d1_cacheable")));
+extern TIM_HandleTypeDef htim4 __attribute__((section (".ram_d1_cacheable")));
 /* USER CODE BEGIN EV */
 
 /* USER CODE END EV */
@@ -272,4 +272,3 @@ void SDMMC1_IRQHandler(void)
 /* USER CODE BEGIN 1 */
 
 /* USER CODE END 1 */
-

@@ -24,7 +24,7 @@
 
 /* USER CODE END 0 */
 
-SD_HandleTypeDef hsd1;
+SD_HandleTypeDef hsd1 __attribute__((section (".ram_d1_cacheable")));
 
 /* SDMMC1 init function */
 

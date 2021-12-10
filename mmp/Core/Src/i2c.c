@@ -24,7 +24,7 @@
 
 /* USER CODE END 0 */
 
-I2C_HandleTypeDef hi2c4;
+I2C_HandleTypeDef hi2c4 __attribute__((section (".ram_d1_cacheable")));
 
 /* I2C4 init function */
 void MX_I2C4_Init(void)

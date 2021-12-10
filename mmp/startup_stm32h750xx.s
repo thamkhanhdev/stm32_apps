@@ -94,6 +94,34 @@ LoopFillZerobss:
   cmp r2, r4
   bcc FillZerobss
 
+/* Zero fill the bss domain 1 cacheable. */
+  ldr r2, =_d1_c_sbss
+  ldr r4, =_d1_c_ebss
+  movs r3, #0
+  b LoopFillZerobssDomain1
+
+FillZerobssDomain1:
+  str  r3, [r2]
+  adds r2, r2, #4
+
+LoopFillZerobssDomain1:
+  cmp r2, r4
+  bcc FillZerobssDomain1
+
+/* Zero fill the bss domain 2 cacheable. */
+  ldr r2, =_d2_c_sbss
+  ldr r4, =_d2_c_ebss
+  movs r3, #0
+  b LoopFillZerobssDomain2
+
+FillZerobssDomain2:
+  str  r3, [r2]
+  adds r2, r2, #4
+
+LoopFillZerobssDomain2:
+  cmp r2, r4
+  bcc FillZerobssDomain2
+
 /* Call static constructors */
     bl __libc_init_array
 /* Call the application's entry point.*/
@@ -751,4 +779,3 @@ g_pfnVectors:
    .thumb_set WAKEUP_PIN_IRQHandler,Default_Handler
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
-
