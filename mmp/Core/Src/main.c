@@ -1502,7 +1502,6 @@ READ_FILE_RESULT SD_GetPlayList(char *playlist_filename, PLAY_INFO **playlist, u
     {
         MATRIX_Printf( FONT_DEFAULT, 1, 0xFFFF, 0xFFFF, 0xF81F, "%s f_stat done %u\r\n", playlist_filename, fatfs_result);
     }
-
     fatfs_result = f_open(&SDFile, (TCHAR*)&playlist_fileinfo.fname, FA_READ);
     if(FR_OK != fatfs_result)
     {
@@ -2072,7 +2071,7 @@ void SD_PlayAviVideo(void)
     unsigned char track_count = 0;
     unsigned char all_track_count = 0;
     unsigned int frame_count = 0;
-    char playlist_filename[_MAX_LFN] = "LIST0.CSV";
+    char playlist_filename[_MAX_LFN] = "list.txt";
 
     float flame_rate;
 
@@ -2237,43 +2236,46 @@ void SD_PlayAviVideo(void)
                             (g <<  7) | ((g & 0xC) << 3) |
                             (b <<  1) | ( b        >> 3);
 #elif defined(RGB565) /* RGB565 */
-                r =  (Flame_Buffer[u8yIdx][u8xIdx][1] >> 3U) & 0x1F;
-                g = ((Flame_Buffer[u8yIdx][u8xIdx][1] << 2U) & 0x1C) | ((Flame_Buffer[u8yIdx][u8xIdx][0] >> 6U) & 0x3);
-                b =   Flame_Buffer[u8yIdx][u8xIdx][0] & 0x1F;
-                r = pgm_read_byte(&gamma_table[(r * 255) >> 5]); // Gamma correction table maps
-                g = pgm_read_byte(&gamma_table[(g * 255) >> 5]); // 6-bit input to 4-bit output
-                b = pgm_read_byte(&gamma_table[(b * 255) >> 5]);
-                u16Color =  (r << 12) | ((r & 0x8) << 8) | // 4/4/4 -> 5/6/5
-                            (g <<  7) | ((g & 0xC) << 3) |
-                            (b <<  1) | ( b        >> 3);
+                // r =  (Flame_Buffer[u8yIdx][u8xIdx][1] >> 3U) & 0x1F;
+                // g = ((Flame_Buffer[u8yIdx][u8xIdx][1] << 2U) & 0x1C) | ((Flame_Buffer[u8yIdx][u8xIdx][0] >> 6U) & 0x3);
+                // b =   Flame_Buffer[u8yIdx][u8xIdx][0] & 0x1F;
+                // r = pgm_read_byte(&gamma_table[(r * 255) >> 5]); // Gamma correction table maps
+                // g = pgm_read_byte(&gamma_table[(g * 255) >> 5]); // 6-bit input to 4-bit output
+                // b = pgm_read_byte(&gamma_table[(b * 255) >> 5]);
+                // u16Color =  (r << 12) | ((r & 0x8) << 8) | // 4/4/4 -> 5/6/5
+                //             (g <<  7) | ((g & 0xC) << 3) |
+                //             (b <<  1) | ( b        >> 3);
+                u16Color = Flame_Buffer[u8yIdx][u8xIdx][1]<<8U | Flame_Buffer[u8yIdx][u8xIdx][0];
 #endif
                 MATRIX_WritePixel(u8xIdx+1, u8HeightStart + u16VideoHeight - u8yIdx -1, u16Color );
 
                 /* For part 2 */
 #if defined(RGB565) /* RGB565 */
-                r =  (Flame_Buffer[u8yIdx+u16VideoHeightDiv2][u8xIdx][1] >> 3U) & 0x1F;
-                g = ((Flame_Buffer[u8yIdx+u16VideoHeightDiv2][u8xIdx][1] << 2U) & 0x1C) | ((Flame_Buffer[u8yIdx+u16VideoHeightDiv2][u8xIdx][0] >> 6U) & 0x3);
-                b =   Flame_Buffer[u8yIdx+u16VideoHeightDiv2][u8xIdx][0] & 0x1F;
-                r = pgm_read_byte(&gamma_table[(r * 255) >> 5]); // Gamma correction table maps
-                g = pgm_read_byte(&gamma_table[(g * 255) >> 5]); // 6-bit input to 4-bit output
-                b = pgm_read_byte(&gamma_table[(b * 255) >> 5]);
-                u16Color =  (r << 12) | ((r & 0x8) << 8) | // 4/4/4 -> 5/6/5
-                            (g <<  7) | ((g & 0xC) << 3) |
-                            (b <<  1) | ( b        >> 3);
+                // r =  (Flame_Buffer[u8yIdx+u16VideoHeightDiv2][u8xIdx][1] >> 3U) & 0x1F;
+                // g = ((Flame_Buffer[u8yIdx+u16VideoHeightDiv2][u8xIdx][1] << 2U) & 0x1C) | ((Flame_Buffer[u8yIdx+u16VideoHeightDiv2][u8xIdx][0] >> 6U) & 0x3);
+                // b =   Flame_Buffer[u8yIdx+u16VideoHeightDiv2][u8xIdx][0] & 0x1F;
+                // r = pgm_read_byte(&gamma_table[(r * 255) >> 5]); // Gamma correction table maps
+                // g = pgm_read_byte(&gamma_table[(g * 255) >> 5]); // 6-bit input to 4-bit output
+                // b = pgm_read_byte(&gamma_table[(b * 255) >> 5]);
+                // u16Color =  (r << 12) | ((r & 0x8) << 8) | // 4/4/4 -> 5/6/5
+                //             (g <<  7) | ((g & 0xC) << 3) |
+                //             (b <<  1) | ( b        >> 3);
+                u16Color = Flame_Buffer[u8yIdx+u16VideoHeightDiv2][u8xIdx][1]<<8U | Flame_Buffer[u8yIdx+u16VideoHeightDiv2][u8xIdx][0];
 #endif
                 MATRIX_WritePixel(u8xIdx+1, u8HeightStart + u16VideoHeightDiv2 - u8yIdx-1, u16Color );
 
                 /* For part 3 */
 #if defined(RGB565) /* RGB565 */
-                r =  (Flame_Buffer[u8yIdx+u16VideoHeightDiv2][u8xIdx+u16VideoWidthDiv2][1] >> 3U) & 0x1F;
-                g = ((Flame_Buffer[u8yIdx+u16VideoHeightDiv2][u8xIdx+u16VideoWidthDiv2][1] << 2U) & 0x1C) | ((Flame_Buffer[u8yIdx+u16VideoHeightDiv2][u8xIdx+u16VideoWidthDiv2][0] >> 6U) & 0x3);
-                b =   Flame_Buffer[u8yIdx+u16VideoHeightDiv2][u8xIdx+u16VideoWidthDiv2][0] & 0x1F;
-                r = pgm_read_byte(&gamma_table[(r * 255) >> 5]); // Gamma correction table maps
-                g = pgm_read_byte(&gamma_table[(g * 255) >> 5]); // 6-bit input to 4-bit output
-                b = pgm_read_byte(&gamma_table[(b * 255) >> 5]);
-                u16Color =  (r << 12) | ((r & 0x8) << 8) | // 4/4/4 -> 5/6/5
-                            (g <<  7) | ((g & 0xC) << 3) |
-                            (b <<  1) | ( b        >> 3);
+                // r =  (Flame_Buffer[u8yIdx+u16VideoHeightDiv2][u8xIdx+u16VideoWidthDiv2][1] >> 3U) & 0x1F;
+                // g = ((Flame_Buffer[u8yIdx+u16VideoHeightDiv2][u8xIdx+u16VideoWidthDiv2][1] << 2U) & 0x1C) | ((Flame_Buffer[u8yIdx+u16VideoHeightDiv2][u8xIdx+u16VideoWidthDiv2][0] >> 6U) & 0x3);
+                // b =   Flame_Buffer[u8yIdx+u16VideoHeightDiv2][u8xIdx+u16VideoWidthDiv2][0] & 0x1F;
+                // r = pgm_read_byte(&gamma_table[(r * 255) >> 5]); // Gamma correction table maps
+                // g = pgm_read_byte(&gamma_table[(g * 255) >> 5]); // 6-bit input to 4-bit output
+                // b = pgm_read_byte(&gamma_table[(b * 255) >> 5]);
+                // u16Color =  (r << 12) | ((r & 0x8) << 8) | // 4/4/4 -> 5/6/5
+                //             (g <<  7) | ((g & 0xC) << 3) |
+                //             (b <<  1) | ( b        >> 3);
+                u16Color = Flame_Buffer[u8yIdx+u16VideoHeightDiv2][u8xIdx+u16VideoWidthDiv2][1]<<8U | Flame_Buffer[u8yIdx+u16VideoHeightDiv2][u8xIdx+u16VideoWidthDiv2][0];
 #endif
                 MATRIX_WritePixel(u8xIdx+1+u16VideoWidthDiv2, u8HeightStart + u16VideoHeightDiv2 - (u8xIdx==(u16VideoWidthDiv2-1)?u8yIdx+1:u8yIdx+1), u16Color );
 
@@ -2282,12 +2284,13 @@ void SD_PlayAviVideo(void)
                 r =  (Flame_Buffer[u8yIdx][u8xIdx+u16VideoWidthDiv2][1] >> 3U) & 0x1F;
                 g = ((Flame_Buffer[u8yIdx][u8xIdx+u16VideoWidthDiv2][1] << 2U) & 0x1C) | ((Flame_Buffer[u8yIdx][u8xIdx+u16VideoWidthDiv2][0] >> 6U) & 0x3);
                 b =   Flame_Buffer[u8yIdx][u8xIdx+u16VideoWidthDiv2][0] & 0x1F;
-                r = pgm_read_byte(&gamma_table[(r * 255) >> 5]); // Gamma correction table maps
-                g = pgm_read_byte(&gamma_table[(g * 255) >> 5]); // 6-bit input to 4-bit output
-                b = pgm_read_byte(&gamma_table[(b * 255) >> 5]);
-                u16Color =  (r << 12) | ((r & 0x8) << 8) | // 4/4/4 -> 5/6/5
-                            (g <<  7) | ((g & 0xC) << 3) |
-                            (b <<  1) | ( b        >> 3);
+                // r = pgm_read_byte(&gamma_table[(r * 255) >> 5]); // Gamma correction table maps
+                // g = pgm_read_byte(&gamma_table[(g * 255) >> 5]); // 6-bit input to 4-bit output
+                // b = pgm_read_byte(&gamma_table[(b * 255) >> 5]);
+                // u16Color =  (r << 12) | ((r & 0x8) << 8) | // 4/4/4 -> 5/6/5
+                //             (g <<  7) | ((g & 0xC) << 3) |
+                //             (b <<  1) | ( b        >> 3);
+                u16Color = Flame_Buffer[u8yIdx][u8xIdx+u16VideoWidthDiv2][1]<<8U | Flame_Buffer[u8yIdx][u8xIdx+u16VideoWidthDiv2][0];
 #endif
                 MATRIX_WritePixel(u8xIdx+1+u16VideoWidthDiv2, u8HeightStart + u16VideoHeight - (u8xIdx==(u16VideoWidthDiv2-1)?u8yIdx+1:u8yIdx+1), u16Color );
 
@@ -2370,7 +2373,7 @@ int main(void)
   MX_DAC1_Init();
   MX_I2C4_Init();
   /* USER CODE BEGIN 2 */
-    MATRIX_Init( 30 );
+    MATRIX_Init( 60 );
 
     HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_2);
     HAL_TIM_Base_Start_IT(&htim4);
@@ -2565,9 +2568,9 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
   RCC_OscInitStruct.PLL.PLLM = 4;
-  RCC_OscInitStruct.PLL.PLLN = 60;
+  RCC_OscInitStruct.PLL.PLLN = 70;
   RCC_OscInitStruct.PLL.PLLP = 2;
-  RCC_OscInitStruct.PLL.PLLQ = 6;
+  RCC_OscInitStruct.PLL.PLLQ = 7;
   RCC_OscInitStruct.PLL.PLLR = 2;
   RCC_OscInitStruct.PLL.PLLRGE = RCC_PLL1VCIRANGE_3;
   RCC_OscInitStruct.PLL.PLLVCOSEL = RCC_PLL1VCOWIDE;
