@@ -55,7 +55,9 @@ extern "C"{
 // static uint16_t const gTimeCount[8]={15, 30, 60, 120, 160, 240, 320}; // he so chia nap vao timer ok with 256x64 47.9Hz
 const uint16_t scan_PWM_duty[]={4,8,16,32,64,128,256,512,1024};   //he so chia nạp vao time pwm chan OE
 // uint16_t const gTimeCount[8]={14, 28, 56, 112, 224, 448, 480, 600}; // he so chia nap vao timer ok with 256x64 47.9Hz
-uint16_t const gTimeCount[8]={ 40, 80, 160, 240, 360, 480, 720, 1200}; // he so chia nap vao timer ok with 256x64 47.9Hz
+// uint16_t const gTimeCount[8]={ 40, 80, 160, 240, 360, 480, 720, 1200}; // RGB565 he so chia nap vao timer ok with 256x64 47.9Hz
+// uint16_t const gTimeCount[MAX_BIT]={ 80, 160, 240, 360, 480, 720}; // RGB555 First options he so chia nap vao timer ok with 256x64 47.9Hz
+uint16_t const gTimeCount[MAX_BIT]={ 90, 180, 270, 380, 600, 800}; // RGB555 Second options he so chia nap vao timer ok with 256x64 47.9Hz
 // uint16_t const gTimeCount[8]={ 160, 240, 360, 480, 600, 1000, 1500}; // he so chia nap vao timer ok with 256x64 47.9Hz
 
 static const int8_t sinetab[256] = {
@@ -121,10 +123,17 @@ static uint16_t gTextBgColor __attribute__((section (".ram_d1_cacheable")));
 
 static const GFXfont *gfxFont = &TomThumb;       ///< Pointer to special font
 #ifdef MAXTRIX_MAX_BUFFER
-uint16_t gBuff0[MATRIX_WIDTH*(MAXTRIX_MAX_BUFFER)*MAX_BIT/2] __attribute__((section (".ram_d2_cacheable"))); //;
-uint16_t gBuff1[MATRIX_WIDTH*(MATRIX_HEIGHT - MAXTRIX_MAX_BUFFER)*MAX_BIT/2] __attribute__((section (".ram_d2_cacheable")));;
+#ifdef USE_SECOND_METHOD
+    uint16_t gMainBuff0[MATRIX_WIDTH][MAXTRIX_MAX_BUFFER] __attribute__((section (".ram_d2_cacheable")));
+    uint16_t gMainBuff1[MATRIX_WIDTH][MATRIX_HEIGHT - MAXTRIX_MAX_BUFFER] __attribute__((section (".ram_d2_cacheable")));
+    uint16_t gIsrBuff0[MATRIX_WIDTH*MAX_BIT] __attribute__((section (".ram_d2_cacheable")));
+    uint16_t gIsrBuff1[MATRIX_WIDTH*MAX_BIT] __attribute__((section (".ram_d2_cacheable")));
 #else
-uint16_t gBuff0[MATRIX_WIDTH*(MATRIX_HEIGHT)*MAX_BIT/2] __attribute__((section (".ram_d1_cacheable")));
+    uint16_t gIsrBuff0[MATRIX_WIDTH*(MAXTRIX_MAX_BUFFER)*MAX_BIT/2] __attribute__((section (".ram_d2_cacheable")));
+    uint16_t gIsrBuff1[MATRIX_WIDTH*(MATRIX_HEIGHT - MAXTRIX_MAX_BUFFER)*MAX_BIT/2] __attribute__((section (".ram_d2_cacheable")));
+#endif /* #ifdef USE_SECOND_METHOD */
+#else
+uint16_t gIsrBuff0[MATRIX_WIDTH*(MATRIX_HEIGHT)*MAX_BIT/2] __attribute__((section (".ram_d1_cacheable")));
 #endif /* #ifdef MAXTRIX_MAX_BUFFER */
 // static const GFXfont *gfxFont = NULL;       ///< Pointer to special font
 /*==================================================================================================
@@ -181,6 +190,20 @@ static inline GFXglyph * pgm_read_glyph_ptr(const GFXfont *gfxFont, uint8_t c)
  */
  static inline void MATRIX_DrawPixel( uint16_t x, uint16_t y, uint32_t c )
 {
+#ifdef USE_SECOND_METHOD
+#ifdef USE_DOUBLE_BUFFER
+    if( y < MAXTRIX_MAX_BUFFER )
+#endif /* #ifdef USE_DOUBLE_BUFFERss */
+    {
+        gMainBuff0[x][y] = (uint16_t) c;
+    }
+#ifdef USE_DOUBLE_BUFFER
+    else
+    {
+        gMainBuff1[x][ y & MAXTRIX_MAX_BUFFER_MASK] = (uint16_t) c;
+    }
+#endif /* #ifdef USE_DOUBLE_BUFFER */
+#else
     uint32_t _curPos;
     uint8_t r, g, b;
     uint16_t bit, limit;
@@ -211,6 +234,7 @@ static inline GFXglyph * pgm_read_glyph_ptr(const GFXfont *gfxFont, uint8_t c)
     bit   = 1;
     limit = 1 << MAX_BIT;
 
+#ifdef USE_DOUBLE_BUFFER
 #ifdef USE_BUS_3
     if( y >= MAXTRIX_MAX_BUFFER )
     {
@@ -233,10 +257,10 @@ static inline GFXglyph * pgm_read_glyph_ptr(const GFXfont *gfxFont, uint8_t c)
              */
             while( bit < limit )
             {
-                gBuff1[_curPos] &= ~RGB5_MASK;                   /* 00000111b Mask out R,G,B in one op */
-                if( r & bit ) gBuff1[_curPos] |= R5_MASK;     /* Plane N R: bit 6 0000.0100.0000b     */
-                if( g & bit ) gBuff1[_curPos] |= G5_MASK;     /* Plane N G: bit 7 0000.1000.0000b     */
-                if( b & bit ) gBuff1[_curPos] |= B5_MASK;    /* Plane N B: bit 8 0001.0000.0000b     */
+                gIsrBuff1[_curPos] &= ~RGB5_MASK;                   /* 00000111b Mask out R,G,B in one op */
+                if( r & bit ) gIsrBuff1[_curPos] |= R5_MASK;     /* Plane N R: bit 6 0000.0100.0000b     */
+                if( g & bit ) gIsrBuff1[_curPos] |= G5_MASK;     /* Plane N G: bit 7 0000.1000.0000b     */
+                if( b & bit ) gIsrBuff1[_curPos] |= B5_MASK;    /* Plane N B: bit 8 0001.0000.0000b     */
                 _curPos  += MATRIX_WIDTH;                /* Advance to next bit plane */
                 bit <<= 1 ;
             }
@@ -248,10 +272,10 @@ static inline GFXglyph * pgm_read_glyph_ptr(const GFXfont *gfxFont, uint8_t c)
 
             while( bit < limit )
             {
-                gBuff1[_curPos] &= ~RGB6_MASK;              /* 00111000b Mask out R,G,B in one op */
-                if(r & bit) gBuff1[_curPos] |= R6_MASK;    /* Plane N R: bit 11 1000.0000.0000b    */
-                if(g & bit) gBuff1[_curPos] |= G6_MASK;   /* Plane N G: bit 9  0010.0000.0000b    */
-                if(b & bit) gBuff1[_curPos] |= B6_MASK;   /* Plane N B: bit 10 0100.0000.0000b    */
+                gIsrBuff1[_curPos] &= ~RGB6_MASK;              /* 00111000b Mask out R,G,B in one op */
+                if(r & bit) gIsrBuff1[_curPos] |= R6_MASK;    /* Plane N R: bit 11 1000.0000.0000b    */
+                if(g & bit) gIsrBuff1[_curPos] |= G6_MASK;   /* Plane N G: bit 9  0010.0000.0000b    */
+                if(b & bit) gIsrBuff1[_curPos] |= B6_MASK;   /* Plane N B: bit 10 0100.0000.0000b    */
                 _curPos  += MATRIX_WIDTH;             /* Advance to next bit plane */
                 bit <<= 1 ;
             }
@@ -259,6 +283,7 @@ static inline GFXglyph * pgm_read_glyph_ptr(const GFXfont *gfxFont, uint8_t c)
     }
     else
 #endif /* #ifdef USE_BUS_3 */
+#endif /* #ifdef USE_DOUBLE_BUFFER */
 
     /* Fill data to the second bus if used */
 #ifdef USE_BUS_2
@@ -283,10 +308,10 @@ static inline GFXglyph * pgm_read_glyph_ptr(const GFXfont *gfxFont, uint8_t c)
              */
             while( bit < limit )
             {
-                gBuff0[_curPos] &= ~RGB3_MASK;                   /* 00000111b Mask out R,G,B in one op */
-                if( r & bit ) gBuff0[_curPos] |= R3_MASK;     /* Plane N R: bit 6 0000.0100.0000b     */
-                if( g & bit ) gBuff0[_curPos] |= G3_MASK;     /* Plane N G: bit 7 0000.1000.0000b     */
-                if( b & bit ) gBuff0[_curPos] |= B3_MASK;    /* Plane N B: bit 8 0001.0000.0000b     */
+                gIsrBuff0[_curPos] &= ~RGB3_MASK;                   /* 00000111b Mask out R,G,B in one op */
+                if( r & bit ) gIsrBuff0[_curPos] |= R3_MASK;     /* Plane N R: bit 6 0000.0100.0000b     */
+                if( g & bit ) gIsrBuff0[_curPos] |= G3_MASK;     /* Plane N G: bit 7 0000.1000.0000b     */
+                if( b & bit ) gIsrBuff0[_curPos] |= B3_MASK;    /* Plane N B: bit 8 0001.0000.0000b     */
                 _curPos  += MATRIX_WIDTH;                /* Advance to next bit plane */
                 bit <<= 1 ;
             }
@@ -298,10 +323,10 @@ static inline GFXglyph * pgm_read_glyph_ptr(const GFXfont *gfxFont, uint8_t c)
 
             while( bit < limit )
             {
-                gBuff0[_curPos] &= ~RGB4_MASK;              /* 00111000b Mask out R,G,B in one op */
-                if(r & bit) gBuff0[_curPos] |= R4_MASK;    /* Plane N R: bit 11 1000.0000.0000b    */
-                if(g & bit) gBuff0[_curPos] |= G4_MASK;   /* Plane N G: bit 9  0010.0000.0000b    */
-                if(b & bit) gBuff0[_curPos] |= B4_MASK;   /* Plane N B: bit 10 0100.0000.0000b    */
+                gIsrBuff0[_curPos] &= ~RGB4_MASK;              /* 00111000b Mask out R,G,B in one op */
+                if(r & bit) gIsrBuff0[_curPos] |= R4_MASK;    /* Plane N R: bit 11 1000.0000.0000b    */
+                if(g & bit) gIsrBuff0[_curPos] |= G4_MASK;   /* Plane N G: bit 9  0010.0000.0000b    */
+                if(b & bit) gIsrBuff0[_curPos] |= B4_MASK;   /* Plane N B: bit 10 0100.0000.0000b    */
                 _curPos  += MATRIX_WIDTH;             /* Advance to next bit plane */
                 bit <<= 1 ;
             }
@@ -328,10 +353,10 @@ static inline GFXglyph * pgm_read_glyph_ptr(const GFXfont *gfxFont, uint8_t c)
          */
         while( bit < limit )
         {
-           gBuff0[_curPos] &= ~RGB1_MASK;                   /* 00000111b Mask out R,G,B in one op */
-           if( r & bit ) gBuff0[_curPos] |= R1_MASK;     /* Plane N R: bit 6 0000.0100.0000b     */
-           if( g & bit ) gBuff0[_curPos] |= G1_MASK;     /* Plane N G: bit 7 0000.1000.0000b     */
-           if( b & bit ) gBuff0[_curPos] |= B1_MASK;    /* Plane N B: bit 8 0001.0000.0000b     */
+           gIsrBuff0[_curPos] &= ~RGB1_MASK;                   /* 00000111b Mask out R,G,B in one op */
+           if( r & bit ) gIsrBuff0[_curPos] |= R1_MASK;     /* Plane N R: bit 6 0000.0100.0000b     */
+           if( g & bit ) gIsrBuff0[_curPos] |= G1_MASK;     /* Plane N G: bit 7 0000.1000.0000b     */
+           if( b & bit ) gIsrBuff0[_curPos] |= B1_MASK;    /* Plane N B: bit 8 0001.0000.0000b     */
             _curPos  += MATRIX_WIDTH;                /* Advance to next bit plane */
             bit <<= 1 ;
         }
@@ -343,17 +368,156 @@ static inline GFXglyph * pgm_read_glyph_ptr(const GFXfont *gfxFont, uint8_t c)
 
        while( bit < limit )
        {
-           gBuff0[_curPos] &= ~RGB2_MASK;              /* 00111000b Mask out R,G,B in one op */
-           if(r & bit) gBuff0[_curPos] |= R2_MASK;    /* Plane N R: bit 11 1000.0000.0000b    */
-           if(g & bit) gBuff0[_curPos] |= G2_MASK;   /* Plane N G: bit 9  0010.0000.0000b    */
-           if(b & bit) gBuff0[_curPos] |= B2_MASK;   /* Plane N B: bit 10 0100.0000.0000b    */
+           gIsrBuff0[_curPos] &= ~RGB2_MASK;              /* 00111000b Mask out R,G,B in one op */
+           if(r & bit) gIsrBuff0[_curPos] |= R2_MASK;    /* Plane N R: bit 11 1000.0000.0000b    */
+           if(g & bit) gIsrBuff0[_curPos] |= G2_MASK;   /* Plane N G: bit 9  0010.0000.0000b    */
+           if(b & bit) gIsrBuff0[_curPos] |= B2_MASK;   /* Plane N B: bit 10 0100.0000.0000b    */
            _curPos  += MATRIX_WIDTH;             /* Advance to next bit plane */
            bit <<= 1 ;
        }
    }
 #endif /* #ifdef USE_BUS_1 */
+#endif /* #ifdef USE_SECOND_METHOD */
 }
 
+#ifdef USE_SECOND_METHOD
+static void MATRIX_ProcessNextRow(void)
+{
+    uint32_t _curPos, color;
+    uint16_t u16Idx;
+    uint16_t bit, limit;
+    uint8_t r, g, b;
+
+    for( u16Idx = 0U; u16Idx < MATRIX_WIDTH; u16Idx++ )
+    {
+#ifdef USE_BUS_1
+        /* Process the first part */
+        color = gMainBuff0[u16Idx][gRows];
+        r = (color >>  R_COLOR_SHIFT) & R_COLOR_MASK;
+        g = (color >>  G_COLOR_SHIFT) & G_COLOR_MASK;
+        b = (color >>  B_COLOR_SHIFT) & B_COLOR_MASK;
+
+        bit   = 1;
+        limit = 1 << MAX_BIT;
+        _curPos = u16Idx;
+
+        while( bit < limit )
+        {
+           gIsrBuff0[_curPos] &= ~RGB1_MASK;                   /* 00000111b Mask out R,G,B in one op */
+           if( r & bit ) gIsrBuff0[_curPos] |= R1_MASK;     /* Plane N R: bit 6 0000.0100.0000b     */
+           if( g & bit ) gIsrBuff0[_curPos] |= G1_MASK;     /* Plane N G: bit 7 0000.1000.0000b     */
+           if( b & bit ) gIsrBuff0[_curPos] |= B1_MASK;    /* Plane N B: bit 8 0001.0000.0000b     */
+            _curPos  += MATRIX_WIDTH;                /* Advance to next bit plane */
+            bit <<= 1 ;
+        }
+
+        /* Process the second part */
+        color = gMainBuff0[u16Idx][gRows | MATRIX_SCANRATE];
+        r = (color >>  R_COLOR_SHIFT) & R_COLOR_MASK;
+        g = (color >>  G_COLOR_SHIFT) & G_COLOR_MASK;
+        b = (color >>  B_COLOR_SHIFT) & B_COLOR_MASK;
+
+        bit   = 1;
+        limit = 1 << MAX_BIT;
+        _curPos = u16Idx;
+
+        while( bit < limit )
+        {
+           gIsrBuff0[_curPos] &= ~RGB2_MASK;                   /* 00000111b Mask out R,G,B in one op */
+           if( r & bit ) gIsrBuff0[_curPos] |= R2_MASK;     /* Plane N R: bit 6 0000.0100.0000b     */
+           if( g & bit ) gIsrBuff0[_curPos] |= G2_MASK;     /* Plane N G: bit 7 0000.1000.0000b     */
+           if( b & bit ) gIsrBuff0[_curPos] |= B2_MASK;    /* Plane N B: bit 8 0001.0000.0000b     */
+            _curPos  += MATRIX_WIDTH;                /* Advance to next bit plane */
+            bit <<= 1 ;
+        }
+#endif /* #ifdef USE_BUS_1 */
+
+#ifdef USE_BUS_2
+        /* Process the first part */
+        color = gMainBuff0[u16Idx][gRows | (MATRIX_SCANRATE << 1)];
+        r = (color >>  R_COLOR_SHIFT) & R_COLOR_MASK;
+        g = (color >>  G_COLOR_SHIFT) & G_COLOR_MASK;
+        b = (color >>  B_COLOR_SHIFT) & B_COLOR_MASK;
+
+        bit   = 1;
+        limit = 1 << MAX_BIT;
+        _curPos = u16Idx;
+
+        while( bit < limit )
+        {
+           gIsrBuff0[_curPos] &= ~RGB3_MASK;                   /* 00000111b Mask out R,G,B in one op */
+           if( r & bit ) gIsrBuff0[_curPos] |= R3_MASK;     /* Plane N R: bit 6 0000.0100.0000b     */
+           if( g & bit ) gIsrBuff0[_curPos] |= G3_MASK;     /* Plane N G: bit 7 0000.1000.0000b     */
+           if( b & bit ) gIsrBuff0[_curPos] |= B3_MASK;    /* Plane N B: bit 8 0001.0000.0000b     */
+            _curPos  += MATRIX_WIDTH;                /* Advance to next bit plane */
+            bit <<= 1 ;
+        }
+
+        /* Process the second part */
+        color = gMainBuff0[u16Idx][gRows | MATRIX_SCANRATE | (MATRIX_SCANRATE << 1)];
+        r = (color >>  R_COLOR_SHIFT) & R_COLOR_MASK;
+        g = (color >>  G_COLOR_SHIFT) & G_COLOR_MASK;
+        b = (color >>  B_COLOR_SHIFT) & B_COLOR_MASK;
+
+        bit   = 1;
+        limit = 1 << MAX_BIT;
+        _curPos = u16Idx;
+
+        while( bit < limit )
+        {
+           gIsrBuff0[_curPos] &= ~RGB4_MASK;                   /* 00000111b Mask out R,G,B in one op */
+           if( r & bit ) gIsrBuff0[_curPos] |= R4_MASK;     /* Plane N R: bit 6 0000.0100.0000b     */
+           if( g & bit ) gIsrBuff0[_curPos] |= G4_MASK;     /* Plane N G: bit 7 0000.1000.0000b     */
+           if( b & bit ) gIsrBuff0[_curPos] |= B4_MASK;    /* Plane N B: bit 8 0001.0000.0000b     */
+            _curPos  += MATRIX_WIDTH;                /* Advance to next bit plane */
+            bit <<= 1 ;
+        }
+#endif /* #ifdef USE_BUS_2 */
+
+#ifdef USE_BUS_3
+        /* Process the first part */
+        color = gMainBuff1[u16Idx][gRows];
+        r = (color >>  R_COLOR_SHIFT) & R_COLOR_MASK;
+        g = (color >>  G_COLOR_SHIFT) & G_COLOR_MASK;
+        b = (color >>  B_COLOR_SHIFT) & B_COLOR_MASK;
+
+        bit   = 1;
+        limit = 1 << MAX_BIT;
+        _curPos = u16Idx;
+
+        while( bit < limit )
+        {
+           gIsrBuff1[_curPos] &= ~RGB5_MASK;                   /* 00000111b Mask out R,G,B in one op */
+           if( r & bit ) gIsrBuff1[_curPos] |= R5_MASK;     /* Plane N R: bit 6 0000.0100.0000b     */
+           if( g & bit ) gIsrBuff1[_curPos] |= G5_MASK;     /* Plane N G: bit 7 0000.1000.0000b     */
+           if( b & bit ) gIsrBuff1[_curPos] |= B5_MASK;    /* Plane N B: bit 8 0001.0000.0000b     */
+            _curPos  += MATRIX_WIDTH;                /* Advance to next bit plane */
+            bit <<= 1 ;
+        }
+
+        /* Process the second part */
+        color = gMainBuff1[u16Idx][gRows | MATRIX_SCANRATE];
+        r = (color >>  R_COLOR_SHIFT) & R_COLOR_MASK;
+        g = (color >>  G_COLOR_SHIFT) & G_COLOR_MASK;
+        b = (color >>  B_COLOR_SHIFT) & B_COLOR_MASK;
+
+        bit   = 1;
+        limit = 1 << MAX_BIT;
+        _curPos = u16Idx;
+
+        while( bit < limit )
+        {
+           gIsrBuff1[_curPos] &= ~RGB6_MASK;                   /* 00000111b Mask out R,G,B in one op */
+           if( r & bit ) gIsrBuff1[_curPos] |= R6_MASK;     /* Plane N R: bit 6 0000.0100.0000b     */
+           if( g & bit ) gIsrBuff1[_curPos] |= G6_MASK;     /* Plane N G: bit 7 0000.1000.0000b     */
+           if( b & bit ) gIsrBuff1[_curPos] |= B6_MASK;    /* Plane N B: bit 8 0001.0000.0000b     */
+            _curPos  += MATRIX_WIDTH;                /* Advance to next bit plane */
+            bit <<= 1 ;
+        }
+#endif /* #ifdef USE_BUS_3 */
+    }
+}
+#endif /* #ifdef USE_SECOND_METHOD */
 /*==================================================================================================
 *                                       GLOBAL FUNCTIONS
 ==================================================================================================*/
@@ -397,11 +561,11 @@ void IRQ_ProcessMonitor( void )
     while( u16Count-- )
     {
 #if defined(USE_BUS_1) || defined(USE_BUS_2)
-        DAT0_P->ODR= gBuff0[ gCountBit ];
+        DAT0_P->ODR= gIsrBuff0[ gCountBit ];
 #endif /* #if defined(USE_BUS_3) || defined(USE_BUS_4) */
-#if defined(USE_BUS_3) || defined(USE_BUS_4)
-        DAT1_P->ODR= gBuff1[ gCountBit ];
-#endif /* #if defined(USE_BUS_3) || defined(USE_BUS_4) */
+#ifdef USE_DOUBLE_BUFFER
+        DAT1_P->ODR= gIsrBuff1[ gCountBit ];
+#endif /* #ifdef USE_DOUBLE_BUFFER */
         gCountBit++;
         CLK_P->BSRR=CLK_OFF;
         CLK_P->BSRR=CLK_ON;
@@ -432,8 +596,14 @@ void IRQ_ProcessMonitor( void )
         if( ++gRows >= MATRIX_SCANRATE )
         {        // advance gRows counter.  Maxed out?
             gRows = 0U;              // Yes, reset gRows counter, then...
+#ifndef USE_SECOND_METHOD
             gCountBit = 0UL;
+#endif /* #ifndef USE_SECOND_METHOD */
         }
+#ifdef USE_SECOND_METHOD
+        gCountBit = 0UL;
+        MATRIX_ProcessNextRow();
+#endif /* #ifdef USE_SECOND_METHOD */
     }
 }
 

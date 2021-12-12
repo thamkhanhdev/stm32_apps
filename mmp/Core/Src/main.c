@@ -30,6 +30,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "matrix.h"
+#include "256_192.h"
 #include "string.h"
 #include "stdio.h"
 #include "anime.h"
@@ -2122,9 +2123,16 @@ void SD_PlayAviVideo(void)
     uint16_t u16VideoWidth = playlist[track_count].avi_info.avi_width;
     uint16_t u16VideoWidthDiv2 = u16VideoWidth >> 1;
     uint16_t u16xTmp;
-    uint16_t u16yTmp;
-    uint8_t u8HeightStart = (MATRIX_HEIGHT - u16VideoHeight) >> 1;
-    uint8_t u8WidthStart = (MATRIX_WIDTH - u16VideoWidth) >> 1;
+    uint16_t u16xTmpCalibratePos;
+    uint16_t u16yTmp14;
+    uint16_t u16yTmp14CalibratePos;
+    uint16_t u16yTmp23;
+    uint16_t u16yTmp23CalibratePos;
+    uint16_t u16xSecondFrame;
+    uint16_t u16ySecondFrame;
+    uint16_t u8ErrorPos;
+    uint16_t u8HeightStart = (MATRIX_HEIGHT - u16VideoHeight) >> 1;
+    uint16_t u8WidthStart = (MATRIX_WIDTH - u16VideoWidth) >> 1;
     MATRIX_Printf( FONT_DEFAULT, 1, 0x0, 0x0, 0xF81F, "Starting... W: %d, H: %d", u16VideoWidth, u16VideoHeight );
     HAL_Delay(500);
 
@@ -2195,8 +2203,6 @@ void SD_PlayAviVideo(void)
             u16VideoHeightDiv2 = u16VideoHeight >> 1;
             u16VideoWidth = playlist[track_count].avi_info.avi_width;
             u16VideoWidthDiv2 = u16VideoWidth >> 1;
-            u16xTmp;
-            u16yTmp;
             u8HeightStart = (MATRIX_HEIGHT - u16VideoHeight) >> 1;
             u8WidthStart = (MATRIX_WIDTH - u16VideoWidth) >> 1;
 
@@ -2208,92 +2214,44 @@ void SD_PlayAviVideo(void)
             Video_End_Flag = RESET;
             Audio_End_Flag = RESET;
         }
+
+        u8ErrorPos = 0U;
         // MATRIX_DispImage( Flame_Buffer, 0U, 0U, 128U, 64U );
         for( uint16_t u8xIdx = 0U; u8xIdx < u16VideoWidthDiv2; u8xIdx++ )
         {
+            if( u8xIdx == (u16VideoWidthDiv2-1) )
+            {
+                u8ErrorPos = 1U;
+                u16xTmpCalibratePos = 0U;
+            }
+            else
+            {
+                u16xTmpCalibratePos = u16VideoWidthDiv2 + u8xIdx + 1U;
+            }
+
+            u16xTmp = u8xIdx+1;
+            u16xSecondFrame = u8xIdx+u16VideoWidthDiv2;
+
             for( uint16_t u8yIdx = 0U; u8yIdx < u16VideoHeightDiv2; u8yIdx++)
             {
+                u16yTmp14 = u8HeightStart + u16VideoHeight - u8yIdx - 1U;
+                u16yTmp23 = u8HeightStart + u16VideoHeightDiv2 - u8yIdx - 1U;
+                u16yTmp14CalibratePos = u16yTmp14 - u8ErrorPos;
+                u16yTmp23CalibratePos = u16yTmp23 - u8ErrorPos;
+                u16ySecondFrame = u8yIdx+u16VideoHeightDiv2;
+
                 /* For part 1 */
-#if defined(RGB444) /* RGB444 */
-                r =  (Flame_Buffer[u8yIdx][u8xIdx][1] >> 3U) & 0x1F;
-                g = ((Flame_Buffer[u8yIdx][u8xIdx][1] << 2U) & 0x1C) | ((Flame_Buffer[u8yIdx][u8xIdx][0] >> 6U) & 0x3);
-                b = Flame_Buffer[u8yIdx][u8xIdx][0] & 0x1F;
-                // r = pgm_read_byte(&gamma_table[(r * 150) >> 5]); // Gamma correction table maps
-                // g = pgm_read_byte(&gamma_table[(g * 150) >> 5]); // 5-bit input to 4-bit output
-                // b = pgm_read_byte(&gamma_table[(b * 150) >> 5]);
-                // u16Color =  (r << 12) | ((r & 0x8) << 8) | // 4/4/4 -> 5/6/5
-                //             (g <<  7) | ((g & 0xC) << 3) |
-                //             (b <<  1) | ( b        >> 3);
-#elif defined(RGB555) /* RGB555 */
-                r =  (Flame_Buffer[u8yIdx][u8xIdx][1] >> 3U) & 0x1F;
-                g = ((Flame_Buffer[u8yIdx][u8xIdx][1] << 2U) & 0x1C) | ((Flame_Buffer[u8yIdx][u8xIdx][0] >> 6U) & 0x3);
-                b =   Flame_Buffer[u8yIdx][u8xIdx][0] & 0x1F;
-
-                r = pgm_read_byte(&gamma_table[(r * 220) >> 5]); // Gamma correction table maps
-                g = pgm_read_byte(&gamma_table[(g * 220) >> 5]); // 5-bit input to 4-bit output
-                b = pgm_read_byte(&gamma_table[(b * 220) >> 5]);
-                u16Color =  (r << 12) | ((r & 0x8) << 8) | // 4/4/4 -> 5/6/5
-                            (g <<  7) | ((g & 0xC) << 3) |
-                            (b <<  1) | ( b        >> 3);
-#elif defined(RGB565) /* RGB565 */
-                // r =  (Flame_Buffer[u8yIdx][u8xIdx][1] >> 3U) & 0x1F;
-                // g = ((Flame_Buffer[u8yIdx][u8xIdx][1] << 2U) & 0x1C) | ((Flame_Buffer[u8yIdx][u8xIdx][0] >> 6U) & 0x3);
-                // b =   Flame_Buffer[u8yIdx][u8xIdx][0] & 0x1F;
-                // r = pgm_read_byte(&gamma_table[(r * 255) >> 5]); // Gamma correction table maps
-                // g = pgm_read_byte(&gamma_table[(g * 255) >> 5]); // 6-bit input to 4-bit output
-                // b = pgm_read_byte(&gamma_table[(b * 255) >> 5]);
-                // u16Color =  (r << 12) | ((r & 0x8) << 8) | // 4/4/4 -> 5/6/5
-                //             (g <<  7) | ((g & 0xC) << 3) |
-                //             (b <<  1) | ( b        >> 3);
                 u16Color = Flame_Buffer[u8yIdx][u8xIdx][1]<<8U | Flame_Buffer[u8yIdx][u8xIdx][0];
-#endif
-                MATRIX_WritePixel(u8xIdx+1, u8HeightStart + u16VideoHeight - u8yIdx -1, u16Color );
-
+                MATRIX_WritePixel(u16xTmp, u16yTmp14, u16Color );
                 /* For part 2 */
-#if defined(RGB565) /* RGB565 */
-                // r =  (Flame_Buffer[u8yIdx+u16VideoHeightDiv2][u8xIdx][1] >> 3U) & 0x1F;
-                // g = ((Flame_Buffer[u8yIdx+u16VideoHeightDiv2][u8xIdx][1] << 2U) & 0x1C) | ((Flame_Buffer[u8yIdx+u16VideoHeightDiv2][u8xIdx][0] >> 6U) & 0x3);
-                // b =   Flame_Buffer[u8yIdx+u16VideoHeightDiv2][u8xIdx][0] & 0x1F;
-                // r = pgm_read_byte(&gamma_table[(r * 255) >> 5]); // Gamma correction table maps
-                // g = pgm_read_byte(&gamma_table[(g * 255) >> 5]); // 6-bit input to 4-bit output
-                // b = pgm_read_byte(&gamma_table[(b * 255) >> 5]);
-                // u16Color =  (r << 12) | ((r & 0x8) << 8) | // 4/4/4 -> 5/6/5
-                //             (g <<  7) | ((g & 0xC) << 3) |
-                //             (b <<  1) | ( b        >> 3);
-                u16Color = Flame_Buffer[u8yIdx+u16VideoHeightDiv2][u8xIdx][1]<<8U | Flame_Buffer[u8yIdx+u16VideoHeightDiv2][u8xIdx][0];
-#endif
-                MATRIX_WritePixel(u8xIdx+1, u8HeightStart + u16VideoHeightDiv2 - u8yIdx-1, u16Color );
-
+                u16Color = Flame_Buffer[u16ySecondFrame][u8xIdx][1]<<8U | Flame_Buffer[u16ySecondFrame][u8xIdx][0];
+                MATRIX_WritePixel(u16xTmp, u16yTmp23, u16Color );
                 /* For part 3 */
-#if defined(RGB565) /* RGB565 */
-                // r =  (Flame_Buffer[u8yIdx+u16VideoHeightDiv2][u8xIdx+u16VideoWidthDiv2][1] >> 3U) & 0x1F;
-                // g = ((Flame_Buffer[u8yIdx+u16VideoHeightDiv2][u8xIdx+u16VideoWidthDiv2][1] << 2U) & 0x1C) | ((Flame_Buffer[u8yIdx+u16VideoHeightDiv2][u8xIdx+u16VideoWidthDiv2][0] >> 6U) & 0x3);
-                // b =   Flame_Buffer[u8yIdx+u16VideoHeightDiv2][u8xIdx+u16VideoWidthDiv2][0] & 0x1F;
-                // r = pgm_read_byte(&gamma_table[(r * 255) >> 5]); // Gamma correction table maps
-                // g = pgm_read_byte(&gamma_table[(g * 255) >> 5]); // 6-bit input to 4-bit output
-                // b = pgm_read_byte(&gamma_table[(b * 255) >> 5]);
-                // u16Color =  (r << 12) | ((r & 0x8) << 8) | // 4/4/4 -> 5/6/5
-                //             (g <<  7) | ((g & 0xC) << 3) |
-                //             (b <<  1) | ( b        >> 3);
-                u16Color = Flame_Buffer[u8yIdx+u16VideoHeightDiv2][u8xIdx+u16VideoWidthDiv2][1]<<8U | Flame_Buffer[u8yIdx+u16VideoHeightDiv2][u8xIdx+u16VideoWidthDiv2][0];
-#endif
-                MATRIX_WritePixel(u8xIdx+1+u16VideoWidthDiv2, u8HeightStart + u16VideoHeightDiv2 - (u8xIdx==(u16VideoWidthDiv2-1)?u8yIdx+1:u8yIdx+1), u16Color );
-
+                u16Color = Flame_Buffer[u16ySecondFrame][u16xSecondFrame][1]<<8U | Flame_Buffer[u16ySecondFrame][u16xSecondFrame][0];
+                MATRIX_WritePixel(u16xTmpCalibratePos, u16yTmp23CalibratePos, u16Color );
                 /* For part 4 */
-#if defined(RGB565) /* RGB565 */
-                r =  (Flame_Buffer[u8yIdx][u8xIdx+u16VideoWidthDiv2][1] >> 3U) & 0x1F;
-                g = ((Flame_Buffer[u8yIdx][u8xIdx+u16VideoWidthDiv2][1] << 2U) & 0x1C) | ((Flame_Buffer[u8yIdx][u8xIdx+u16VideoWidthDiv2][0] >> 6U) & 0x3);
-                b =   Flame_Buffer[u8yIdx][u8xIdx+u16VideoWidthDiv2][0] & 0x1F;
-                // r = pgm_read_byte(&gamma_table[(r * 255) >> 5]); // Gamma correction table maps
-                // g = pgm_read_byte(&gamma_table[(g * 255) >> 5]); // 6-bit input to 4-bit output
-                // b = pgm_read_byte(&gamma_table[(b * 255) >> 5]);
-                // u16Color =  (r << 12) | ((r & 0x8) << 8) | // 4/4/4 -> 5/6/5
-                //             (g <<  7) | ((g & 0xC) << 3) |
-                //             (b <<  1) | ( b        >> 3);
-                u16Color = Flame_Buffer[u8yIdx][u8xIdx+u16VideoWidthDiv2][1]<<8U | Flame_Buffer[u8yIdx][u8xIdx+u16VideoWidthDiv2][0];
-#endif
-                MATRIX_WritePixel(u8xIdx+1+u16VideoWidthDiv2, u8HeightStart + u16VideoHeight - (u8xIdx==(u16VideoWidthDiv2-1)?u8yIdx+1:u8yIdx+1), u16Color );
-
+                u16Color = Flame_Buffer[u8yIdx][u16xSecondFrame][1]<<8U | Flame_Buffer[u8yIdx][u16xSecondFrame][0];
+                MATRIX_WritePixel(u16xTmpCalibratePos, u16yTmp14CalibratePos, u16Color );
             }
         }
 
@@ -2374,19 +2332,21 @@ int main(void)
   MX_I2C4_Init();
   /* USER CODE BEGIN 2 */
     MATRIX_Init( 60 );
+    MATRIX_SetTextSize(1);
+    MATRIX_FillScreen(0x0);
+    // MATRIX_disImage(gImage_256_192, 256, 192, 0, 0, RGB_888);
 
     HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_2);
     HAL_TIM_Base_Start_IT(&htim4);
     __HAL_TIM_SET_COMPARE(&htim2,TIM_CHANNEL_2,MATRIX_getBrightness());
 
-    MATRIX_SetTextSize(1);
-    MATRIX_FillScreen(0x0);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+
     if( MSD_OK == BSP_SD_Init() )
     {
         BSP_SD_GetCardInfo(&CardInfo);
