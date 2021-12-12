@@ -554,10 +554,7 @@ void IRQ_ProcessMonitor( void )
 {
     uint16_t u16Count = MATRIX_WIDTH;
 
-    /* Disable LED output during gRows/gBitPos switchover */
-    TIM2->CCR2 = 0U;
-
-    /* Release new data region */
+    /*! Step 1: Clock in the data for the current row one bit at a time */
     while( u16Count-- )
     {
 #if defined(USE_BUS_1) || defined(USE_BUS_2)
@@ -571,31 +568,32 @@ void IRQ_ProcessMonitor( void )
         CLK_P->BSRR=CLK_ON;
     }
 
-    TIM2->CCR2 = gBrightness;
-    // TIM2->CCR2 = scan_PWM_duty[gBitPos];
-    /* Load new division value */
-    TIM4->PSC = gTimeCount[gBitPos];
-    /* Trigger EGR upto 1 in order re-load PSC value */
-    TIM4->EGR = 1U;
-    /* Clear interrupt flag */
-    TIM4->SR = 0xFFFFFFFE;
-    // if( gBitPos == 0U )
-    // {
-        // gBitPos 0 was loaded on prior interrupt invocation and is about to
-        // latch now, so update the row address lines before we do that:
-        // ROW_P->ODR = (ROW_P->ODR & MATRIX_MASKROWS) | gRows;
-        ROW_P->ODR = gRows;
-    // }
-    /* Latch data loaded during *prior* interrupt */
+    /*! Step 2:
+     *  Pull the latch and output enable pins high. This enables the latch,
+     *  allowing the row data to reach the output driver but it also disables
+     *  the output so that no LEDs are lit while we're switching rows.
+     */
+    TIM2->CCR2 = 0U;
     LAT_P->BSRR=LAT_ON;
+
+    /*! Step 3: Switch rows by driving the appropriate row select lines */
+    TIM4->PSC = gTimeCount[gBitPos];
+    ROW_P->ODR = gRows;
+
+    /*! Step 4:
+     *  Pull the latch and output enable pins low again,
+     *  enabling the output and closing the latch so we
+     *  can clock in the next row of data.
+     */
+    TIM2->CCR2 = gBrightness;
     LAT_P->BSRR = LAT_OFF;
 
     if( ++gBitPos >= MAX_BIT )
-    {      // Advance gBitPos counter.  Maxed out?
-        gBitPos = 0U;                  // Yes, reset to gBitPos 0, and
+    {
+        gBitPos = 0U;
         if( ++gRows >= MATRIX_SCANRATE )
-        {        // advance gRows counter.  Maxed out?
-            gRows = 0U;              // Yes, reset gRows counter, then...
+        {
+            gRows = 0U;
 #ifndef USE_SECOND_METHOD
             gCountBit = 0UL;
 #endif /* #ifndef USE_SECOND_METHOD */
@@ -605,6 +603,11 @@ void IRQ_ProcessMonitor( void )
         MATRIX_ProcessNextRow();
 #endif /* #ifdef USE_SECOND_METHOD */
     }
+
+    /*! Trigger EGR upto 1 in order re-load PSC value */
+    TIM4->EGR = 1U;
+    /*! Clear interrupt flag */
+    TIM4->SR = 0xFFFFFFFE;
 }
 
 /**
