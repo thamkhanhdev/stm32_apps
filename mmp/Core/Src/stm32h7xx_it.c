@@ -62,6 +62,7 @@ extern TIM_HandleTypeDef htim4 __attribute__((section (".ram_d1_cacheable")));
 extern TIM_HandleTypeDef htim6 __attribute__((section (".ram_d1_cacheable")));
 /* USER CODE BEGIN EV */
 extern void IRQ_DAC_ProcessAudio(void);
+extern void IRQ_ProcessMonitor(void);
 
 /* USER CODE END EV */
 
@@ -235,9 +236,9 @@ void EXTI9_5_IRQHandler(void)
 void TIM4_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM4_IRQn 0 */
-
+  IRQ_ProcessMonitor();
   /* USER CODE END TIM4_IRQn 0 */
-  HAL_TIM_IRQHandler(&htim4);
+  // HAL_TIM_IRQHandler(&htim4);
   /* USER CODE BEGIN TIM4_IRQn 1 */
 
   /* USER CODE END TIM4_IRQn 1 */
@@ -280,8 +281,8 @@ void TIM6_DAC_IRQHandler(void)
   /* USER CODE BEGIN TIM6_DAC_IRQn 0 */
   IRQ_DAC_ProcessAudio();
   /* USER CODE END TIM6_DAC_IRQn 0 */
-  HAL_DAC_IRQHandler(&hdac1);
-  HAL_TIM_IRQHandler(&htim6);
+  // HAL_DAC_IRQHandler(&hdac1);
+  // HAL_TIM_IRQHandler(&htim6);
   /* USER CODE BEGIN TIM6_DAC_IRQn 1 */
 
   /* USER CODE END TIM6_DAC_IRQn 1 */

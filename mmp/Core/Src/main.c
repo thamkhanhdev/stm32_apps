@@ -351,7 +351,7 @@ typedef struct
 } PLAY_INFO;
 
 /* APB1 Timer clock 280Mhz */
-#define TIM6_FREQ 280000000
+#define TIM6_FREQ 300000000
 #define TIM6_PRESCALER 0
 
 #define TIM7_FREQ 108000000
@@ -432,9 +432,9 @@ unsigned char Audio_Channnel_Count __attribute__((section (".ram_d1_cacheable"))
 
 volatile unsigned char Audio_Flame_End_flag = RESET;
 
-signed short Audio_Buffer[2][MAX_AUDIO_SAMPLE_RATE * MAX_AUDIO_CHANNEL / MIN_VIDEO_FLAME_RATE] __attribute__((section (".ram_d1_cacheable"))) = {0};
+signed short Audio_Buffer[2][MAX_AUDIO_SAMPLE_RATE * MAX_AUDIO_CHANNEL / MIN_VIDEO_FLAME_RATE]  = {0};
 
-unsigned char Flame_Buffer[MATRIXLED_Y_COUNT][MATRIXLED_X_COUNT][MATRIXLED_COLOR_COUNT] ;
+unsigned char Flame_Buffer[MATRIXLED_Y_COUNT][MATRIXLED_X_COUNT][MATRIXLED_COLOR_COUNT] __attribute__((section (".ram_d1_cacheable")));
 
 /* USER CODE END PV */
 
@@ -447,13 +447,13 @@ void IRQ_ProcessMonitor( void );
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+/* void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
     if( htim->Instance == TIM4 )
     {
         IRQ_ProcessMonitor();
     }
-}
+} */
 
 void IRQ_DAC_ProcessAudio(void)
 {
@@ -2347,43 +2347,30 @@ void SD_PlayAviVideo(void)
             Audio_End_Flag = RESET;
         }
 
-        u8ErrorPos = 0U;
         // MATRIX_DispImage( Flame_Buffer, 0U, 0U, 128U, 64U );
         for( uint16_t u8xIdx = 0U; u8xIdx < u16VideoWidthDiv2; u8xIdx++ )
         {
-            if( u8xIdx == (u16VideoWidthDiv2-1) )
-            {
-                u8ErrorPos = 1U;
-                u16xTmpCalibratePos = 0U;
-            }
-            else
-            {
-                u16xTmpCalibratePos = u16VideoWidthDiv2 + u8xIdx + 1U;
-            }
-
-            u16xTmp = u8xIdx+1;
+            u16xTmpCalibratePos = u16VideoWidthDiv2 + u8xIdx;
             u16xSecondFrame = u8xIdx+u16VideoWidthDiv2;
 
             for( uint16_t u8yIdx = 0U; u8yIdx < u16VideoHeightDiv2; u8yIdx++)
             {
-                u16yTmp14 = u8HeightStart + u16VideoHeight - u8yIdx - 1U;
-                u16yTmp23 = u8HeightStart + u16VideoHeightDiv2 - u8yIdx - 1U;
-                u16yTmp14CalibratePos = u16yTmp14 - u8ErrorPos;
-                u16yTmp23CalibratePos = u16yTmp23 - u8ErrorPos;
+                u16yTmp14 = u8HeightStart + u16VideoHeight - u8yIdx - 1;
+                u16yTmp23 = u8HeightStart + u16VideoHeightDiv2 - u8yIdx - 1;
                 u16ySecondFrame = u8yIdx+u16VideoHeightDiv2;
 
                 /* For part 1 */
                 u16Color = Flame_Buffer[u8yIdx][u8xIdx][1]<<8U | Flame_Buffer[u8yIdx][u8xIdx][0];
-                MATRIX_WritePixel(u16xTmp, u16yTmp14, u16Color );
+                MATRIX_WritePixel(u8xIdx, u16yTmp14, u16Color );
                 /* For part 2 */
                 u16Color = Flame_Buffer[u16ySecondFrame][u8xIdx][1]<<8U | Flame_Buffer[u16ySecondFrame][u8xIdx][0];
-                MATRIX_WritePixel(u16xTmp, u16yTmp23, u16Color );
+                MATRIX_WritePixel(u8xIdx, u16yTmp23, u16Color );
                 /* For part 3 */
                 u16Color = Flame_Buffer[u16ySecondFrame][u16xSecondFrame][1]<<8U | Flame_Buffer[u16ySecondFrame][u16xSecondFrame][0];
-                MATRIX_WritePixel(u16xTmpCalibratePos, u16yTmp23CalibratePos, u16Color );
+                MATRIX_WritePixel(u16xTmpCalibratePos, u16yTmp23, u16Color );
                 /* For part 4 */
                 u16Color = Flame_Buffer[u8yIdx][u16xSecondFrame][1]<<8U | Flame_Buffer[u8yIdx][u16xSecondFrame][0];
-                MATRIX_WritePixel(u16xTmpCalibratePos, u16yTmp14CalibratePos, u16Color );
+                MATRIX_WritePixel(u16xTmpCalibratePos, u16yTmp14, u16Color );
             }
         }
 
@@ -2661,9 +2648,9 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
   RCC_OscInitStruct.PLL.PLLM = 4;
-  RCC_OscInitStruct.PLL.PLLN = 70;
+  RCC_OscInitStruct.PLL.PLLN = 75;
   RCC_OscInitStruct.PLL.PLLP = 2;
-  RCC_OscInitStruct.PLL.PLLQ = 7;
+  RCC_OscInitStruct.PLL.PLLQ = 6;
   RCC_OscInitStruct.PLL.PLLR = 2;
   RCC_OscInitStruct.PLL.PLLRGE = RCC_PLL1VCIRANGE_3;
   RCC_OscInitStruct.PLL.PLLVCOSEL = RCC_PLL1VCOWIDE;

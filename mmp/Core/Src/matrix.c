@@ -58,7 +58,7 @@ const uint16_t scan_PWM_duty[]={4,8,16,32,64,128,256,512,1024};   //he so chia n
 // uint16_t const gTimeCount[8]={ 40, 80, 160, 240, 360, 480, 720, 1200}; // RGB565 he so chia nap vao timer ok with 256x64 47.9Hz
 // uint16_t const gTimeCount[MAX_BIT]={ 80, 160, 240, 360, 480, 720}; // RGB555 First options he so chia nap vao timer ok with 256x64 47.9Hz
 uint16_t const gTimeCount[MAX_BIT]={ 90, 180, 270, 380, 600, 800}; // RGB555 Second options he so chia nap vao timer ok with 256x64 47.9Hz
-// uint16_t const gTimeCount[8]={ 160, 240, 360, 480, 600, 1000, 1500}; // he so chia nap vao timer ok with 256x64 47.9Hz
+// uint16_t const gTimeCount[MAX_BIT]={ 120, 240, 360, 480, 600, 1000}; // he so chia nap vao timer ok with 256x64 47.9Hz
 
 static const int8_t sinetab[256] = {
      0,   2,   5,   8,  11,  15,  18,  21,
