@@ -56,9 +56,12 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
+extern DAC_HandleTypeDef hdac1 __attribute__((section (".ram_d1_cacheable")));
 extern SD_HandleTypeDef hsd1 __attribute__((section (".ram_d1_cacheable")));
 extern TIM_HandleTypeDef htim4 __attribute__((section (".ram_d1_cacheable")));
+extern TIM_HandleTypeDef htim6 __attribute__((section (".ram_d1_cacheable")));
 /* USER CODE BEGIN EV */
+extern void IRQ_DAC_ProcessAudio(void);
 
 /* USER CODE END EV */
 
@@ -267,6 +270,21 @@ void SDMMC1_IRQHandler(void)
   /* USER CODE BEGIN SDMMC1_IRQn 1 */
 
   /* USER CODE END SDMMC1_IRQn 1 */
+}
+
+/**
+  * @brief This function handles TIM6 global interrupt, DAC1_CH1 and DAC1_CH2 underrun error interrupts.
+  */
+void TIM6_DAC_IRQHandler(void)
+{
+  /* USER CODE BEGIN TIM6_DAC_IRQn 0 */
+  IRQ_DAC_ProcessAudio();
+  /* USER CODE END TIM6_DAC_IRQn 0 */
+  HAL_DAC_IRQHandler(&hdac1);
+  HAL_TIM_IRQHandler(&htim6);
+  /* USER CODE BEGIN TIM6_DAC_IRQn 1 */
+
+  /* USER CODE END TIM6_DAC_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */

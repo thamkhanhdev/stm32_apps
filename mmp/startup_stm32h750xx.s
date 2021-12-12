@@ -122,6 +122,20 @@ LoopFillZerobssDomain2:
   cmp r2, r4
   bcc FillZerobssDomain2
 
+/* Zero fill the bss domain 3 cacheable. */
+  ldr r2, =_d3_nc_sbss
+  ldr r4, =_d3_nc_ebss
+  movs r3, #0
+  b LoopFillZerobssDomain3
+
+FillZerobssDomain3:
+  str  r3, [r2]
+  adds r2, r2, #4
+
+LoopFillZerobssDomain3:
+  cmp r2, r4
+  bcc FillZerobssDomain3
+
 /* Call static constructors */
     bl __libc_init_array
 /* Call the application's entry point.*/

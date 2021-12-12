@@ -185,6 +185,15 @@ SECTIONS
     _d2_c_ebss = .;
   } >RAM_D2
 
+  . = ALIGN(4);
+  .ram_d3_nc_a :
+  {
+    _d3_nc_sbss = .;
+    *(.ram_d3_nc)
+    *(.ram_d3_nc*)
+    _d3_nc_ebss = .;
+  } >RAM_D3
+
 
 
   /* User_heap_stack section, used to check that there is enough RAM left */

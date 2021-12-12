@@ -101,210 +101,6 @@ typedef struct my_error_mgr * my_error_ptr;
 struct my_error_mgr jerr __attribute__((section (".ram_d1_cacheable")));
 int row_stride __attribute__((section (".ram_d1_cacheable"))); /* physical row width in output buffer */
 JSAMPROW nRowBuff[1] __attribute__((section (".ram_d1_cacheable"))); /* Output row buffer */
-
-/* USER CODE END PV */
-
-/* Private function prototypes -----------------------------------------------*/
-void SystemClock_Config(void);
-static void MPU_Config(void);
-/* USER CODE BEGIN PFP */
-void IRQ_ProcessMonitor( void );
-/* USER CODE END PFP */
-
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN 0 */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
-    if( htim->Instance == TIM4 )
-    {
-        IRQ_ProcessMonitor();
-    }
-}
-
-/*
- * Here's the routine that will replace the standard error_exit method:
- */
-
-void my_error_exit (j_common_ptr cinfo)
-{
-  /* cinfo->err really points to a my_error_mgr struct, so coerce pointer */
-  my_error_ptr myerr = (my_error_ptr) cinfo->err;
-
-    MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "my_error_exit!\n");
-  /* Always display the message. */
-  /* We could postpone this until after returning, if we chose. */
-  (*cinfo->err->output_message) (cinfo);
-
-  /* Return control to the setjmp point */
-  longjmp(myerr->setjmp_buffer, 1);
-}
-
-FRESULT scan_files (char* pat)
-{
-    UINT i;
-    uint16_t color = 65535;
-    char path[20];
-    sprintf (path, "%s",pat);
-
-    SDResult = f_opendir(&dir, path);                       /* Open the directory */
-    if (SDResult == FR_OK)
-    {
-        for (;;)
-        {
-            SDResult = f_readdir(&dir, &fno);                   /* Read a directory item */
-            if (SDResult != FR_OK || fno.fname[0] == 0) break;  /* Break on error or end of dir */
-            if (fno.fattrib & AM_DIR)     /* It is a directory */
-            {
-                if (!(strcmp ("SYSTEM~1", fno.fname))) continue;
-                MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "Dir: %s\r\n", fno.fname);
-                color -= 1024;
-                i = strlen(path);
-                sprintf(&path[i], "/%s", fno.fname);
-                SDResult = scan_files(path);                     /* Enter the directory */
-                if (SDResult != FR_OK) break;
-                path[i] = 0;
-            }
-            else
-            {                                       /* It is a file. */
-                MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "File: %s/%s\r\n", path, fno.fname);
-                color -= 1024;
-            }
-        }
-        f_closedir(&dir);
-    }
-    else
-    {
-        MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "Error open dir!\n");
-    }
-    return SDResult;
-}
-
-
-static int bufftoint(char *buff)
-{
-    int x=buff[3];
-    x=x<<8;
-    x=x|buff[2];
-    x=x<<8;
-    x=x|buff[1];
-    x=x<<8;
-    x=x|buff[0];
-
-    return x;
-}
-
-
-uint8_t MEDIA_DisplayJpeg(char * pPath)
-{
-    uint8_t u8ReturnError = 0x0U;
-    uint8_t r, g, b;
-    uint16_t u16Color;
-    uint16_t u16Index;
-
-    if( FR_OK==f_open(&SDFile, (TCHAR*) pPath, FA_READ) )
-    {
-        /* Step 1: allocate and initialize JPEG decompression object */
-        /* We set up the normal JPEG error routines, then override error_exit. */
-        cinfo.err = jpeg_std_error(&jerr.pub);
-        jerr.pub.error_exit = my_error_exit;
-
-        /* Establish the setjmp return context for my_error_exit to use. */
-        if (setjmp(jerr.setjmp_buffer))
-        {
-            /* If we get here, the JPEG code has signaled an error.
-             * We need to clean up the JPEG object, close the input file, and return.
-                */
-            jpeg_destroy_decompress(&cinfo);
-            MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "Destroy Compression!\n");
-            HAL_Delay(1000);
-            MATRIX_FillScreen(0x0);
-            f_close(&SDFile);
-            u8ReturnError = 0x1U;
-        }
-        else
-        {
-            /* Now we can initialize the JPEG decompression object. */
-            // MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "jpeg_create_decompress: %i\n",0);
-            jpeg_create_decompress(&cinfo);
-            // MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "jpeg_stdio_src: %i\n",0);
-            /* Step 2: specify data source (eg, a file) */
-            jpeg_stdio_src(&cinfo, &SDFile);
-            // MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "jpeg_read_header: %i\n",0);
-            /* Step 3: read file parameters with jpeg_read_header() */
-            (void) jpeg_read_header(&cinfo, TRUE);
-            /* Step 4: set parameters for decompression */
-            /* In this example, we don't need to change any of the defaults set by
-             * jpeg_read_header(), so we do nothing here.
-                */
-            // MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "jpeg_start_decompress: %i\n",0);
-            /* Step 5: Start decompressor */
-            (void) jpeg_start_decompress(&cinfo);
-            /* We may need to do some setup of our own at this point before reading
-             * the data.  After jpeg_start_decompress() we have the correct scaled
-                * output image dimensions available, as well as the output colormap
-                * if we asked for color quantization.
-                * In this example, we need to make an output work buffer of the u16RightPos size.
-                */
-            /* JSAMPLEs per row in output buffer */
-            /* row_stride = cinfo.output_width * cinfo.output_components; */
-            /* Make a one-row-high sample array that will go away when done with image */
-            /* nRowBuff[0] = (unsigned char *) malloc( row_stride ); */
-            nRowBuff[0] = (unsigned char *) pagebuff;
-            // MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "print: %i\n",0);
-            /* Step 6: while (scan lines remain to be read) */
-            /*           jpeg_read_scanlines(...); */
-            while( cinfo.output_scanline < cinfo.output_height)
-            {
-                /* jpeg_read_scanlines expects an array of pointers to scanlines.
-                 * Here the array is only one element long, but you could ask for
-                    * more than one scanline at a time if that's more convenient.
-                    */
-                // MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "step 0: %i\n",cinfo.output_height);
-                (void) jpeg_read_scanlines(&cinfo, nRowBuff, 1);
-                // MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "step 1: %i\n",cinfo.output_height);
-                for( u16Index = 0U; u16Index < MATRIX_WIDTH; u16Index++ )
-                {
-                    r = (uint8_t) pagebuff[ u16Index * 3 + 0 ];
-                    g = (uint8_t) pagebuff[ u16Index * 3 + 1 ];
-                    b = (uint8_t) pagebuff[ u16Index * 3 + 2 ];
-
-                    r = pgm_read_byte(&gamma_table[(r * 255) >> 8]); // Gamma correction table maps
-                    g = pgm_read_byte(&gamma_table[(g * 255) >> 8]); // 8-bit input to 4-bit output
-                    b = pgm_read_byte(&gamma_table[(b * 255) >> 8]);
-
-                    u16Color =  (r << 12) | ((r & 0x8) << 8) | // 4/4/4 -> 5/6/5
-                                (g <<  7) | ((g & 0xC) << 3) |
-                                (b <<  1) | ( b        >> 3);
-
-                    MATRIX_WritePixel( u16Index, cinfo.output_scanline - 1, u16Color );
-                }
-            }
-
-            // MATRIX_SetCursor(0, 5);
-            // MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "%s\r\n",  pPath);
-
-            /* Step 7: Finish decompression */
-            (void) jpeg_finish_decompress(&cinfo);
-                /* Step 8: Release JPEG decompression object */
-            /* This is an important step since it will release a good deal of memory. */
-            jpeg_destroy_decompress(&cinfo);
-            /* After finish_decompress, we can close the input file. */
-            f_close(&SDFile);
-            /**
-             * In case use the static buffer as a local pointer, it must not be free caused from it shall re-use another behavior
-             * free(nRowBuff[0]);
-             */
-        }
-    }
-    else
-    {
-        MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "can't open !\n");
-        u8ReturnError = 0x2U;
-    }
-
-    return u8ReturnError;
-}
-
 typedef enum
 {
   FILE_OK = 0,
@@ -554,8 +350,8 @@ typedef struct
     AVI_INFO avi_info;
 } PLAY_INFO;
 
-/* APB1 Timer clock 80Mhz */
-#define TIM6_FREQ 80000000
+/* APB1 Timer clock 280Mhz */
+#define TIM6_FREQ 280000000
 #define TIM6_PRESCALER 0
 
 #define TIM7_FREQ 108000000
@@ -569,7 +365,7 @@ typedef struct
 #define SET_AUDIO_SAMPLERATE(x) \
     do                                  \
     {                                   \
-        TIM6->ARR = ((unsigned int)(TIM6_FREQ / ((x) * (TIM6_PRESCALER + 1))) - 200U);   \
+        TIM6->ARR = ((unsigned int)(TIM6_FREQ / ((x) * (TIM6_PRESCALER + 1))) - 10U) ;   \
     } while(0)
 
 //   __HAL_TIM_SET_AUTORELOAD(&htim6, ((unsigned int)(TIM6_FREQ / ((x) * (TIM6_PRESCALER + 1))) - 1))
@@ -611,7 +407,7 @@ typedef struct
 
 #define MIN_VIDEO_FLAME_RATE 15
 #define MAX_VIDEO_FLAME_RATE 60
-#define MIN_AUDIO_SAMPLE_RATE 44099
+#define MIN_AUDIO_SAMPLE_RATE 44000
 #define MAX_AUDIO_SAMPLE_RATE 48000
 #define MIN_AUDIO_CHANNEL 1
 #define MAX_AUDIO_CHANNEL 2
@@ -639,6 +435,330 @@ volatile unsigned char Audio_Flame_End_flag = RESET;
 signed short Audio_Buffer[2][MAX_AUDIO_SAMPLE_RATE * MAX_AUDIO_CHANNEL / MIN_VIDEO_FLAME_RATE] __attribute__((section (".ram_d1_cacheable"))) = {0};
 
 unsigned char Flame_Buffer[MATRIXLED_Y_COUNT][MATRIXLED_X_COUNT][MATRIXLED_COLOR_COUNT] ;
+
+/* USER CODE END PV */
+
+/* Private function prototypes -----------------------------------------------*/
+void SystemClock_Config(void);
+static void MPU_Config(void);
+/* USER CODE BEGIN PFP */
+void IRQ_ProcessMonitor( void );
+/* USER CODE END PFP */
+
+/* Private user code ---------------------------------------------------------*/
+/* USER CODE BEGIN 0 */
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+    if( htim->Instance == TIM4 )
+    {
+        IRQ_ProcessMonitor();
+    }
+}
+
+void IRQ_DAC_ProcessAudio(void)
+{
+    static uint16_t audio_data_output_count;
+
+    /* Clear interrupt flag */
+    TIM6->SR = 0xFFFFFFFE;
+
+    // if(htim->Instance == TIM14)
+    // {
+        // IR_Receive_Data = 0;
+        // IR_Receive_Count = 0;
+    // }
+
+    // if(htim->Instance == TIM6)
+    {
+        if((Audio_End_Flag == RESET) && (Status == PLAY))
+        {
+            if(Audio_Channnel_Count == 1)
+            {
+                HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_L, ((unsigned int)((Audio_Buffer[Audio_Double_Buffer & 0x01][audio_data_output_count] * Volume_Value_float) + 0x8000) & 0x0000fff0));
+                HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_L, ((unsigned int)((Audio_Buffer[Audio_Double_Buffer & 0x01][audio_data_output_count] * Volume_Value_float) + 0x8000) & 0x0000fff0));
+                // LL_DAC_ConvertData12LeftAligned( DAC1, LL_DAC_CHANNEL_1, ((unsigned int)((Audio_Buffer[Audio_Double_Buffer & 0x01][audio_data_output_count] * Volume_Value_float) + 0x8000) & 0x0000fff0) );
+                // LL_DAC_ConvertData12LeftAligned( DAC1, LL_DAC_CHANNEL_2, ((unsigned int)((Audio_Buffer[Audio_Double_Buffer & 0x01][audio_data_output_count] * Volume_Value_float) + 0x8000) & 0x0000fff0) );
+                if(audio_data_output_count < ((Audio_Flame_Data_Count >> 1) - 1))
+                {
+                    audio_data_output_count++;
+                }
+                else
+                {
+                    Audio_Flame_End_flag = SET;
+                    if(Audio_Double_Buffer == 0)
+                    {
+                        Audio_Double_Buffer = 1;
+                    }
+                    else
+                    {
+                        Audio_Double_Buffer = 0;
+                    }
+                    audio_data_output_count = 0;
+                }
+            }
+            else if(Audio_Channnel_Count == 2)
+            {
+                HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_L, ((unsigned int)((Audio_Buffer[Audio_Double_Buffer & 0x01][audio_data_output_count + 0] * Volume_Value_float) + 0x8000) & 0x0000fff0));
+                HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_L, ((unsigned int)((Audio_Buffer[Audio_Double_Buffer & 0x01][audio_data_output_count + 1] * Volume_Value_float) + 0x8000) & 0x0000fff0));
+                // LL_DAC_ConvertData12LeftAligned( DAC1, LL_DAC_CHANNEL_1, ((unsigned int)((Audio_Buffer[Audio_Double_Buffer & 0x01][audio_data_output_count + 0] * Volume_Value_float) + 0x8000) & 0x0000fff0) );
+                // LL_DAC_ConvertData12LeftAligned( DAC1, LL_DAC_CHANNEL_2, ((unsigned int)((Audio_Buffer[Audio_Double_Buffer & 0x01][audio_data_output_count + 0] * Volume_Value_float) + 0x8000) & 0x0000fff0) );
+                if(audio_data_output_count < ((Audio_Flame_Data_Count >> 1) - 2))
+                {
+                    audio_data_output_count += 2;
+                }
+                else
+                {
+                    Audio_Flame_End_flag = SET;
+                    if(Audio_Double_Buffer == 0)
+                    {
+                        Audio_Double_Buffer = 1;
+                    }else
+                    {
+                        Audio_Double_Buffer = 0;
+                    }
+                    audio_data_output_count = 0;
+                }
+            }
+        }
+        else
+        {
+            // LL_DAC_ConvertData12LeftAligned( DAC1, LL_DAC_CHANNEL_1, (0x8000 & 0x0000fff0) );
+            // LL_DAC_ConvertData12LeftAligned( DAC1, LL_DAC_CHANNEL_2, (0x8000 & 0x0000fff0) );
+            HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_L, (0x8000 & 0x0000fff0));
+            HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_L, (0x8000 & 0x0000fff0));
+            if(Audio_Channnel_Count == 1)
+            {
+                if(audio_data_output_count < ((Audio_Flame_Data_Count >> 1) - 1))
+                {
+                    audio_data_output_count++;
+                }
+                else
+                {
+                    Audio_Flame_End_flag = SET;
+                    Audio_Double_Buffer = 0;
+                    audio_data_output_count = 0;
+                }
+            }
+            else if(Audio_Channnel_Count == 2)
+            {
+                if(audio_data_output_count < ((Audio_Flame_Data_Count >> 1) - 2))
+                {
+                    audio_data_output_count += 2;
+                }
+                else
+                {
+                    Audio_Flame_End_flag = SET;
+                    Audio_Double_Buffer = 0;
+                    audio_data_output_count = 0;
+                }
+            }
+        }
+    }
+}
+
+void pop_noise_reduction(void)
+{
+    unsigned int loop0, loop1;
+
+    for(loop0 = 0;loop0 <= 0x8000;loop0++)
+    {
+        HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_L, (loop0 & 0x0000fff0));
+        HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_L, (loop0 & 0x0000fff0));
+        // LL_DAC_ConvertData12LeftAligned( DAC1, LL_DAC_CHANNEL_1, (loop0 & 0x0000fff0));
+        // LL_DAC_ConvertData12LeftAligned( DAC1, LL_DAC_CHANNEL_2, (loop0 & 0x0000fff0));
+        for(loop1 = 0;loop1 < 250;loop1++)
+        {
+            asm volatile(
+                "nop"
+            );
+        }
+    }
+}
+
+/*
+ * Here's the routine that will replace the standard error_exit method:
+ */
+
+void my_error_exit (j_common_ptr cinfo)
+{
+  /* cinfo->err really points to a my_error_mgr struct, so coerce pointer */
+  my_error_ptr myerr = (my_error_ptr) cinfo->err;
+
+    MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "my_error_exit!\n");
+  /* Always display the message. */
+  /* We could postpone this until after returning, if we chose. */
+  (*cinfo->err->output_message) (cinfo);
+
+  /* Return control to the setjmp point */
+  longjmp(myerr->setjmp_buffer, 1);
+}
+
+FRESULT scan_files (char* pat)
+{
+    UINT i;
+    uint16_t color = 65535;
+    char path[20];
+    sprintf (path, "%s",pat);
+
+    SDResult = f_opendir(&dir, path);                       /* Open the directory */
+    if (SDResult == FR_OK)
+    {
+        for (;;)
+        {
+            SDResult = f_readdir(&dir, &fno);                   /* Read a directory item */
+            if (SDResult != FR_OK || fno.fname[0] == 0) break;  /* Break on error or end of dir */
+            if (fno.fattrib & AM_DIR)     /* It is a directory */
+            {
+                if (!(strcmp ("SYSTEM~1", fno.fname))) continue;
+                MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "Dir: %s\r\n", fno.fname);
+                color -= 1024;
+                i = strlen(path);
+                sprintf(&path[i], "/%s", fno.fname);
+                SDResult = scan_files(path);                     /* Enter the directory */
+                if (SDResult != FR_OK) break;
+                path[i] = 0;
+            }
+            else
+            {                                       /* It is a file. */
+                MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "File: %s/%s\r\n", path, fno.fname);
+                color -= 1024;
+            }
+        }
+        f_closedir(&dir);
+    }
+    else
+    {
+        MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "Error open dir!\n");
+    }
+    return SDResult;
+}
+
+
+static int bufftoint(char *buff)
+{
+    int x=buff[3];
+    x=x<<8;
+    x=x|buff[2];
+    x=x<<8;
+    x=x|buff[1];
+    x=x<<8;
+    x=x|buff[0];
+
+    return x;
+}
+
+
+uint8_t MEDIA_DisplayJpeg(char * pPath)
+{
+    uint8_t u8ReturnError = 0x0U;
+    uint8_t r, g, b;
+    uint16_t u16Color;
+    uint16_t u16Index;
+
+    if( FR_OK==f_open(&SDFile, (TCHAR*) pPath, FA_READ) )
+    {
+        /* Step 1: allocate and initialize JPEG decompression object */
+        /* We set up the normal JPEG error routines, then override error_exit. */
+        cinfo.err = jpeg_std_error(&jerr.pub);
+        jerr.pub.error_exit = my_error_exit;
+
+        /* Establish the setjmp return context for my_error_exit to use. */
+        if (setjmp(jerr.setjmp_buffer))
+        {
+            /* If we get here, the JPEG code has signaled an error.
+             * We need to clean up the JPEG object, close the input file, and return.
+                */
+            jpeg_destroy_decompress(&cinfo);
+            MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "Destroy Compression!\n");
+            HAL_Delay(1000);
+            MATRIX_FillScreen(0x0);
+            f_close(&SDFile);
+            u8ReturnError = 0x1U;
+        }
+        else
+        {
+            /* Now we can initialize the JPEG decompression object. */
+            // MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "jpeg_create_decompress: %i\n",0);
+            jpeg_create_decompress(&cinfo);
+            // MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "jpeg_stdio_src: %i\n",0);
+            /* Step 2: specify data source (eg, a file) */
+            jpeg_stdio_src(&cinfo, &SDFile);
+            // MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "jpeg_read_header: %i\n",0);
+            /* Step 3: read file parameters with jpeg_read_header() */
+            (void) jpeg_read_header(&cinfo, TRUE);
+            /* Step 4: set parameters for decompression */
+            /* In this example, we don't need to change any of the defaults set by
+             * jpeg_read_header(), so we do nothing here.
+                */
+            // MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "jpeg_start_decompress: %i\n",0);
+            /* Step 5: Start decompressor */
+            (void) jpeg_start_decompress(&cinfo);
+            /* We may need to do some setup of our own at this point before reading
+             * the data.  After jpeg_start_decompress() we have the correct scaled
+                * output image dimensions available, as well as the output colormap
+                * if we asked for color quantization.
+                * In this example, we need to make an output work buffer of the u16RightPos size.
+                */
+            /* JSAMPLEs per row in output buffer */
+            /* row_stride = cinfo.output_width * cinfo.output_components; */
+            /* Make a one-row-high sample array that will go away when done with image */
+            /* nRowBuff[0] = (unsigned char *) malloc( row_stride ); */
+            nRowBuff[0] = (unsigned char *) pagebuff;
+            // MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "print: %i\n",0);
+            /* Step 6: while (scan lines remain to be read) */
+            /*           jpeg_read_scanlines(...); */
+            while( cinfo.output_scanline < cinfo.output_height)
+            {
+                /* jpeg_read_scanlines expects an array of pointers to scanlines.
+                 * Here the array is only one element long, but you could ask for
+                    * more than one scanline at a time if that's more convenient.
+                    */
+                // MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "step 0: %i\n",cinfo.output_height);
+                (void) jpeg_read_scanlines(&cinfo, nRowBuff, 1);
+                // MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "step 1: %i\n",cinfo.output_height);
+                for( u16Index = 0U; u16Index < MATRIX_WIDTH; u16Index++ )
+                {
+                    r = (uint8_t) pagebuff[ u16Index * 3 + 0 ];
+                    g = (uint8_t) pagebuff[ u16Index * 3 + 1 ];
+                    b = (uint8_t) pagebuff[ u16Index * 3 + 2 ];
+
+                    r = pgm_read_byte(&gamma_table[(r * 255) >> 8]); // Gamma correction table maps
+                    g = pgm_read_byte(&gamma_table[(g * 255) >> 8]); // 8-bit input to 4-bit output
+                    b = pgm_read_byte(&gamma_table[(b * 255) >> 8]);
+
+                    u16Color =  (r << 12) | ((r & 0x8) << 8) | // 4/4/4 -> 5/6/5
+                                (g <<  7) | ((g & 0xC) << 3) |
+                                (b <<  1) | ( b        >> 3);
+
+                    MATRIX_WritePixel( u16Index, cinfo.output_scanline - 1, u16Color );
+                }
+            }
+
+            // MATRIX_SetCursor(0, 5);
+            // MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "%s\r\n",  pPath);
+
+            /* Step 7: Finish decompression */
+            (void) jpeg_finish_decompress(&cinfo);
+                /* Step 8: Release JPEG decompression object */
+            /* This is an important step since it will release a good deal of memory. */
+            jpeg_destroy_decompress(&cinfo);
+            /* After finish_decompress, we can close the input file. */
+            f_close(&SDFile);
+            /**
+             * In case use the static buffer as a local pointer, it must not be free caused from it shall re-use another behavior
+             * free(nRowBuff[0]);
+             */
+        }
+    }
+    else
+    {
+        MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "can't open !\n");
+        u8ReturnError = 0x2U;
+    }
+
+    return u8ReturnError;
+}
+
 
 READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
 {
@@ -1393,7 +1513,7 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
     // MATRIX_Printf( FONT_TOMTHUMB, 1U, 42U, 21U,  0xFFF, "3. %u\r\n", play_info->avi_info.avi_file_size);
     // MATRIX_Printf( FONT_TOMTHUMB, 1U, 42U, 28U,  0xFFF, "4. %u\r\n", play_info->avi_info.avi_width);
     // MATRIX_Printf( FONT_TOMTHUMB, 1U, 42U, 35U,  0xFFF, "5. %u\r\n", play_info->avi_info.avi_height);
-    // HAL_Delay(4000);
+    // HAL_Delay(1000);
     // MATRIX_FillScreen(0x0);
 
     f_close(&avi_fileobject);
@@ -2054,6 +2174,8 @@ READ_FILE_RESULT SD_ReadAviStream(PLAY_INFO *play_info, uint32_t read_frame_coun
 
     FATFS_ERROR_PROCESS:
         MATRIX_Printf( FONT_DEFAULT, 1U, 0U, 0U, 0xFFFF, "FATFS_ERROR_PROCESS\r\n");
+        HAL_DAC_Stop(&hdac1, DAC_CHANNEL_1);
+        HAL_DAC_Stop(&hdac1, DAC_CHANNEL_2);
         HAL_Delay(3000);
         MATRIX_FillScreen(0x0);
         // snprintf((char*)previous_filename, _MAX_LFN, "*");
@@ -2074,7 +2196,7 @@ void SD_PlayAviVideo(void)
     unsigned int frame_count = 0;
     char playlist_filename[_MAX_LFN] = "list.txt";
 
-    float flame_rate;
+    float frame_duty;
 
     unsigned char loop_status = LOOP_ALL;
     // unsigned char ledpanel_brightness = 100;
@@ -2083,8 +2205,8 @@ void SD_PlayAviVideo(void)
     // unsigned int previous_sw_value = 0;
 
     // char display_text_buffer[DISPLAY_TEXT_MAX];
-    // unsigned short display_text_flame;
-    // unsigned short display_text_flame_count = 0;
+    unsigned short display_text_flame;
+    unsigned short display_text_flame_count = 0;
     // char status_text[DISPLAY_TEXT_MAX] = {0};
 
     // char movie_time[20] = {0};
@@ -2118,6 +2240,7 @@ void SD_PlayAviVideo(void)
     uint32_t u32PreFrame = 0UL;
     uint32_t u32CurrTick = 0UL;
     uint32_t u32PreTick = 0UL;
+    uint32_t u32PreDelay = 0UL;
     uint16_t u16VideoHeight = playlist[track_count].avi_info.avi_height;
     uint16_t u16VideoHeightDiv2 = u16VideoHeight >> 1;
     uint16_t u16VideoWidth = playlist[track_count].avi_info.avi_width;
@@ -2136,10 +2259,14 @@ void SD_PlayAviVideo(void)
     MATRIX_Printf( FONT_DEFAULT, 1, 0x0, 0x0, 0xF81F, "Starting... W: %d, H: %d", u16VideoWidth, u16VideoHeight );
     HAL_Delay(500);
 
+    HAL_DAC_Start(&hdac1, DAC_CHANNEL_1);
+    HAL_DAC_Start(&hdac1, DAC_CHANNEL_2);
+    pop_noise_reduction();
+
+    frame_duty = 1000.0/playlist[track_count].avi_info.video_frame_rate;
+    // display_text_flame = (unsigned short)(flame_rate * 500) / DISPLAY_TEXT_TIME;
     while(1)
     {
-        flame_rate = playlist[track_count].avi_info.video_frame_rate;
-        // display_text_flame = (unsigned short)(flame_rate * 500) / DISPLAY_TEXT_TIME;
         SD_ReadAviStream(&playlist[track_count], frame_count);
 
         if(PLAY == Status)
@@ -2150,9 +2277,11 @@ void SD_PlayAviVideo(void)
             }
             else
             {
+                Volume_Value_float = 0U;
                 frame_count = 0;
                 Video_End_Flag = SET;
                 Audio_End_Flag = SET;
+
             }
         } else if(PAUSE == Status)
         {
@@ -2199,6 +2328,7 @@ void SD_PlayAviVideo(void)
             u32PreFrame = 0UL;
             u32CurrTick = 0UL;
             u32PreTick = 0UL;
+            u32PreDelay = 0UL;
             u16VideoHeight = playlist[track_count].avi_info.avi_height;
             u16VideoHeightDiv2 = u16VideoHeight >> 1;
             u16VideoWidth = playlist[track_count].avi_info.avi_width;
@@ -2210,7 +2340,9 @@ void SD_PlayAviVideo(void)
             HAL_Delay(1000);
             MATRIX_FillScreen(0x0);
             MATRIX_SetCursor(0, 0);
-
+            Volume_Value_float = 1U;
+            frame_duty = 1000.0/playlist[track_count].avi_info.video_frame_rate;
+            // display_text_flame = (unsigned short)(flame_rate * 500) / DISPLAY_TEXT_TIME;
             Video_End_Flag = RESET;
             Audio_End_Flag = RESET;
         }
@@ -2258,28 +2390,26 @@ void SD_PlayAviVideo(void)
         MATRIX_Printf( FONT_DEFAULT, 1U, 85, 10, 0xFFFF, "%i.%ifPs", (uint32_t) fCurrkFps, (uint32_t) ((fCurrkFps - (uint32_t) fCurrkFps) * 10) );
         /* MATRIX_UpdateScreen(); */
         u32CurrTick = HAL_GetTick();
-        /* OFF_LED(); */
-        // while(Audio_Flame_End_flag == RESET);
+        while(Audio_Flame_End_flag == RESET && ((HAL_GetTick() - u32CurrTick) < 10) );
         Audio_Flame_End_flag = RESET;
-        // HAL_Delay(500/flame_rate - (u32CurrTick - u32PreTick) - 1U);
-        if( u32CurrTick - u32PreTick >= 500)
+        u32CurrTick = HAL_GetTick();
+        if( frame_duty - (u32CurrTick - u32PreTick) > 1U)
         {
-            fCurrkFps = (frame_count - u32PreFrame) << 1;
+            HAL_Delay(frame_duty - (u32CurrTick - u32PreTick) - 1U);
+        }
+        u32PreTick = HAL_GetTick();
 
-            u32PreTick = u32CurrTick;
+        if( u32CurrTick - u32PreDelay >= 1000)
+        {
+            fCurrkFps = (frame_count - u32PreFrame);
+
+            u32PreDelay = u32CurrTick;
             u32PreFrame = frame_count;
         }
-        // HAL_Delay(20);
-        /* ON_LED(); */
-        // HAL_Delay(500/flame_rate);
     }
 }
 /* USER CODE END 0 */
 
-FIL stm32_fileobject;
-
-    char sPath[30] = "2.avi";
-    uint16_t i;
 /**
   * @brief  The application entry point.
   * @retval int
@@ -2287,6 +2417,7 @@ FIL stm32_fileobject;
 int main(void)
 {
   /* USER CODE BEGIN 1 */
+    FIL stm32_fileobject;
     HAL_SD_CardInfoTypeDef CardInfo;
     FATFS *pfs;
     DWORD fre_clust;
@@ -2330,12 +2461,14 @@ int main(void)
   MX_LIBJPEG_Init();
   MX_DAC1_Init();
   MX_I2C4_Init();
+  MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
-    MATRIX_Init( 60 );
+    MATRIX_Init( 70 );
     MATRIX_SetTextSize(1);
     MATRIX_FillScreen(0x0);
     // MATRIX_disImage(gImage_256_192, 256, 192, 0, 0, RGB_888);
 
+    HAL_TIM_Base_Start_IT(&htim6);
     HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_2);
     HAL_TIM_Base_Start_IT(&htim4);
     __HAL_TIM_SET_COMPARE(&htim2,TIM_CHANNEL_2,MATRIX_getBrightness());
@@ -2552,7 +2685,7 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.APB2CLKDivider = RCC_APB2_DIV2;
   RCC_ClkInitStruct.APB4CLKDivider = RCC_APB4_DIV2;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_4) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
   {
     Error_Handler();
   }
@@ -2615,24 +2748,24 @@ void MPU_Config(void)
   HAL_MPU_ConfigRegion(&MPU_InitStruct);
   /** Initializes and configures the Region and the memory to be protected
   */
-  MPU_InitStruct.IsCacheable = MPU_ACCESS_NOT_CACHEABLE;
   MPU_InitStruct.Number = MPU_REGION_NUMBER4;
   MPU_InitStruct.BaseAddress = 0x24060000;
   MPU_InitStruct.Size = MPU_REGION_SIZE_128KB;
+  MPU_InitStruct.IsCacheable = MPU_ACCESS_NOT_CACHEABLE;
 
   HAL_MPU_ConfigRegion(&MPU_InitStruct);
   /** Initializes and configures the Region and the memory to be protected
   */
-  MPU_InitStruct.IsCacheable = MPU_ACCESS_CACHEABLE;
   MPU_InitStruct.Number = MPU_REGION_NUMBER5;
   MPU_InitStruct.BaseAddress = 0x30000000;
-  MPU_InitStruct.Size = MPU_REGION_SIZE_128KB;
+  MPU_InitStruct.IsCacheable = MPU_ACCESS_CACHEABLE;
 
   HAL_MPU_ConfigRegion(&MPU_InitStruct);
   /** Initializes and configures the Region and the memory to be protected
   */
   MPU_InitStruct.Number = MPU_REGION_NUMBER6;
   MPU_InitStruct.BaseAddress = 0x30020000;
+  MPU_InitStruct.AccessPermission = MPU_REGION_NO_ACCESS;
 
   HAL_MPU_ConfigRegion(&MPU_InitStruct);
   /** Initializes and configures the Region and the memory to be protected
@@ -2640,7 +2773,7 @@ void MPU_Config(void)
   MPU_InitStruct.Number = MPU_REGION_NUMBER7;
   MPU_InitStruct.BaseAddress = 0x30040000;
   MPU_InitStruct.Size = MPU_REGION_SIZE_32KB;
-  MPU_InitStruct.AccessPermission = MPU_REGION_NO_ACCESS;
+  MPU_InitStruct.AccessPermission = MPU_REGION_FULL_ACCESS;
 
   HAL_MPU_ConfigRegion(&MPU_InitStruct);
   /** Initializes and configures the Region and the memory to be protected
@@ -2648,7 +2781,6 @@ void MPU_Config(void)
   MPU_InitStruct.Number = MPU_REGION_NUMBER8;
   MPU_InitStruct.BaseAddress = 0x38000000;
   MPU_InitStruct.Size = MPU_REGION_SIZE_64KB;
-  MPU_InitStruct.AccessPermission = MPU_REGION_FULL_ACCESS;
 
   HAL_MPU_ConfigRegion(&MPU_InitStruct);
   /** Initializes and configures the Region and the memory to be protected
