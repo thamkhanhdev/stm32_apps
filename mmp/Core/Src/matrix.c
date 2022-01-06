@@ -56,8 +56,8 @@ extern "C"{
 const uint16_t scan_PWM_duty[]={4,8,16,32,64,128,256,512,1024};   //he so chia nạp vao time pwm chan OE
 // uint16_t const gTimeCount[8]={14, 28, 56, 112, 224, 448, 480, 600}; // he so chia nap vao timer ok with 256x64 47.9Hz
 // uint16_t const gTimeCount[8]={ 40, 80, 160, 240, 360, 480, 720, 1200}; // RGB565 he so chia nap vao timer ok with 256x64 47.9Hz
-// uint16_t const gTimeCount[MAX_BIT]={ 80, 160, 240, 360, 480, 720}; // RGB555 First options he so chia nap vao timer ok with 256x64 47.9Hz
-uint16_t const gTimeCount[MAX_BIT]={ 90, 180, 270, 380, 600, 800}; // RGB555 Second options he so chia nap vao timer ok with 256x64 47.9Hz
+uint16_t const gTimeCount[MAX_BIT]={ 80, 160, 240, 360, 480, 720}; // RGB555 First options he so chia nap vao timer ok with 256x64 47.9Hz
+// uint16_t const gTimeCount[MAX_BIT]={ 90, 180, 270, 380, 600, 800}; // RGB555 Second options he so chia nap vao timer ok with 256x64 47.9Hz
 // uint16_t const gTimeCount[MAX_BIT]={ 120, 240, 360, 480, 600, 1000}; // he so chia nap vao timer ok with 256x64 47.9Hz
 
 static const int8_t sinetab[256] = {
@@ -111,7 +111,7 @@ static uint8_t gBitPos __attribute__((section (".ram_d1_cacheable")));
 /**
  * @brief The current brightness value
  */
-static uint8_t gBrightness __attribute__((section (".ram_d1_cacheable")));
+static uint16_t gBrightness __attribute__((section (".ram_d1_cacheable")));
 static bool gCp437 __attribute__((section (".ram_d1_cacheable")));
 static volatile uint32_t gCountBit __attribute__((section (".ram_d1_cacheable")));
 static uint16_t gCursorX __attribute__((section (".ram_d1_cacheable")));
@@ -586,7 +586,13 @@ void IRQ_ProcessMonitor( void )
      *  can clock in the next row of data.
      */
     TIM2->CCR2 = gBrightness;
+    // TIM2->CCR2 = 1280 - (gBrightness * (1 << gBitPos));
     LAT_P->BSRR = LAT_OFF;
+
+    /*! Trigger EGR upto 1 in order re-load PSC value */
+    TIM4->EGR = 1U;
+    /*! Clear interrupt flag */
+    TIM4->SR = 0xFFFFFFFE;
 
     if( ++gBitPos >= MAX_BIT )
     {
@@ -604,10 +610,6 @@ void IRQ_ProcessMonitor( void )
 #endif /* #ifdef USE_SECOND_METHOD */
     }
 
-    /*! Trigger EGR upto 1 in order re-load PSC value */
-    TIM4->EGR = 1U;
-    /*! Clear interrupt flag */
-    TIM4->SR = 0xFFFFFFFE;
 }
 
 /**
