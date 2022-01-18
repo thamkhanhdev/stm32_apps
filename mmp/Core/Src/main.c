@@ -807,8 +807,8 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
     UINT read_data_byte_result;
 
 
-    // MATRIX_Printf( FONT_DEFAULT, 1U, 0U, 10U, 0x1AF, "-->Read HD");
-    MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0x1AF, "-->Read HD %s\r\n", play_info->file_name);
+    // MATRIX_Printf( FONT_DEFAULT, 1U, 0U, 10U, 0x7FF, "-->Read HD");
+    MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0x7FF, "-->Read HD %s\r\n", play_info->file_name);
     HAL_Delay(400);
 
     // char path[30] = "2.avi";
@@ -867,13 +867,13 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
     printf("RIFF�`�����N�T�C�Y:%u\r\n", riff_chunk->cb);
     */
 
-    MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0x1AF, "-->Reading...\n");
+    MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0x7FF, "-->Reading...\n");
     HAL_Delay(200);
 
 
     avi_file_size = riff_chunk->cb + sizeof(RIFFCHUNK);
 
-    MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0x1AF, "-->avi_file_size: %u\n", avi_file_size);
+    MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0x7FF, "-->avi_file_size: %u\n", avi_file_size);
     MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xF8A0, "RIFF fcc: %.4s\r\n", riff_chunk->fcc.fcc);
     MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xF80A, "RIFF cb: %u\r\n", riff_chunk->cb);
 
@@ -2564,6 +2564,15 @@ int main(void)
 
             while(1)
             {
+                MATRIX_FillScreen(0xFFFF);
+                HAL_Delay(2000);
+                MATRIX_FillScreen(0x1F);
+                HAL_Delay(2000);
+                MATRIX_FillScreen(0x7E0);
+                HAL_Delay(2000);
+                MATRIX_FillScreen(0xF800);
+                HAL_Delay(2000);
+
                 // for (i = 0; i < 500; i++)
                 // {
                 //     u32PreTick = HAL_GetTick();

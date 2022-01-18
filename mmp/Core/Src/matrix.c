@@ -56,7 +56,8 @@ extern "C"{
 const uint16_t scan_PWM_duty[]={4,8,16,32,64,128,256,512,1024};   //he so chia nạp vao time pwm chan OE
 // uint16_t const gTimeCount[8]={14, 28, 56, 112, 224, 448, 480, 600}; // he so chia nap vao timer ok with 256x64 47.9Hz
 // uint16_t const gTimeCount[8]={ 40, 80, 160, 240, 360, 480, 720, 1200}; // RGB565 he so chia nap vao timer ok with 256x64 47.9Hz
-uint16_t const gTimeCount[MAX_BIT]={ 80, 160, 240, 360, 480, 720}; // RGB555 First options he so chia nap vao timer ok with 256x64 47.9Hz
+// uint16_t const gTimeCount[MAX_BIT]={ 16, 16, 16, 16, 16, 16}; // RGB555 First options he so chia nap vao timer ok with 256x64 47.9Hz
+uint16_t const gTimeCount[MAX_BIT]={ 2, 4, 8, 16, 32, 64, 128}; // RGB555 First options he so chia nap vao timer ok with 256x64 47.9Hz
 // uint16_t const gTimeCount[MAX_BIT]={ 90, 180, 270, 380, 600, 800}; // RGB555 Second options he so chia nap vao timer ok with 256x64 47.9Hz
 // uint16_t const gTimeCount[MAX_BIT]={ 120, 240, 360, 480, 600, 1000}; // he so chia nap vao timer ok with 256x64 47.9Hz
 
@@ -554,6 +555,8 @@ void IRQ_ProcessMonitor( void )
 {
     uint16_t u16Count = MATRIX_WIDTH;
 
+    GPIOD->BSRR = 0x4000;
+
     /*! Step 1: Clock in the data for the current row one bit at a time */
     while( u16Count-- )
     {
@@ -563,8 +566,8 @@ void IRQ_ProcessMonitor( void )
 #ifdef USE_DOUBLE_BUFFER
         DAT1_P->ODR= gIsrBuff1[ gCountBit ];
 #endif /* #ifdef USE_DOUBLE_BUFFER */
-        gCountBit++;
         CLK_P->BSRR=CLK_OFF;
+        gCountBit++;
         CLK_P->BSRR=CLK_ON;
     }
 
@@ -577,7 +580,7 @@ void IRQ_ProcessMonitor( void )
     LAT_P->BSRR=LAT_ON;
 
     /*! Step 3: Switch rows by driving the appropriate row select lines */
-    TIM4->PSC = gTimeCount[gBitPos];
+    // TIM4->PSC = gTimeCount[gBitPos];
     ROW_P->ODR = gRows;
 
     /*! Step 4:
@@ -585,9 +588,10 @@ void IRQ_ProcessMonitor( void )
      *  enabling the output and closing the latch so we
      *  can clock in the next row of data.
      */
-    TIM2->CCR2 = gBrightness;
     // TIM2->CCR2 = 1280 - (gBrightness * (1 << gBitPos));
     LAT_P->BSRR = LAT_OFF;
+    // TIM2->CCR2 = gBrightness;
+    TIM2->CCR2 = gTimeCount[gBitPos];
 
     /*! Trigger EGR upto 1 in order re-load PSC value */
     TIM4->EGR = 1U;
@@ -610,6 +614,7 @@ void IRQ_ProcessMonitor( void )
 #endif /* #ifdef USE_SECOND_METHOD */
     }
 
+    GPIOD->BSRR = 0x40000000;
 }
 
 /**

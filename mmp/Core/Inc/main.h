@@ -108,8 +108,6 @@ void Error_Handler(void);
 #define G8_GPIO_Port GPIOB
 #define B8_Pin GPIO_PIN_11
 #define B8_GPIO_Port GPIOB
-#define BT4_Pin GPIO_PIN_14
-#define BT4_GPIO_Port GPIOD
 #define BT2_Pin GPIO_PIN_6
 #define BT2_GPIO_Port GPIOC
 #define BT1_Pin GPIO_PIN_7
