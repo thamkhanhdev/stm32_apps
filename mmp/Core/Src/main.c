@@ -391,7 +391,11 @@ typedef struct
 #define MATRIXLED_X_COUNT 256
 #define MATRIXLED_Y_COUNT 192
 
+#ifdef RGB888
+#define MATRIXLED_COLOR_COUNT 3
+#else
 #define MATRIXLED_COLOR_COUNT 2
+#endif
 #define MATRIXLED_PWM_RESOLUTION 256
 
 #define SPI_SEND_COMMAND_COUNT 4
@@ -2186,7 +2190,7 @@ READ_FILE_RESULT SD_ReadAviStream(PLAY_INFO *play_info, uint32_t read_frame_coun
 void SD_PlayAviVideo(void)
 {
     uint8_t r, g, b;
-    uint16_t u16Color;
+    uint32_t u32Color;
 
     PLAY_INFO *playlist;
 
@@ -2360,21 +2364,37 @@ void SD_PlayAviVideo(void)
                 u16ySecondFrame = u8yIdx+u16VideoHeightDiv2;
 
                 /* For part 1 */
-                u16Color = Flame_Buffer[u8yIdx][u8xIdx][1]<<8U | Flame_Buffer[u8yIdx][u8xIdx][0];
-                MATRIX_WritePixel(u8xIdx, u16yTmp14, u16Color );
+#if (defined(RGB555) || defined(RGB565))
+                u32Color = Flame_Buffer[u8yIdx][u8xIdx][1]<<8U | Flame_Buffer[u8yIdx][u8xIdx][0];
+#elif defined(RGB888)
+                u32Color = Flame_Buffer[u8yIdx][u8xIdx][2]<<16U | Flame_Buffer[u8yIdx][u8xIdx][1]<<8U | Flame_Buffer[u8yIdx][u8xIdx][0];
+#endif
+                MATRIX_WritePixel(u8xIdx, u16yTmp14, u32Color );
                 /* For part 2 */
-                u16Color = Flame_Buffer[u16ySecondFrame][u8xIdx][1]<<8U | Flame_Buffer[u16ySecondFrame][u8xIdx][0];
-                MATRIX_WritePixel(u8xIdx, u16yTmp23, u16Color );
+#if (defined(RGB555) || defined(RGB565))
+                u32Color = Flame_Buffer[u16ySecondFrame][u8xIdx][1]<<8U | Flame_Buffer[u16ySecondFrame][u8xIdx][0];
+#elif defined(RGB888)
+                u32Color = Flame_Buffer[u16ySecondFrame][u8xIdx][2]<<16U | Flame_Buffer[u16ySecondFrame][u8xIdx][1]<<8U | Flame_Buffer[u16ySecondFrame][u8xIdx][0];
+#endif
+                MATRIX_WritePixel(u8xIdx, u16yTmp23, u32Color );
                 /* For part 3 */
-                u16Color = Flame_Buffer[u16ySecondFrame][u16xSecondFrame][1]<<8U | Flame_Buffer[u16ySecondFrame][u16xSecondFrame][0];
-                MATRIX_WritePixel(u16xTmpCalibratePos, u16yTmp23, u16Color );
+#if (defined(RGB555) || defined(RGB565))
+                u32Color = Flame_Buffer[u16ySecondFrame][u16xSecondFrame][1]<<8U | Flame_Buffer[u16ySecondFrame][u16xSecondFrame][0];
+#elif defined(RGB888)
+                u32Color = Flame_Buffer[u16ySecondFrame][u16xSecondFrame][2]<<16U | Flame_Buffer[u16ySecondFrame][u16xSecondFrame][1]<<8U | Flame_Buffer[u16ySecondFrame][u16xSecondFrame][0];
+#endif
+                MATRIX_WritePixel(u16xTmpCalibratePos, u16yTmp23, u32Color );
                 /* For part 4 */
-                u16Color = Flame_Buffer[u8yIdx][u16xSecondFrame][1]<<8U | Flame_Buffer[u8yIdx][u16xSecondFrame][0];
-                MATRIX_WritePixel(u16xTmpCalibratePos, u16yTmp14, u16Color );
+#if (defined(RGB555) || defined(RGB565))
+                u32Color = Flame_Buffer[u8yIdx][u16xSecondFrame][1]<<8U | Flame_Buffer[u8yIdx][u16xSecondFrame][0];
+#elif defined(RGB888)
+                u32Color = Flame_Buffer[u8yIdx][u16xSecondFrame][2]<<16U | Flame_Buffer[u8yIdx][u16xSecondFrame][1]<<8U | Flame_Buffer[u8yIdx][u16xSecondFrame][0];
+#endif
+                MATRIX_WritePixel(u16xTmpCalibratePos, u16yTmp14, u32Color );
             }
         }
 
-        MATRIX_Printf( FONT_DEFAULT, 1U, 85, 10, 0xFFFF, "%i.%ifPs", (uint32_t) fCurrkFps, (uint32_t) ((fCurrkFps - (uint32_t) fCurrkFps) * 10) );
+        MATRIX_Printf( FONT_DEFAULT, 1U, 85, 10, 0xFFFFFFFF, "%i.%ifPs", (uint32_t) fCurrkFps, (uint32_t) ((fCurrkFps - (uint32_t) fCurrkFps) * 10) );
         /* MATRIX_UpdateScreen(); */
         u32CurrTick = HAL_GetTick();
         while(Audio_Flame_End_flag == RESET && ((HAL_GetTick() - u32CurrTick) < 10) );
@@ -2450,7 +2470,7 @@ int main(void)
   MX_I2C4_Init();
   MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
-    MATRIX_Init( 70 );
+    MATRIX_Init( 19 );
     MATRIX_SetTextSize(1);
     MATRIX_FillScreen(0x0);
     // MATRIX_disImage(gImage_256_192, 256, 192, 0, 0, RGB_888);
@@ -2761,7 +2781,6 @@ void MPU_Config(void)
   */
   MPU_InitStruct.Number = MPU_REGION_NUMBER6;
   MPU_InitStruct.BaseAddress = 0x30020000;
-  MPU_InitStruct.AccessPermission = MPU_REGION_NO_ACCESS;
 
   HAL_MPU_ConfigRegion(&MPU_InitStruct);
   /** Initializes and configures the Region and the memory to be protected
@@ -2769,7 +2788,6 @@ void MPU_Config(void)
   MPU_InitStruct.Number = MPU_REGION_NUMBER7;
   MPU_InitStruct.BaseAddress = 0x30040000;
   MPU_InitStruct.Size = MPU_REGION_SIZE_32KB;
-  MPU_InitStruct.AccessPermission = MPU_REGION_FULL_ACCESS;
 
   HAL_MPU_ConfigRegion(&MPU_InitStruct);
   /** Initializes and configures the Region and the memory to be protected

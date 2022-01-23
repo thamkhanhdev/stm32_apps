@@ -81,7 +81,7 @@ extern "C"{
 #define MATRIX_HEIGHT           192U
 #define MATRIX_WIDTH_BIT        ((uint8_t) 8U)
 
-#define RGB555
+#define RGB565
 
 #if (MATRIX_HEIGHT > 0U)
     #define USE_BUS_1
@@ -107,19 +107,34 @@ extern "C"{
 #define MATRIX_MASKROWS (uint16_t)(~(MATRIX_SCANRATE-1U))
 
 #if defined(RGB888)
-#define MAX_BIT   ((uint8_t) (8U))
+    #define TYPEDEF_BUFF uint32_t
+
+    #define MAX_BIT   ((uint8_t) (8U))
+
+    #define R_COLOR_SHIFT ((uint8_t) (16U))
+    #define R_COLOR_MASK  ((uint8_t) (0xFFU))
+
+    #define G_COLOR_SHIFT ((uint8_t) (8U))
+    #define G_COLOR_MASK  ((uint8_t) (0xFFU))
+
+    #define B_COLOR_SHIFT ((uint8_t) (0U))
+    #define B_COLOR_MASK  ((uint8_t) (0xFFU))
 #elif defined(RGB666) || defined(RGB565)
+    #define TYPEDEF_BUFF uint16_t
+
     #define MAX_BIT   ((uint8_t) (6U))
 
     #define R_COLOR_SHIFT ((uint8_t) (11U))
     #define R_COLOR_MASK  ((uint8_t) (0x1FU))
 
-    #define G_COLOR_SHIFT ((uint8_t) (5U))
-    #define G_COLOR_MASK  ((uint8_t) (0x3FU))
+    #define G_COLOR_SHIFT ((uint8_t) (6U))
+    #define G_COLOR_MASK  ((uint8_t) (0x1FU))
 
     #define B_COLOR_SHIFT ((uint8_t) (0U))
     #define B_COLOR_MASK  ((uint8_t) (0x1FU))
 #elif defined(RGB555)
+    #define TYPEDEF_BUFF uint16_t
+
     #define MAX_BIT   ((uint8_t) (5U))
 
     #define R_COLOR_SHIFT ((uint8_t) (11U))
@@ -292,31 +307,31 @@ StdReturnType MATRIX_Init( uint8_t bri );
 StdReturnType MATRIX_FillAllColorPannel( uint8_t cR, uint8_t cG, uint8_t cB );
 
 void MATRIX_SwapBuffers( void );
-void MATRIX_DrawCircle( int16_t x0, int16_t y0, int16_t r, uint16_t color );
-void MATRIX_WriteLine( int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color );
-void MATRIX_DrawFastVLine( int16_t x, int16_t y, int16_t h, uint16_t color );
-void MATRIX_DrawFastHLine( int16_t x, int16_t y, int16_t w, uint16_t color );
-void MATRIX_FillRect( int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color );
-void MATRIX_FillScreen( uint16_t color );
-void MATRIX_DrawLine( int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color );
-void MATRIX_DrawCircleHelper( int16_t x0, int16_t y0, int16_t r, uint8_t cornername, uint16_t color );
-void MATRIX_FillCircle( int16_t x0, int16_t y0, int16_t r, uint16_t color );
-void MATRIX_FillCircleHelper( int16_t x0, int16_t y0, int16_t r, uint8_t corners, int16_t delta, uint16_t color );
-void MATRIX_DrawRect( int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color );
-void MATRIX_DrawRoundRect( int16_t x, int16_t y, int16_t w, int16_t h, int16_t r, uint16_t color );
-void MATRIX_FillRoundRect( int16_t x, int16_t y, int16_t w, int16_t h, int16_t r, uint16_t color );
-void MATRIX_DrawTriangle( int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color );
-void MATRIX_FillTriangle( int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color );
+void MATRIX_DrawCircle( int16_t x0, int16_t y0, int16_t r, uint32_t u32Color );
+void MATRIX_WriteLine( int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint32_t u32Color );
+void MATRIX_DrawFastVLine( int16_t x, int16_t y, int16_t h, uint32_t u32Color );
+void MATRIX_DrawFastHLine( int16_t x, int16_t y, int16_t w, uint32_t u32Color );
+void MATRIX_FillRect( int16_t x, int16_t y, int16_t w, int16_t h, uint32_t u32Color );
+void MATRIX_FillScreen( uint32_t u32Color );
+void MATRIX_DrawLine( int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint32_t u32Color );
+void MATRIX_DrawCircleHelper( int16_t x0, int16_t y0, int16_t r, uint8_t cornername, uint32_t u32Color );
+void MATRIX_FillCircle( int16_t x0, int16_t y0, int16_t r, uint32_t u32Color );
+void MATRIX_FillCircleHelper( int16_t x0, int16_t y0, int16_t r, uint8_t corners, int16_t delta, uint32_t u32Color );
+void MATRIX_DrawRect( int16_t x, int16_t y, int16_t w, int16_t h, uint32_t u32Color );
+void MATRIX_DrawRoundRect( int16_t x, int16_t y, int16_t w, int16_t h, int16_t r, uint32_t u32Color );
+void MATRIX_FillRoundRect( int16_t x, int16_t y, int16_t w, int16_t h, int16_t r, uint32_t u32Color );
+void MATRIX_DrawTriangle( int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint32_t u32Color );
+void MATRIX_FillTriangle( int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint32_t u32Color );
 void MATRIX_WritePixel( uint16_t x, uint16_t y, uint32_t c );
-void MATRIX_DrawChar( int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_t bg, uint8_t size_x, uint8_t size_y, MATRIX_FontTypes fontType );
-size_t MATRIX_Write( uint8_t c, MATRIX_FontTypes nFontType, uint16_t u16Color );
+void MATRIX_DrawChar( int16_t x, int16_t y, unsigned char c, uint32_t u32Color, uint16_t bg, uint8_t size_x, uint8_t size_y, MATRIX_FontTypes fontType );
+size_t MATRIX_Write( uint8_t c, MATRIX_FontTypes nFontType, uint32_t u32Color );
 void MATRIX_SetTextSize( uint8_t s );
 void MATRIX_SetRotation( uint8_t x );
 void MATRIX_SetCursor( int16_t x, int16_t y );
 void MATRIX_SetTextColor( uint16_t c );
-void MATRIX_Print( char *s, MATRIX_FontTypes nFontType, uint16_t u16Color );
+void MATRIX_Print( char *s, MATRIX_FontTypes nFontType, uint32_t u32Color );
 void MATRIX_Printf( MATRIX_FontTypes nFontType, uint8_t u8TextSize,
-                    uint16_t u16XPos, uint16_t u16YPos, uint16_t u16Color, char *fmt, ... );
+                    uint16_t u16XPos, uint16_t u16YPos, uint32_t u32Color, char *fmt, ... );
 void plasma( void );
 #ifdef __cplusplus
 }
