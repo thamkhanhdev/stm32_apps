@@ -2241,6 +2241,8 @@ void SD_PlayAviVideo(void)
     // display_text_flame_count = 0;
     float fCurrkFps = 0;
 
+    unsigned char movie_total_time_min, movie_total_time_sec;
+    unsigned char movie_current_time_min, movie_current_time_sec;
     uint32_t u32PreFrame = 0UL;
     uint32_t u32CurrTick = 0UL;
     uint32_t u32PreTick = 0UL;
@@ -2268,6 +2270,8 @@ void SD_PlayAviVideo(void)
     pop_noise_reduction();
 
     frame_duty = 1000.0/playlist[track_count].avi_info.video_frame_rate;
+    movie_total_time_min = playlist[track_count].avi_info.video_length / (playlist[track_count].avi_info.video_frame_rate * 60);
+    movie_total_time_sec = (unsigned int)(playlist[track_count].avi_info.video_length / playlist[track_count].avi_info.video_frame_rate) % 60;
     // display_text_flame = (unsigned short)(flame_rate * 500) / DISPLAY_TEXT_TIME;
     while(1)
     {
@@ -2339,6 +2343,8 @@ void SD_PlayAviVideo(void)
             u16VideoWidthDiv2 = u16VideoWidth >> 1;
             u8HeightStart = (MATRIX_HEIGHT - u16VideoHeight) >> 1;
             u8WidthStart = (MATRIX_WIDTH - u16VideoWidth) >> 1;
+            movie_total_time_min = playlist[track_count].avi_info.video_length / (playlist[track_count].avi_info.video_frame_rate * 60);
+            movie_total_time_sec = (unsigned int)(playlist[track_count].avi_info.video_length / playlist[track_count].avi_info.video_frame_rate) % 60;
 
             MATRIX_Printf( FONT_DEFAULT, 1, 0x0, 0x0, 0xF81F, "Playing next video...");
             HAL_Delay(1000);
@@ -2393,8 +2399,11 @@ void SD_PlayAviVideo(void)
                 MATRIX_WritePixel(u16xTmpCalibratePos, u16yTmp14, u32Color );
             }
         }
+        movie_current_time_min = frame_count / (playlist[track_count].avi_info.video_frame_rate * 60);
+        movie_current_time_sec = (unsigned int)(frame_count / playlist[track_count].avi_info.video_frame_rate) % 60;
 
         MATRIX_Printf( FONT_DEFAULT, 1U, 85, 10, 0xFFFFFFFF, "%i.%ifPs", (uint32_t) fCurrkFps, (uint32_t) ((fCurrkFps - (uint32_t) fCurrkFps) * 10) );
+        MATRIX_Printf( FONT_DEFAULT, 1U, 128, 10, 0xFFFFFFFF, "%2u:%02u/%2u:%02u", movie_current_time_min, movie_current_time_sec, movie_total_time_min, movie_total_time_sec);
         /* MATRIX_UpdateScreen(); */
         u32CurrTick = HAL_GetTick();
         while(Audio_Flame_End_flag == RESET && ((HAL_GetTick() - u32CurrTick) < 10) );
