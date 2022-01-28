@@ -421,7 +421,7 @@ typedef struct
 #define DISPLAY_FPS_AVERAGE_TIME 0.4
 
 #define MAX_PLAYLIST_COUNT 9
-#define MAX_TRACK_COUNT 10
+#define MAX_TRACK_COUNT 50
 
 #define SKIP_TIME 5
 
@@ -588,7 +588,7 @@ void my_error_exit (j_common_ptr cinfo)
   /* cinfo->err really points to a my_error_mgr struct, so coerce pointer */
   my_error_ptr myerr = (my_error_ptr) cinfo->err;
 
-    MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "my_error_exit!\n");
+    // MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "my_error_exit!\n");
   /* Always display the message. */
   /* We could postpone this until after returning, if we chose. */
   (*cinfo->err->output_message) (cinfo);
@@ -614,7 +614,7 @@ FRESULT scan_files (char* pat)
             if (fno.fattrib & AM_DIR)     /* It is a directory */
             {
                 if (!(strcmp ("SYSTEM~1", fno.fname))) continue;
-                MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "Dir: %s\r\n", fno.fname);
+                // MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "Dir: %s\r\n", fno.fname);
                 color -= 1024;
                 i = strlen(path);
                 sprintf(&path[i], "/%s", fno.fname);
@@ -624,7 +624,7 @@ FRESULT scan_files (char* pat)
             }
             else
             {                                       /* It is a file. */
-                MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "File: %s/%s\r\n", path, fno.fname);
+                // MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "File: %s/%s\r\n", path, fno.fname);
                 color -= 1024;
             }
         }
@@ -632,7 +632,7 @@ FRESULT scan_files (char* pat)
     }
     else
     {
-        MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "Error open dir!\n");
+        // MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "Error open dir!\n");
     }
     return SDResult;
 }
@@ -673,8 +673,8 @@ uint8_t MEDIA_DisplayJpeg(char * pPath)
              * We need to clean up the JPEG object, close the input file, and return.
                 */
             jpeg_destroy_decompress(&cinfo);
-            MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "Destroy Compression!\n");
-            HAL_Delay(1000);
+            // MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "Destroy Compression!\n");
+            // HAL_Delay(1000);
             MATRIX_FillScreen(0x0);
             f_close(&SDFile);
             u8ReturnError = 0x1U;
@@ -756,7 +756,7 @@ uint8_t MEDIA_DisplayJpeg(char * pPath)
     }
     else
     {
-        MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "can't open !\n");
+        // MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "can't open !\n");
         u8ReturnError = 0x2U;
     }
 
@@ -812,14 +812,14 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
 
 
     // MATRIX_Printf( FONT_DEFAULT, 1U, 0U, 10U, 0x7FF, "-->Read HD");
-    MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0x7FF, "-->Read HD %s\r\n", play_info->file_name);
-    HAL_Delay(400);
+    // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0x7FF, "-->Read HD %s\r\n", play_info->file_name);
+    // HAL_Delay(400);
 
     // char path[30] = "2.avi";
     // sprintf(path,"%s", "2.avi");
     // for( uint8_t i = 0; i < 3; i++ )
     // {
-    //     MATRIX_Printf( FONT_DEFAULT, 1, 1U, 0, 10 * i, 0xFFFF, "%d %d %d %d", play_info->file_name[4*i+0], play_info->file_name[4*i+1], play_info->file_name[4*i+2], play_info->file_name[4*i+3]);
+        // MATRIX_Printf( FONT_DEFAULT, 1, 1U, 0, 10 * i, 0xFFFF, "%d %d %d %d", play_info->file_name[4*i+0], play_info->file_name[4*i+1], play_info->file_name[4*i+2], play_info->file_name[4*i+3]);
     // }
     // MATRIX_Printf( FONT_DEFAULT, 1, 1U, 0U, 30, 0xFFFF, "%s\r\n", (const TCHAR*) path);
 
@@ -827,12 +827,12 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
     if(FR_OK != fatfs_result)
     {
         // printf("SD_ReadAviHeader f_open NG fatfs_result=%d\r\n", fatfs_result);
-        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "f_open NG fatfs_result=%d\r\n", fatfs_result);
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "f_open NG fatfs_result=%d\r\n", fatfs_result);
         goto FATFS_ERROR_PROCESS;
     }
     else
     {
-        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "f_open %s\r\n", (char*)(play_info->file_name));
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "f_open %s\r\n", (char*)(play_info->file_name));
     }
 
     avi_fileobject.cltbl = linkmap_table;
@@ -840,7 +840,7 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
     fatfs_result = f_lseek(&avi_fileobject, CREATE_LINKMAP);
     if(FR_OK != fatfs_result)
     {
-        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "Link error");
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "Link error");
         // printf("SD_ReadAviHeader create linkmap table NG fatfs_result=%d\r\n", fatfs_result);
         // printf("need linkmap table size %lu\r\n", linkmap_table[0]);
         goto FATFS_ERROR_PROCESS;
@@ -849,19 +849,19 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
     riff_chunk = (RIFFCHUNK *)malloc(sizeof(RIFFCHUNK));
     if(NULL == riff_chunk)
     {
-        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "Malloc error");
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "Malloc error");
         // printf("riff_chunk malloc error\r\n");
         goto OTHER_ERROR_PROCESS;
     }
     else
     {
-        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "Malloc 0x%X\r\n",riff_chunk);
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "Malloc 0x%X\r\n",riff_chunk);
     }
 
     fatfs_result = f_read(&avi_fileobject, riff_chunk, sizeof(RIFFCHUNK), &read_data_byte_result);
     if(FR_OK != fatfs_result)
     {
-        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "RIFF f_read error %u", fatfs_result);
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "RIFF f_read error %u", fatfs_result);
         // printf("riff_chunk f_read NG fatfs_result=%d\r\n", fatfs_result);
         goto FATFS_ERROR_PROCESS;
     }
@@ -871,19 +871,19 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
     printf("RIFF�`�����N�T�C�Y:%u\r\n", riff_chunk->cb);
     */
 
-    MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0x7FF, "-->Reading...\n");
+    MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0x7FF, ".");
     HAL_Delay(200);
 
 
     avi_file_size = riff_chunk->cb + sizeof(RIFFCHUNK);
 
-    MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0x7FF, "-->avi_file_size: %u\n", avi_file_size);
-    MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xF8A0, "RIFF fcc: %.4s\r\n", riff_chunk->fcc.fcc);
-    MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xF80A, "RIFF cb: %u\r\n", riff_chunk->cb);
+    // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0x7FF, "-->avi_file_size: %u\n", avi_file_size);
+    // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xF8A0, "RIFF fcc: %.4s\r\n", riff_chunk->fcc.fcc);
+    // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xF80A, "RIFF cb: %u\r\n", riff_chunk->cb);
 
     if(strncmp((char*)riff_chunk->fcc.fcc, "RIFF", sizeof(FOURCC)) != 0)
     {
-        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "Not RIFF");
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "Not RIFF");
         // printf("this file is not RIFF format\r\n");
         goto FILE_ERROR_PROCESS;
     }
@@ -891,14 +891,14 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
     four_cc = (FOURCC *)malloc(sizeof(FOURCC));
     if(NULL == four_cc)
     {
-        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "four_cc error");
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "four_cc error");
         // printf("four_cc malloc error\r\n");
         goto OTHER_ERROR_PROCESS;
     }
     fatfs_result = f_read(&avi_fileobject, four_cc, sizeof(FOURCC), &read_data_byte_result);
     if(FR_OK != fatfs_result)
     {
-        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "four_cc read error");
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "four_cc read error");
         // printf("four_cc f_read NG fatfs_result=%d\r\n", fatfs_result);
         goto FATFS_ERROR_PROCESS;
     }
@@ -907,7 +907,7 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
     //*/
     if(strncmp((char*)four_cc->fcc, "AVI ", sizeof(FOURCC)) != 0)
     {
-        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "RIFF not AVI");
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "RIFF not AVI");
         // printf("RIFF form type is not AVI \r\n");
         goto FILE_ERROR_PROCESS;
     }
@@ -916,14 +916,14 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
     riff_list = (RIFFLIST *)malloc(sizeof(RIFFLIST));
     if(NULL == riff_list)
     {
-        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "riff_list malloc");
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "riff_list malloc");
         // printf("riff_list malloc error\r\n");
         goto OTHER_ERROR_PROCESS;
     }
     fatfs_result = f_read(&avi_fileobject, riff_list, sizeof(RIFFLIST), &read_data_byte_result);
     if(FR_OK != fatfs_result)
     {
-        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "riff_list f_read");
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "riff_list f_read");
         // printf("riff_list f_read NG fatfs_result=%d\r\n", fatfs_result);
         goto FATFS_ERROR_PROCESS;
     }
@@ -934,7 +934,7 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
     //*/
     if((strncmp((char*)riff_list->fcc.fcc, "LIST", sizeof(FOURCC)) != 0) || (strncmp((char*)riff_list->fccListType.fcc, "hdrl ", sizeof(FOURCC)) != 0))
     {
-        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "not found hdrl");
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "not found hdrl");
         // printf("could not find hdrl list\r\n");
         goto FILE_ERROR_PROCESS;
     }
@@ -942,14 +942,14 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
     avi_main_header = (AVIMAINHEADER *)malloc(sizeof(AVIMAINHEADER));
     if(NULL == avi_main_header)
     {
-        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "avi_main_header malloc");
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "avi_main_header malloc");
         // printf("avi_main_header malloc error\r\n");
         goto OTHER_ERROR_PROCESS;
     }
     fatfs_result = f_read(&avi_fileobject, avi_main_header, sizeof(AVIMAINHEADER), &read_data_byte_result);
     if(FR_OK != fatfs_result)
     {
-        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "avi_main_header read");
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "avi_main_header read");
         // printf("avi_main_header f_read NG fatfs_result=%d\r\n", fatfs_result);
         goto FATFS_ERROR_PROCESS;
     }
@@ -973,19 +973,19 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
 
     if(strncmp((char*)avi_main_header->fcc.fcc, "avih", sizeof(FOURCC)) != 0)
     {
-        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "not found avi main header");
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "not found avi main header");
         // printf("could not find avi main header\r\n");
         goto FILE_ERROR_PROCESS;
     }
     if(AVIF_HASINDEX != (avi_main_header->dwFlags & AVIF_HASINDEX))
     {
-        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "avi not index");
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "avi not index");
         // printf("avi file does not have index\r\n");
         goto FILE_ERROR_PROCESS;
     }
     if((MATRIXLED_X_COUNT < avi_main_header->dwWidth) || (MATRIXLED_Y_COUNT < avi_main_header->dwHeight))
     {
-        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "wrong size");
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "wrong size");
         // printf("wrong size avi file\r\n");
         goto FILE_ERROR_PROCESS;
     }
@@ -1007,35 +1007,35 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
     strl_list = (RIFFLIST *)malloc(sizeof(RIFFLIST));
     if(NULL == strl_list)
     {
-        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "strl_list malloc");
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "strl_list malloc");
         // printf("strl_list malloc error\r\n");
         goto OTHER_ERROR_PROCESS;
     }
     avi_stream_header = (AVISTREAMHEADER *)malloc(sizeof(AVISTREAMHEADER));
     if(NULL == avi_stream_header)
     {
-        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "avi stream malloc");
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "avi stream malloc");
         // printf("avi_stream_header malloc error\r\n");
         goto OTHER_ERROR_PROCESS;
     }
     strf_chunk = (RIFFCHUNK *)malloc(sizeof(RIFFCHUNK));
     if(NULL == strf_chunk)
     {
-        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "strf_chunk malloc");
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "strf_chunk malloc");
         // printf("strf_chunk malloc error\r\n");
         goto OTHER_ERROR_PROCESS;
     }
     bitmap_info_header = (BITMAPINFOHEADER *)malloc(sizeof(BITMAPINFOHEADER));
     if(NULL == bitmap_info_header)
     {
-        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "bitmap_info_header malloc");
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "bitmap_info_header malloc");
         // printf("bitmap_info_header malloc error\r\n");
         goto OTHER_ERROR_PROCESS;
     }
     wave_format_ex = (WAVEFORMATEX *)malloc(sizeof(WAVEFORMATEX));
     if(NULL == wave_format_ex)
     {
-        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "wave_format_ex malloc");
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "wave_format_ex malloc");
         // printf("wave_format_ex malloc error\r\n");
         goto OTHER_ERROR_PROCESS;
     }
@@ -1045,7 +1045,7 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
         fatfs_result = f_read(&avi_fileobject, strl_list, sizeof(RIFFLIST), &read_data_byte_result);
         if(FR_OK != fatfs_result)
         {
-            MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "strl_list_f_read");
+            // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "strl_list_f_read");
             // printf("strl_list f_read NG fatfs_result=%d\r\n", fatfs_result);
             goto FATFS_ERROR_PROCESS;
         }
@@ -1054,7 +1054,7 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
             fatfs_result = f_read(&avi_fileobject, avi_stream_header, sizeof(AVISTREAMHEADER), &read_data_byte_result);
             if(FR_OK != fatfs_result)
             {
-                MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "avi_stream_header f_read ");
+                // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "avi_stream_header f_read ");
                 // printf("avi_stream_header f_read NG fatfs_result=%d\r\n", fatfs_result);
                 goto FATFS_ERROR_PROCESS;
             }
@@ -1094,7 +1094,7 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
                             fatfs_result = f_read(&avi_fileobject, strf_chunk, sizeof(RIFFCHUNK), &read_data_byte_result);
                             if(FR_OK != fatfs_result)
                             {
-                                MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "strl_chunk f_read");
+                                // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "strl_chunk f_read");
                                 // printf("strf_chunk f_read NG fatfs_result=%d\r\n", fatfs_result);
                                 goto FATFS_ERROR_PROCESS;
                             }
@@ -1103,24 +1103,24 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
                                 fatfs_result = f_read(&avi_fileobject, bitmap_info_header, sizeof(BITMAPINFOHEADER), &read_data_byte_result);
                                 if(FR_OK != fatfs_result)
                                 {
-                                    MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "bitmap_info_header f_read");
+                                    // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "bitmap_info_header f_read");
                                     // printf("bitmap_info_header f_read NG fatfs_result=%d\r\n", fatfs_result);
                                     goto FATFS_ERROR_PROCESS;
                                 }
 
-                                /* MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U,   7U,  0xFF, "1. %u\r\n", bitmap_info_header->biSize);
-                                MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U,  14U,  0xFF, "2. %u\r\n", bitmap_info_header->biWidth);
-                                MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U,  21U,  0xFF, "3. %u\r\n", bitmap_info_header->biHeight);
-                                MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U,  28U,  0xFF, "4. %u\r\n", bitmap_info_header->biPlanes);
-                                MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U,  35U,  0xFF, "5. %u\r\n", bitmap_info_header->biBitCount);
-                                MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U,  42U,  0xFF, "6. %u\r\n", bitmap_info_header->biCompression);
-                                MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U,  49U,  0xFF, "7. %u\r\n", bitmap_info_header->biSizeImage);
-                                MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U,  56U,  0xFF, "8. %u\r\n", bitmap_info_header->biXPelsPerMeter);
-                                MATRIX_Printf( FONT_TOMTHUMB, 1U,  42U,  7U,  0xFF, "1. %u\r\n", bitmap_info_header->biYPelsPerMeter);
-                                MATRIX_Printf( FONT_TOMTHUMB, 1U,  42U, 14U,  0xFF, "2. %u\r\n", bitmap_info_header->biClrUsed);
-                                MATRIX_Printf( FONT_TOMTHUMB, 1U,  42U, 21U,  0xFF, "3. %u\r\n", bitmap_info_header->biClrImportant);
-                                HAL_Delay(400);
-                                MATRIX_FillScreen(0x0); */
+                                // /* MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U,   7U,  0xFF, "1. %u\r\n", bitmap_info_header->biSize);
+                                // MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U,  14U,  0xFF, "2. %u\r\n", bitmap_info_header->biWidth);
+                                // MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U,  21U,  0xFF, "3. %u\r\n", bitmap_info_header->biHeight);
+                                // MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U,  28U,  0xFF, "4. %u\r\n", bitmap_info_header->biPlanes);
+                                // MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U,  35U,  0xFF, "5. %u\r\n", bitmap_info_header->biBitCount);
+                                // MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U,  42U,  0xFF, "6. %u\r\n", bitmap_info_header->biCompression);
+                                // MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U,  49U,  0xFF, "7. %u\r\n", bitmap_info_header->biSizeImage);
+                                // MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U,  56U,  0xFF, "8. %u\r\n", bitmap_info_header->biXPelsPerMeter);
+                                // MATRIX_Printf( FONT_TOMTHUMB, 1U,  42U,  7U,  0xFF, "1. %u\r\n", bitmap_info_header->biYPelsPerMeter);
+                                // MATRIX_Printf( FONT_TOMTHUMB, 1U,  42U, 14U,  0xFF, "2. %u\r\n", bitmap_info_header->biClrUsed);
+                                // MATRIX_Printf( FONT_TOMTHUMB, 1U,  42U, 21U,  0xFF, "3. %u\r\n", bitmap_info_header->biClrImportant);
+                                // HAL_Delay(400);
+                                // MATRIX_FillScreen(0x0); */
 
                                 if((video_width == bitmap_info_header->biWidth) && (video_height == bitmap_info_header->biHeight))
                                 {
@@ -1144,7 +1144,7 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
                                         }
                                         else
                                         {
-                                            MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "not BI_RGB: %i", bitmap_info_header->biCompression );
+                                            // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "not BI_RGB: %i", bitmap_info_header->biCompression );
                                             // printf("video flame is not BI_RGB\r\n");
                                         }
                                     }
@@ -1163,39 +1163,39 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
                                 }
                                 else
                                 {
-                                    MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "wrong size video");
+                                    // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "wrong size video");
                                     // printf("wrong size video stream\r\n");
                                 }
                                 fatfs_result = f_lseek(&avi_fileobject, f_tell(&avi_fileobject) - sizeof(BITMAPINFOHEADER));
                                 if(FR_OK != fatfs_result)
                                 {
-                                    MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "bitmap_info_header f_lseek");
+                                    // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "bitmap_info_header f_lseek");
                                     // printf("bitmap_info_header f_lseek NG fatfs_result=%d\r\n", fatfs_result);
                                 goto FATFS_ERROR_PROCESS;
                                 }
                             }
                             else
                             {
-                                MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "not found strl_chunk");
+                                // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "not found strl_chunk");
                                 // printf("could not find strf_chunk\r\n");
                             }
                             fatfs_result = f_lseek(&avi_fileobject, f_tell(&avi_fileobject) - sizeof(RIFFCHUNK));
                             if(FR_OK != fatfs_result)
                             {
-                                MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "strl_chunk f_lseek");
+                                // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "strl_chunk f_lseek");
                                 // printf("strf_chunk f_lseek NG fatfs_result=%d\r\n", fatfs_result);
                                 goto FATFS_ERROR_PROCESS;
                             }
                         }
                         else
                         {
-                            MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "out of flame range");
+                            // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "out of flame range");
                             // printf("video flame rate is out of range\r\n");
                         }
                     }
                     else
                     {
-                        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "stream disabled");
+                        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "stream disabled");
                         // printf("stream is disabled\r\n");
                     }
                 }
@@ -1209,7 +1209,7 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
                             fatfs_result = f_read(&avi_fileobject, strf_chunk, sizeof(RIFFCHUNK), &read_data_byte_result);
                             if(FR_OK != fatfs_result)
                             {
-                                MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "strl_chunk f_read");
+                                // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "strl_chunk f_read");
                                 // printf("strf_chunk f_read NG fatfs_result=%d\r\n", fatfs_result);
                                 goto FATFS_ERROR_PROCESS;
                             }
@@ -1218,18 +1218,18 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
                                 fatfs_result = f_read(&avi_fileobject, wave_format_ex, sizeof(WAVEFORMATEX), &read_data_byte_result);
                                 if(FR_OK != fatfs_result)
                                 {
-                                    MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "wave_format_ex f_read");
+                                    // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "wave_format_ex f_read");
                                     // printf("wave_format_ex f_read NG fatfs_result=%d\r\n", fatfs_result);
                                     goto FATFS_ERROR_PROCESS;
                                 }
 
-                                /* MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U,  7U,  0xFF, "1. %04x\r\n", wave_format_ex->wFormatTag);
-                                MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U, 14U,  0xFF, "2. %u\r\n", wave_format_ex->nChannels);
-                                MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U, 21U,  0xFF, "3. %u\r\n", wave_format_ex->nSamplesPerSec);
-                                MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U, 28U,  0xFF, "4. %u\r\n", wave_format_ex->nAvgBytesPerSec);
-                                MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U, 35U,  0xFF, "5. %u\r\n", wave_format_ex->nBlockAlign);
-                                MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U, 42U,  0xFF, "6. %u\r\n", wave_format_ex->wBitsPerSample);
-                                MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U, 49U,  0xFF, "7. %u\r\n", wave_format_ex->cbSize); */
+                                // /* MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U,  7U,  0xFF, "1. %04x\r\n", wave_format_ex->wFormatTag);
+                                // MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U, 14U,  0xFF, "2. %u\r\n", wave_format_ex->nChannels);
+                                // MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U, 21U,  0xFF, "3. %u\r\n", wave_format_ex->nSamplesPerSec);
+                                // MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U, 28U,  0xFF, "4. %u\r\n", wave_format_ex->nAvgBytesPerSec);
+                                // MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U, 35U,  0xFF, "5. %u\r\n", wave_format_ex->nBlockAlign);
+                                // MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U, 42U,  0xFF, "6. %u\r\n", wave_format_ex->wBitsPerSample);
+                                // MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U, 49U,  0xFF, "7. %u\r\n", wave_format_ex->cbSize); */
 
                                 if( WAVE_FORMAT_PCM == wave_format_ex->wFormatTag )
                                 {
@@ -1253,65 +1253,65 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
                                             }
                                             else
                                             {
-                                                MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "not 16bit audio");
+                                                // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "not 16bit audio");
                                                 // printf("audio bits per sample is not 16bit\r\n");
                                             }
                                         }
                                         else
                                         {
-                                            MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "out of audio range");
+                                            // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "out of audio range");
                                             // printf("audio sample rate is out of range\r\n");
                                         }
                                     }
                                     else
                                     {
-                                        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "audio channels out range");
+                                        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "audio channels out range");
                                         // printf("audio channels is out of range\r\n");
                                     }
                                 }
                                 else
                                 {
-                                    MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "not PCM");
+                                    // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "not PCM");
                                     // printf("audio format is not linearPCM\r\n");
                                 }
 
                                 fatfs_result = f_lseek(&avi_fileobject, f_tell(&avi_fileobject) - sizeof(WAVEFORMATEX));
                                 if(FR_OK != fatfs_result)
                                 {
-                                    MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "bitmap_info_header f_lssek");
+                                    // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "bitmap_info_header f_lssek");
                                     // printf("bitmap_info_header f_lseek NG fatfs_result=%d\r\n", fatfs_result);
                                     goto FATFS_ERROR_PROCESS;
                                 }
                             }
                             else
                             {
-                                MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "not found strf_chunk");
+                                // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "not found strf_chunk");
                                 // printf("could not find strf_chunk\r\n");
                             }
 
                             fatfs_result = f_lseek(&avi_fileobject, f_tell(&avi_fileobject) - sizeof(RIFFCHUNK));
                             if(FR_OK != fatfs_result)
                             {
-                                MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "strf_chunk f_lseek");
+                                // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "strf_chunk f_lseek");
                                 // printf("strf_chunk f_lseek NG fatfs_result=%d\r\n", fatfs_result);
                                 goto FATFS_ERROR_PROCESS;
                             }
                         }
                         else
                         {
-                            MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "out range audio sample");
+                            // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "out range audio sample");
                             // printf("audio sample rate is out of range\r\n");
                         }
                     }
                     else
                     {
-                        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "stream disabled");
+                        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "stream disabled");
                         // printf("stream is disabled\r\n");
                     }
                 }
                 else
                 {
-                    MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "not vid or audio");
+                    // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "not vid or audio");
                     // printf("stream is not video or audio\r\n");
                 }
 #if 0
@@ -1324,15 +1324,15 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
                     ( (wave_format_ex->nSamplesPerSec * wave_format_ex->nChannels) <= (audio_suggest_buffer_size - wave_format_ex->nBlockAlign * 2))))
 #endif
                 {
-                    MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "audio buff size wrong");
+                    // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "audio buff size wrong");
 
-                    /* MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U, 21U,  0xFF, "1. %u\r\n", wave_format_ex->nSamplesPerSec);
-                    MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U, 28U,  0xFF, "2. %u\r\n", wave_format_ex->nChannels);
-                    MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U, 35U,  0xFF, "3. %u\r\n", video_frame_rate);
-                    MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U, 42U,  0xFF, "4. %u\r\n", audio_suggest_buffer_size);
-                    MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U, 49U,  0xFF, "5. %u\r\n", wave_format_ex->nBlockAlign);
-                    HAL_Delay(400);
-                    MATRIX_FillScreen(0x0); */
+                    // /* MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U, 21U,  0xFF, "1. %u\r\n", wave_format_ex->nSamplesPerSec);
+                    // MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U, 28U,  0xFF, "2. %u\r\n", wave_format_ex->nChannels);
+                    // MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U, 35U,  0xFF, "3. %u\r\n", video_frame_rate);
+                    // MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U, 42U,  0xFF, "4. %u\r\n", audio_suggest_buffer_size);
+                    // MATRIX_Printf( FONT_TOMTHUMB, 1U,  0U, 49U,  0xFF, "5. %u\r\n", wave_format_ex->nBlockAlign);
+                    // HAL_Delay(400);
+                    // MATRIX_FillScreen(0x0); */
 
                     /* We will inrestigate it soon */
                     audio_stream_find_flag = RESET;
@@ -1341,14 +1341,14 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
             }
             else
             {
-                MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "wrong strh header");
+                // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "wrong strh header");
                 // printf("wrong strh header\r\n");
             }
 
             fatfs_result = f_lseek(&avi_fileobject, f_tell(&avi_fileobject) - sizeof(AVISTREAMHEADER));
             if(FR_OK != fatfs_result)
             {
-                MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "avi_header_stream f_lseek");
+                // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "avi_header_stream f_lseek");
                 // printf("avi_stream_header f_lseek NG fatfs_result=%d\r\n", fatfs_result);
                 goto FATFS_ERROR_PROCESS;
             }
@@ -1356,14 +1356,14 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
         }
         else
         {
-            MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "not found strl list");
+            // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "not found strl list");
             // printf("could not find strl list\r\n");
         }
 
         fatfs_result = f_lseek(&avi_fileobject, f_tell(&avi_fileobject) + strl_list->cb - sizeof(FOURCC));
         if(FR_OK != fatfs_result)
         {
-            MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "avi_header_stream f_lseek");
+            // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "avi_header_stream f_lseek");
             // printf("avi_stream_header f_lseek NG fatfs_result=%d\r\n", fatfs_result);
             goto FATFS_ERROR_PROCESS;
         }
@@ -1376,7 +1376,7 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
 
         if(f_tell(&avi_fileobject) >= (riff_chunk->cb + sizeof(RIFFCHUNK) - 1))
         {
-            MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "not find audio video str head");
+            // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "not find audio video str head");
             // printf("could not find playable audio video stream header\r\n");
             goto FILE_ERROR_PROCESS;
         }
@@ -1398,7 +1398,7 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
     unknown_list = (RIFFLIST *)malloc(sizeof(RIFFLIST));
     if(NULL == unknown_list)
     {
-        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "unknow malloc");
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "unknow malloc");
         // printf("unknown_list malloc error\r\n");
         goto OTHER_ERROR_PROCESS;
     }
@@ -1408,7 +1408,7 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
         fatfs_result = f_read(&avi_fileobject, unknown_list, sizeof(RIFFLIST), &read_data_byte_result);
         if(FR_OK != fatfs_result)
         {
-            MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "unkown_list f_read");
+            // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "unkown_list f_read");
             // printf("unknown_list f_read NG fatfs_result=%d\r\n", fatfs_result);
             goto FATFS_ERROR_PROCESS;
         }
@@ -1416,7 +1416,7 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
         fatfs_result = f_lseek(&avi_fileobject, f_tell(&avi_fileobject) - sizeof(RIFFLIST));
         if(FR_OK != fatfs_result)
         {
-            MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "unknow_list f_lseek");
+            // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "unknow_list f_lseek");
             // printf("unknown_list f_lseek NG fatfs_result=%d\r\n", fatfs_result);
             goto FATFS_ERROR_PROCESS;
         }
@@ -1425,7 +1425,7 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
         fatfs_result = f_lseek(&avi_fileobject, f_tell(&avi_fileobject) + unknown_list->cb - sizeof(FOURCC));
         if(FR_OK != fatfs_result)
         {
-            MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "unknown_list f_lseek");
+            // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "unknown_list f_lseek");
             // printf("unknown_list f_lseek NG fatfs_result=%d\r\n", fatfs_result);
             goto FATFS_ERROR_PROCESS;
         }
@@ -1433,7 +1433,7 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
 
         if(f_tell(&avi_fileobject) >= (riff_chunk->cb + sizeof(RIFFCHUNK) - 1))
         {
-            MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "not find movi list");
+            // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "not find movi list");
             // printf("could not find movi list\r\n");
             goto FILE_ERROR_PROCESS;
         }
@@ -1447,7 +1447,7 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
     movi_list = (RIFFLIST *)malloc(sizeof(RIFFLIST));
     if(NULL == movi_list)
     {
-        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "movi_list malloc err");
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "movi_list malloc err");
         // printf("movi_list malloc error\r\n");
         goto OTHER_ERROR_PROCESS;
     }
@@ -1455,7 +1455,7 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
     fatfs_result = f_read(&avi_fileobject, movi_list, sizeof(RIFFLIST), &read_data_byte_result);
     if(FR_OK != fatfs_result)
     {
-        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "movi_list f_read");
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "movi_list f_read");
         // printf("movi_list f_read NG fatfs_result=%d\r\n", fatfs_result);
         goto FATFS_ERROR_PROCESS;
     }
@@ -1465,7 +1465,7 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
     fatfs_result = f_lseek(&avi_fileobject, f_tell(&avi_fileobject) + movi_list->cb - sizeof(FOURCC));
     if(FR_OK != fatfs_result)
     {
-        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "movi_list f_lseek");
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "movi_list f_lseek");
         // printf("movi_list f_lseek NG fatfs_result=%d\r\n", fatfs_result);
         goto FATFS_ERROR_PROCESS;
     }
@@ -1473,14 +1473,14 @@ READ_FILE_RESULT SD_ReadAviHeader(PLAY_INFO *play_info)
     idx1_chunk = (RIFFCHUNK *)malloc(sizeof(RIFFCHUNK));
     if(NULL == idx1_chunk)
     {
-        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "idx1_chunk malloc");
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "idx1_chunk malloc");
         // printf("idx1_chunk malloc error\r\n");
         goto OTHER_ERROR_PROCESS;
     }
     fatfs_result = f_read(&avi_fileobject, idx1_chunk, sizeof(RIFFCHUNK), &read_data_byte_result);
     if(FR_OK != fatfs_result)
     {
-        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "idx1_chunk f_read");
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "idx1_chunk f_read");
         // printf("idx1_chunk f_read NG fatfs_result=%d\r\n", fatfs_result);
         goto FATFS_ERROR_PROCESS;
     }
@@ -1616,7 +1616,7 @@ READ_FILE_RESULT SD_GetPlayList(char *playlist_filename, PLAY_INFO **playlist, u
     fatfs_result = f_stat(playlist_filename, &playlist_fileinfo);
     if(FR_OK != fatfs_result)
     {
-        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "%s f_stat error %u\r\n", playlist_filename, fatfs_result);
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "%s f_stat error %u\r\n", playlist_filename, fatfs_result);
         // printf("%s f_stat error %u\r\n", playlist_filename, fatfs_result);
         //fatfs_result = f_open(&SDFile, playlist_filename, FA_WRITE|FA_OPEN_ALWAYS);
         //fatfs_result = f_write(&SDFile, Playlist_Default_Message, 461, NULL);
@@ -1625,24 +1625,24 @@ READ_FILE_RESULT SD_GetPlayList(char *playlist_filename, PLAY_INFO **playlist, u
     }
     else
     {
-        MATRIX_Printf( FONT_DEFAULT, 1, 0xFFFF, 0xFFFF, 0xF81F, "%s f_stat done %u\r\n", playlist_filename, fatfs_result);
+        // MATRIX_Printf( FONT_DEFAULT, 1, 0xFFFF, 0xFFFF, 0xF81F, "%s f_stat done %u\r\n", playlist_filename, fatfs_result);
     }
     fatfs_result = f_open(&SDFile, (TCHAR*)&playlist_fileinfo.fname, FA_READ);
     if(FR_OK != fatfs_result)
     {
-        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "%s f_open error %u\r\n", playlist_filename, fatfs_result);
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "%s f_open error %u\r\n", playlist_filename, fatfs_result);
         // printf("%s f_open error %u\r\n", playlist_filename, fatfs_result);
         goto FATFS_ERROR_PROCESS;
     }
     else
     {
-        MATRIX_Printf( FONT_DEFAULT, 1, 0xFFFF, 0xFFFF, 0xF81F, "%s %s f_open done %u\r\n", playlist_filename, playlist_fileinfo.fname, fatfs_result);
+        // MATRIX_Printf( FONT_DEFAULT, 1, 0xFFFF, 0xFFFF, 0xF81F, "%s %s f_open done %u\r\n", playlist_filename, playlist_fileinfo.fname, fatfs_result);
     }
 
     // fatfs_result = f_read(&SDFile, playlist_data, sizeof(playlist_data), (UINT*)&bytesread);
     // if(FR_OK != fatfs_result)
     // {
-    //     MATRIX_Printf( FONT_DEFAULT, 1U, 0U, 0U, 0xFFFF, "f_read error %u\r\n", fatfs_result);
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0U, 0U, 0xFFFF, "f_read error %u\r\n", fatfs_result);
     //     HAL_Delay(400);
     //     MATRIX_FillScreen(0x0);
     //     // printf("%s f_read error %u\r\n", playlist_filename, fatfs_result);
@@ -1650,7 +1650,7 @@ READ_FILE_RESULT SD_GetPlayList(char *playlist_filename, PLAY_INFO **playlist, u
     // }
     // else
     // {
-    //     MATRIX_Printf( FONT_DEFAULT, 1U, 0U, 0U, 0xFFFF, "This content: %s\r\n", playlist_data);
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0U, 0U, 0xFFFF, "This content: %s\r\n", playlist_data);
     //     HAL_Delay(400);
     //     MATRIX_FillScreen(0x0);
     // }
@@ -1659,7 +1659,7 @@ READ_FILE_RESULT SD_GetPlayList(char *playlist_filename, PLAY_INFO **playlist, u
     while((f_gets((TCHAR*)playlist_data, (_MAX_LFN + 16), &SDFile) != NULL) && (track_count_temp <= MAX_TRACK_COUNT))
     {
         // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0x07E0, "L: ");
-        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "L:%s\r\n", strtok((char*)playlist_data, "\r\n"));
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "L:%s\r\n", strtok((char*)playlist_data, "\r\n"));
         // HAL_Delay(400);
         printf("%s\r\n", strtok((char*)playlist_data, "\r\n"));
         track_count_temp++;
@@ -1668,7 +1668,7 @@ READ_FILE_RESULT SD_GetPlayList(char *playlist_filename, PLAY_INFO **playlist, u
     //printf("\r\n");
     if(0 == track_count_temp)
     {
-        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "No track count\r\n");
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "No track count\r\n");
         // printf("item does not exist in playlist\r\n");
         goto FILE_ERROR_PROCESS;
     }
@@ -1676,7 +1676,7 @@ READ_FILE_RESULT SD_GetPlayList(char *playlist_filename, PLAY_INFO **playlist, u
     fatfs_result = f_lseek(&SDFile, 0);
     if(FR_OK != fatfs_result)
     {
-        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "%s f_lseek error %u\r\n", playlist_filename, fatfs_result);
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "%s f_lseek error %u\r\n", playlist_filename, fatfs_result);
         // printf("%s f_lseek error %u\r\n", playlist_filename, fatfs_result);
         goto FATFS_ERROR_PROCESS;
     }
@@ -1684,12 +1684,12 @@ READ_FILE_RESULT SD_GetPlayList(char *playlist_filename, PLAY_INFO **playlist, u
     playlist_temp0 = (PLAY_INFO *)malloc(sizeof(PLAY_INFO) * track_count_temp);
     if(NULL == playlist_temp0)
     {
-        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "malloc error\r\n");
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "malloc error\r\n");
         // printf("malloc error\r\n");
         goto OTHER_ERROR_PROCESS;
     }
 
-    HAL_Delay(400);
+    // HAL_Delay(400);
     track_count_temp = 0;
     while( (f_gets((TCHAR*)playlist_data, (_MAX_LFN + 16), &SDFile) != NULL) && (track_count_temp <= MAX_TRACK_COUNT))
     {
@@ -1698,9 +1698,9 @@ READ_FILE_RESULT SD_GetPlayList(char *playlist_filename, PLAY_INFO **playlist, u
         if((token_pointer != NULL) && (strncmp((char*)playlist_data, "//", 2) != 0))
         {
             strcpy((char*)playlist_temp0[track_count_temp].file_name, (char*)token_pointer);
-            MATRIX_FillScreen(0U);
-            MATRIX_SetCursor(0U, 0U);
-            MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "Read %s, 0x%X\r\n", playlist_temp0[track_count_temp].file_name, token_pointer);
+            // MATRIX_FillScreen(0U);
+            // MATRIX_SetCursor(0U, 0U);
+            // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "Read %s, 0x%X\r\n", playlist_temp0[track_count_temp].file_name, token_pointer);
             if(FILE_OK == SD_ReadAviHeader(&playlist_temp0[track_count_temp]))
             {
                 track_count_temp++;
@@ -1708,14 +1708,14 @@ READ_FILE_RESULT SD_GetPlayList(char *playlist_filename, PLAY_INFO **playlist, u
         }
         else
         {
-            MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "Read %s error\r\n", playlist_data);
+            // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "Read %s error\r\n", playlist_data);
         }
     }
 
     if(0 == track_count_temp)
     {
         free(playlist_temp0);
-        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "item does not exist in playlist\r\n");
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "item does not exist in playlist\r\n");
         // printf("item does not exist in playlist\r\n");
         goto FILE_ERROR_PROCESS;
     }
@@ -1723,7 +1723,7 @@ READ_FILE_RESULT SD_GetPlayList(char *playlist_filename, PLAY_INFO **playlist, u
     playlist_temp1 = (PLAY_INFO *)realloc(playlist_temp0, (sizeof(PLAY_INFO) * track_count_temp));
     if(NULL == playlist_temp1){
         free(playlist_temp0);
-        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "realloc error\r\n");
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "realloc error\r\n");
         // printf("realloc error\r\n");
         goto OTHER_ERROR_PROCESS;
     }
@@ -1731,31 +1731,31 @@ READ_FILE_RESULT SD_GetPlayList(char *playlist_filename, PLAY_INFO **playlist, u
     fatfs_result = f_close(&SDFile);
     if(FR_OK != fatfs_result){
         free(playlist_temp1);
-        MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "%s f_close error %u\r\n", playlist_filename, fatfs_result);
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "%s f_close error %u\r\n", playlist_filename, fatfs_result);
         // printf("%s f_close error %u\r\n", playlist_filename, fatfs_result);
         goto FATFS_ERROR_PROCESS;
     }
 
-    MATRIX_FillScreen(0U);
-    MATRIX_SetCursor(0U, 0U);
-    MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "Track: %i\r\n", track_count_temp);
+    // MATRIX_FillScreen(0U);
+    // MATRIX_SetCursor(0U, 0U);
+    // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "Track: %i\r\n", track_count_temp);
 
     //  for(int testloop = 0;testloop < track_count_temp;testloop++)
     //  {
     //     float fCurrentFps = playlist_temp1[testloop].avi_info.video_frame_rate;
-    //     MATRIX_Printf( FONT_DEFAULT, 1U,  0U,  9U,  0xFFF, "%s\r\n", playlist_temp1[testloop].file_name);
-    //     MATRIX_Printf( FONT_DEFAULT, 1U,  0U, 18U,  0xFFF, "%d.%5fFPS\r\n", (uint32_t) fCurrentFps, (uint32_t)((fCurrentFps - (uint32_t) fCurrentFps) * 4000) );
-    //     MATRIX_Printf( FONT_DEFAULT, 1U,  0U, 27U,  0xFFF, "%lu\r\n", playlist_temp1[testloop].avi_info.video_length);
-    //     MATRIX_Printf( FONT_DEFAULT, 1U,  0U, 36U,  0xFFF, "%.4s\r\n", playlist_temp1[testloop].avi_info.video_data_chunk_name.fcc);
-    //     MATRIX_Printf( FONT_DEFAULT, 1U,  0U, 45U,  0xFFF, "%u\r\n", playlist_temp1[testloop].avi_info.audio_channels);
-    //     MATRIX_Printf( FONT_DEFAULT, 1U,  0U, 54U,  0xFFF, "%luHz\r\n", playlist_temp1[testloop].avi_info.audio_sampling_rate);
-    //     MATRIX_Printf( FONT_DEFAULT, 1U,  0U, 63U,  0xFFF, "%lu\r\n", playlist_temp1[testloop].avi_info.audio_length);
-    //     MATRIX_Printf( FONT_DEFAULT, 1U,  0U, 72U,  0xFFF, "%.4s\r\n", playlist_temp1[testloop].avi_info.audio_data_chunk_name.fcc);
-    //     MATRIX_Printf( FONT_DEFAULT, 1U,  0U, 81U,  0xFFF, "%lu\r\n", playlist_temp1[testloop].avi_info.avi_streams_count);
-    //     MATRIX_Printf( FONT_DEFAULT, 1U, 60U, 9U,  0xFFF, "movi:0x%08lx\r\n", playlist_temp1[testloop].avi_info.movi_list_position);
-    //     MATRIX_Printf( FONT_DEFAULT, 1U, 60U, 18U,  0xFFF, "idx1:0x%08lx\r\n", playlist_temp1[testloop].avi_info.avi_old_index_position);
-    //     MATRIX_Printf( FONT_DEFAULT, 1U, 60U, 27U,  0xFFF, "idx1:0x%08lx\r\n", playlist_temp1[testloop].avi_info.avi_old_index_size);
-    //     MATRIX_Printf( FONT_DEFAULT, 1U, 60U, 36U,  0xFFF, "AVI:%luB\r\n", playlist_temp1[testloop].avi_info.avi_file_size);
+        // MATRIX_Printf( FONT_DEFAULT, 1U,  0U,  9U,  0xFFF, "%s\r\n", playlist_temp1[testloop].file_name);
+        // MATRIX_Printf( FONT_DEFAULT, 1U,  0U, 18U,  0xFFF, "%d.%5fFPS\r\n", (uint32_t) fCurrentFps, (uint32_t)((fCurrentFps - (uint32_t) fCurrentFps) * 4000) );
+        // MATRIX_Printf( FONT_DEFAULT, 1U,  0U, 27U,  0xFFF, "%lu\r\n", playlist_temp1[testloop].avi_info.video_length);
+        // MATRIX_Printf( FONT_DEFAULT, 1U,  0U, 36U,  0xFFF, "%.4s\r\n", playlist_temp1[testloop].avi_info.video_data_chunk_name.fcc);
+        // MATRIX_Printf( FONT_DEFAULT, 1U,  0U, 45U,  0xFFF, "%u\r\n", playlist_temp1[testloop].avi_info.audio_channels);
+        // MATRIX_Printf( FONT_DEFAULT, 1U,  0U, 54U,  0xFFF, "%luHz\r\n", playlist_temp1[testloop].avi_info.audio_sampling_rate);
+        // MATRIX_Printf( FONT_DEFAULT, 1U,  0U, 63U,  0xFFF, "%lu\r\n", playlist_temp1[testloop].avi_info.audio_length);
+        // MATRIX_Printf( FONT_DEFAULT, 1U,  0U, 72U,  0xFFF, "%.4s\r\n", playlist_temp1[testloop].avi_info.audio_data_chunk_name.fcc);
+        // MATRIX_Printf( FONT_DEFAULT, 1U,  0U, 81U,  0xFFF, "%lu\r\n", playlist_temp1[testloop].avi_info.avi_streams_count);
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 60U, 9U,  0xFFF, "movi:0x%08lx\r\n", playlist_temp1[testloop].avi_info.movi_list_position);
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 60U, 18U,  0xFFF, "idx1:0x%08lx\r\n", playlist_temp1[testloop].avi_info.avi_old_index_position);
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 60U, 27U,  0xFFF, "idx1:0x%08lx\r\n", playlist_temp1[testloop].avi_info.avi_old_index_size);
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 60U, 36U,  0xFFF, "AVI:%luB\r\n", playlist_temp1[testloop].avi_info.avi_file_size);
     //     HAL_Delay(5000);
     //     MATRIX_FillScreen(0x0);
     // }
@@ -1840,7 +1840,7 @@ READ_FILE_RESULT SD_ReadAviStream(PLAY_INFO *play_info, uint32_t read_frame_coun
         // fatfs_result = f_open(&avi_fileobject, "T1.avi", FA_READ);
         if(FR_OK != fatfs_result)
         {
-            MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "read_avi_stream f_open\r\n");
+            // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "read_avi_stream f_open\r\n");
             // printf("read_avi_stream f_open NG fatfs_result=%d\r\n", fatfs_result);
             goto FATFS_ERROR_PROCESS;
         }
@@ -1856,7 +1856,7 @@ READ_FILE_RESULT SD_ReadAviStream(PLAY_INFO *play_info, uint32_t read_frame_coun
         fatfs_result = f_lseek(&avi_fileobject, CREATE_LINKMAP);
         if(FR_OK != fatfs_result)
         {
-            MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "read_avi_header linkmap\r\n");
+            // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "read_avi_header linkmap\r\n");
             // printf("read_avi_header create linkmap table NG fatfs_result=%d\r\n", fatfs_result);
             // printf("need linkmap table size %lu\r\n", linkmap_table[0]);
             goto FATFS_ERROR_PROCESS;
@@ -1877,7 +1877,7 @@ READ_FILE_RESULT SD_ReadAviStream(PLAY_INFO *play_info, uint32_t read_frame_coun
         fatfs_result = f_lseek(&avi_fileobject, (play_info->avi_info.avi_old_index_position + sizeof(aIndex) * (play_info->avi_info.avi_streams_count * read_frame_count_temp + idx1_search_loop)));
         if(FR_OK != fatfs_result)
         {
-            MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "read_index f_lseek\r\n");
+            // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "read_index f_lseek\r\n");
             // printf("read_index f_lseek NG fatfs_result=%d\r\n", fatfs_result);
             goto FATFS_ERROR_PROCESS;
         }
@@ -1890,7 +1890,7 @@ READ_FILE_RESULT SD_ReadAviStream(PLAY_INFO *play_info, uint32_t read_frame_coun
         fatfs_result = f_read(&avi_fileobject, &avi_old_index_0, sizeof(aIndex), &read_data_byte_result);
         if(FR_OK != fatfs_result)
         {
-            MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "avi_old_idx f_read\r\n");
+            // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "avi_old_idx f_read\r\n");
             // printf("avi_old_index f_read NG fatfs_result=%d\r\n", fatfs_result);
             goto FATFS_ERROR_PROCESS;
         }
@@ -1906,7 +1906,7 @@ READ_FILE_RESULT SD_ReadAviStream(PLAY_INFO *play_info, uint32_t read_frame_coun
             fatfs_result = f_lseek(&avi_fileobject, (avi_old_index_0.dwOffset + play_info->avi_info.movi_list_position));
             if(FR_OK != fatfs_result)
             {
-                MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "read vid flame chunk f_lseek\r\n");
+                // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "read vid flame chunk f_lseek\r\n");
                 // printf("read video flame chunk f_lseek NG fatfs_result=%d\r\n", fatfs_result);
                 goto FATFS_ERROR_PROCESS;
             }
@@ -1919,7 +1919,7 @@ READ_FILE_RESULT SD_ReadAviStream(PLAY_INFO *play_info, uint32_t read_frame_coun
             fatfs_result = f_read(&avi_fileobject, &stream_chunk_header, sizeof(CHUNKHEADER), &read_data_byte_result);
             if(FR_OK != fatfs_result)
             {
-                MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "read vid flame chunk f_read\r\n");
+                // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "read vid flame chunk f_read\r\n");
                 // printf("read video flame chunk f_read NG fatfs_result=%d\r\n", fatfs_result);
                 goto FATFS_ERROR_PROCESS;
             }
@@ -1939,7 +1939,7 @@ READ_FILE_RESULT SD_ReadAviStream(PLAY_INFO *play_info, uint32_t read_frame_coun
                 fatfs_result = f_read(&avi_fileobject, Flame_Buffer, (play_info->avi_info.avi_height * play_info->avi_info.avi_width * MATRIXLED_COLOR_COUNT), &read_data_byte_result);
                 if(FR_OK != fatfs_result)
                 {
-                    MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "read vid flame f_read\r\n");
+                    // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "read vid flame f_read\r\n");
                     // printf("read video flame f_read NG fatfs_result=%d\r\n", fatfs_result);
                     goto FATFS_ERROR_PROCESS;
                 }
@@ -1952,7 +1952,7 @@ READ_FILE_RESULT SD_ReadAviStream(PLAY_INFO *play_info, uint32_t read_frame_coun
             }
             else
             {
-                MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "vid flame chunk wrong\r\n");
+                // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "vid flame chunk wrong\r\n");
                 // printf("video flame chunk id is wrong\r\n");
             }
         }
@@ -1972,7 +1972,7 @@ READ_FILE_RESULT SD_ReadAviStream(PLAY_INFO *play_info, uint32_t read_frame_coun
                 fatfs_result = f_lseek(&avi_fileobject, (avi_old_index_0.dwOffset + play_info->avi_info.movi_list_position));
                 if(FR_OK != fatfs_result)
                 {
-                    MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "read audio chunk f_lseek\r\n");
+                    // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "read audio chunk f_lseek\r\n");
                     // printf("read audio data chunk f_lseek NG fatfs_result=%d\r\n", fatfs_result);
                     goto FATFS_ERROR_PROCESS;
                 }
@@ -1985,7 +1985,7 @@ READ_FILE_RESULT SD_ReadAviStream(PLAY_INFO *play_info, uint32_t read_frame_coun
                 fatfs_result = f_read(&avi_fileobject, &stream_chunk_header, sizeof(CHUNKHEADER), &read_data_byte_result);
                 if(FR_OK != fatfs_result)
                 {
-                    MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "read audio chunk f_read\r\n");
+                    // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "read audio chunk f_read\r\n");
                     // printf("read audio data chunk f_read NG fatfs_result=%d\r\n", fatfs_result);
                     goto FATFS_ERROR_PROCESS;
                 }
@@ -2005,7 +2005,7 @@ READ_FILE_RESULT SD_ReadAviStream(PLAY_INFO *play_info, uint32_t read_frame_coun
                     // fatfs_result = f_read(&avi_fileobject, &Audio_Buffer[0][0], stream_chunk_header.chunkSize, &read_data_byte_result);
                     // if(FR_OK != fatfs_result)
                     // {
-                    //     MATRIX_Printf( FONT_DEFAULT, 1U, 0U, 0U, 0xFFFF, "read vid flame f_read\r\n");
+                        // MATRIX_Printf( FONT_DEFAULT, 1U, 0U, 0U, 0xFFFF, "read vid flame f_read\r\n");
                     //     HAL_Delay(1000);
                     //     MATRIX_FillScreen(0x0);
                     //     // printf("read video flame f_read NG fatfs_result=%d\r\n", fatfs_result);
@@ -2013,7 +2013,7 @@ READ_FILE_RESULT SD_ReadAviStream(PLAY_INFO *play_info, uint32_t read_frame_coun
                     // }
                     // else
                     // {
-                    //     MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, 1U, 0U, 0U, 0xFFFF, "read vid flame f_read\r\n");
+                        // MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, 1U, 0U, 0U, 0xFFFF, "read vid flame f_read\r\n");
                     //     HAL_Delay(1000);
                     //     MATRIX_FillScreen(0x0);
                     // }
@@ -2021,7 +2021,7 @@ READ_FILE_RESULT SD_ReadAviStream(PLAY_INFO *play_info, uint32_t read_frame_coun
                 }
                 else
                 {
-                    MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "audio dat chunk wrong\r\n");
+                    // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "audio dat chunk wrong\r\n");
                 // printf("audio data chunk id is wrong\r\n");
                 }
             }
@@ -2029,7 +2029,7 @@ READ_FILE_RESULT SD_ReadAviStream(PLAY_INFO *play_info, uint32_t read_frame_coun
             fatfs_result = f_lseek(&avi_fileobject, (play_info->avi_info.avi_old_index_position + sizeof(aIndex) * (play_info->avi_info.avi_streams_count * (read_frame_count_temp + 1) + idx1_search_loop)));
             if(FR_OK != fatfs_result)
             {
-                MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "read_idx f_lseek\r\n");
+                // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "read_idx f_lseek\r\n");
                 // printf("read_index f_lseek NG fatfs_result=%d\r\n", fatfs_result);
                 goto FATFS_ERROR_PROCESS;
             }
@@ -2042,7 +2042,7 @@ READ_FILE_RESULT SD_ReadAviStream(PLAY_INFO *play_info, uint32_t read_frame_coun
             fatfs_result = f_read(&avi_fileobject, &avi_old_index_1, sizeof(aIndex), &read_data_byte_result);
             if(FR_OK != fatfs_result)
             {
-                MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "avi_old_idx f_read\r\n");
+                // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "avi_old_idx f_read\r\n");
                 // printf("avi_old_index f_read NG fatfs_result=%d\r\n", fatfs_result);
                 goto FATFS_ERROR_PROCESS;
             }
@@ -2058,7 +2058,7 @@ READ_FILE_RESULT SD_ReadAviStream(PLAY_INFO *play_info, uint32_t read_frame_coun
                 fatfs_result = f_lseek(&avi_fileobject, (avi_old_index_1.dwOffset + play_info->avi_info.movi_list_position));
                 if(FR_OK != fatfs_result)
                 {
-                    MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "read audio dat chunk f_lseek\r\n");
+                    // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "read audio dat chunk f_lseek\r\n");
                     // printf("read audio data chunk f_lseek NG fatfs_result=%d\r\n", fatfs_result);
                     goto FATFS_ERROR_PROCESS;
                 }
@@ -2071,7 +2071,7 @@ READ_FILE_RESULT SD_ReadAviStream(PLAY_INFO *play_info, uint32_t read_frame_coun
                 fatfs_result = f_read(&avi_fileobject, &stream_chunk_header, sizeof(CHUNKHEADER), &read_data_byte_result);
                 if(FR_OK != fatfs_result)
                 {
-                    MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "read audio data chunk f_read\r\n");
+                    // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "read audio data chunk f_read\r\n");
                     // printf("read audio data chunk f_read NG fatfs_result=%d\r\n", fatfs_result);
                     goto FATFS_ERROR_PROCESS;
                 }
@@ -2091,7 +2091,7 @@ READ_FILE_RESULT SD_ReadAviStream(PLAY_INFO *play_info, uint32_t read_frame_coun
                     // fatfs_result = f_read(&avi_fileobject, &Audio_Buffer[1][0], stream_chunk_header.chunkSize, &read_data_byte_result);
                     // if(FR_OK != fatfs_result)
                     // {
-                    //     MATRIX_Printf( FONT_DEFAULT, 1U, 0U, 0U, 0xFFFF, "read vid flame f_read\r\n");
+                        // MATRIX_Printf( FONT_DEFAULT, 1U, 0U, 0U, 0xFFFF, "read vid flame f_read\r\n");
                     //     HAL_Delay(1000);
                     //     MATRIX_FillScreen(0x0);
                     //     // printf("read video flame f_read NG fatfs_result=%d\r\n", fatfs_result);
@@ -2099,14 +2099,14 @@ READ_FILE_RESULT SD_ReadAviStream(PLAY_INFO *play_info, uint32_t read_frame_coun
                     // }
                     // else
                     // {
-                    //     MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, 1U, 0U, 0U, 0xFFFF, "read vid flame f_read\r\n");
+                        // MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, 1U, 0U, 0U, 0xFFFF, "read vid flame f_read\r\n");
                     //     HAL_Delay(1000);
                     //     MATRIX_FillScreen(0x0);
                     // }
                 }
                 else
                 {
-                    MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "audio dat chunk wrong\r\n");
+                    // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "audio dat chunk wrong\r\n");
                 // printf("audio data chunk id is wrong\r\n");
                 }
             }
@@ -2120,14 +2120,14 @@ READ_FILE_RESULT SD_ReadAviStream(PLAY_INFO *play_info, uint32_t read_frame_coun
             fatfs_result = f_lseek(&avi_fileobject, (play_info->avi_info.avi_old_index_position + sizeof(aIndex) * (play_info->avi_info.avi_streams_count * (read_frame_count_temp + 1) + idx1_search_loop)));
             if(FR_OK != fatfs_result)
             {
-                MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "read_idx f_lseek\r\n");
+                // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "read_idx f_lseek\r\n");
                 // printf("read_index f_lseek NG fatfs_result=%d\r\n", fatfs_result);
                 goto FATFS_ERROR_PROCESS;
             }
             fatfs_result = f_read(&avi_fileobject, &avi_old_index_1, sizeof(aIndex), &read_data_byte_result);
             if(FR_OK != fatfs_result)
             {
-                MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "avi_old_idx f_read 3\r\n");
+                // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "avi_old_idx f_read 3\r\n");
                 // printf("avi_old_index f_read NG fatfs_result=%d\r\n", fatfs_result);
                 goto FATFS_ERROR_PROCESS;
             }
@@ -2137,14 +2137,14 @@ READ_FILE_RESULT SD_ReadAviStream(PLAY_INFO *play_info, uint32_t read_frame_coun
                 fatfs_result = f_lseek(&avi_fileobject, (avi_old_index_1.dwOffset + play_info->avi_info.movi_list_position));
                 if(FR_OK != fatfs_result)
                 {
-                    MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "read audio dat chunk f_lseek as\r\n");
+                    // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "read audio dat chunk f_lseek as\r\n");
                     // printf("read audio data chunk f_lseek NG fatfs_result=%d\r\n", fatfs_result);
                     goto FATFS_ERROR_PROCESS;
                 }
                 fatfs_result = f_read(&avi_fileobject, &stream_chunk_header, sizeof(CHUNKHEADER), &read_data_byte_result);
                 if(FR_OK != fatfs_result)
                 {
-                    MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "read au dat chunk f_read\r\n");
+                    // MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0xFFFF, "read au dat chunk f_read\r\n");
                     // printf("read audio data chunk f_read NG fatfs_result=%d\r\n", fatfs_result);
                     goto FATFS_ERROR_PROCESS;
                 }
@@ -2158,14 +2158,14 @@ READ_FILE_RESULT SD_ReadAviStream(PLAY_INFO *play_info, uint32_t read_frame_coun
                     fatfs_result = f_read(&avi_fileobject, &Audio_Buffer[~Audio_Double_Buffer & 0x01][0], stream_chunk_header.chunkSize, &read_data_byte_result);
                     if(FR_OK != fatfs_result)
                     {
-                        MATRIX_Printf( FONT_DEFAULT, 1U, 0U, 0U, 0xFFFF, "read vid flame f_read NSS\r\n");
+                        // MATRIX_Printf( FONT_DEFAULT, 1U, 0U, 0U, 0xFFFF, "read vid flame f_read NSS\r\n");
                         // printf("read video flame f_read NG fatfs_result=%d\r\n", fatfs_result);
                         goto FATFS_ERROR_PROCESS;
                     }
                 }
                 else
                 {
-                    MATRIX_Printf( FONT_DEFAULT, 1U, 0U, 0U, 0xFFFF, "audio dat chunk wrong\r\n");
+                    // MATRIX_Printf( FONT_DEFAULT, 1U, 0U, 0U, 0xFFFF, "audio dat chunk wrong\r\n");
                     // printf("audio data chunk id is wrong\r\n");
                 }
             }
@@ -2229,11 +2229,15 @@ void SD_PlayAviVideo(void)
 
     /* CLOCK_DisableAllIrq(); */
     /* __asm("cpsid i\n"); */
+    MATRIX_FillScreen(0xFFFFFFFF);
+    MATRIX_SetCursor(0, 0);
+    MATRIX_Printf( FONT_DEFAULT, 1U, 0xFFFF, 0xFFFF, 0x7FF, "-->Reading\n");
     SD_GetPlayList(playlist_filename, &playlist, &all_track_count);
     /* __asm("cpsie i\n"); */
     /* CLOCK_EnableAllIrq(); */
+    MATRIX_FillScreen(0x0);
     MATRIX_Printf( FONT_DEFAULT, 1, 0, 0, 0xF81F, "Get Playlist done!\r\nTrackCount: %i", all_track_count );
-    HAL_Delay(2000);
+    HAL_Delay(1000);
     MATRIX_FillScreen(0x0);
     MATRIX_SetCursor(0, 0);
 
@@ -2262,8 +2266,8 @@ void SD_PlayAviVideo(void)
     uint16_t u8ErrorPos;
     uint16_t u8HeightStart = (MATRIX_HEIGHT - u16VideoHeight) >> 1;
     uint16_t u8WidthStart = (MATRIX_WIDTH - u16VideoWidth) >> 1;
-    MATRIX_Printf( FONT_DEFAULT, 1, 0x0, 0x0, 0xF81F, "Starting... W: %d, H: %d", u16VideoWidth, u16VideoHeight );
-    HAL_Delay(500);
+    // MATRIX_Printf( FONT_DEFAULT, 1, 0x0, 0x0, 0xF81F, "Starting... W: %d, H: %d", u16VideoWidth, u16VideoHeight );
+    // HAL_Delay(500);
 
     HAL_DAC_Start(&hdac1, DAC_CHANNEL_1);
     HAL_DAC_Start(&hdac1, DAC_CHANNEL_2);
@@ -2346,10 +2350,10 @@ void SD_PlayAviVideo(void)
             movie_total_time_min = playlist[track_count].avi_info.video_length / (playlist[track_count].avi_info.video_frame_rate * 60);
             movie_total_time_sec = (unsigned int)(playlist[track_count].avi_info.video_length / playlist[track_count].avi_info.video_frame_rate) % 60;
 
-            MATRIX_Printf( FONT_DEFAULT, 1, 0x0, 0x0, 0xF81F, "Playing next video...");
-            HAL_Delay(1000);
+            // MATRIX_Printf( FONT_DEFAULT, 1, 0x0, 0x0, 0xF81F, "Playing next video...");
+            // HAL_Delay(1000);
             MATRIX_FillScreen(0x0);
-            MATRIX_SetCursor(0, 0);
+            // MATRIX_SetCursor(0, 0);
             Volume_Value_float = 1U;
             frame_duty = 1000.0/playlist[track_count].avi_info.video_frame_rate;
             // display_text_flame = (unsigned short)(flame_rate * 500) / DISPLAY_TEXT_TIME;
@@ -2402,8 +2406,8 @@ void SD_PlayAviVideo(void)
         movie_current_time_min = frame_count / (playlist[track_count].avi_info.video_frame_rate * 60);
         movie_current_time_sec = (unsigned int)(frame_count / playlist[track_count].avi_info.video_frame_rate) % 60;
 
-        MATRIX_Printf( FONT_DEFAULT, 1U, 85, 10, 0xFFFFFFFF, "%i.%ifPs", (uint32_t) fCurrkFps, (uint32_t) ((fCurrkFps - (uint32_t) fCurrkFps) * 10) );
-        MATRIX_Printf( FONT_DEFAULT, 1U, 128, 10, 0xFFFFFFFF, "%2u:%02u/%2u:%02u", movie_current_time_min, movie_current_time_sec, movie_total_time_min, movie_total_time_sec);
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 85, 10, 0xFFFFFFFF, "%i.%ifPs", (uint32_t) fCurrkFps, (uint32_t) ((fCurrkFps - (uint32_t) fCurrkFps) * 10) );
+        // MATRIX_Printf( FONT_DEFAULT, 1U, 128, 10, 0xFFFFFFFF, "%2u:%02u/%2u:%02u", movie_current_time_min, movie_current_time_sec, movie_total_time_min, movie_total_time_sec);
         /* MATRIX_UpdateScreen(); */
         u32CurrTick = HAL_GetTick();
         while(Audio_Flame_End_flag == RESET && ((HAL_GetTick() - u32CurrTick) < 10) );
@@ -2499,41 +2503,41 @@ int main(void)
     if( MSD_OK == BSP_SD_Init() )
     {
         BSP_SD_GetCardInfo(&CardInfo);
-        MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "-----------CardInfo-----------\n");
-        MATRIX_Printf( FONT_DEFAULT, 1, 0xFFFF, 0xFFFF, 0xF81F, " - Type:  %7u\n - Ver:   %7u\n - Class: %7u\n - Add:   %7u\n - BNbr:  %7u\n - Bsize: %7u\n - LNbr:  %7u\n - LSize: %7u\n", CardInfo.CardType, CardInfo.CardVersion, CardInfo.Class, CardInfo.RelCardAdd, CardInfo.BlockNbr, CardInfo.BlockSize, CardInfo.LogBlockNbr, CardInfo.LogBlockSize);
+        // MATRIX_Printf( FONT_DEFAULT, 1, 0, 5, 0xF81F, "-----------CardInfo-----------\n");
+        // MATRIX_Printf( FONT_DEFAULT, 1, 0xFFFF, 0xFFFF, 0xF81F, " - Type:  %7u\n - Ver:   %7u\n - Class: %7u\n - Add:   %7u\n - BNbr:  %7u\n - Bsize: %7u\n - LNbr:  %7u\n - LSize: %7u\n", CardInfo.CardType, CardInfo.CardVersion, CardInfo.Class, CardInfo.RelCardAdd, CardInfo.BlockNbr, CardInfo.BlockSize, CardInfo.LogBlockNbr, CardInfo.LogBlockSize);
         // MATRIX_disImage(gImage_256_192, 256, 192, 0, 0, RGB_888);
         if (f_mount(&SDFatFS, (TCHAR const*) SDPath, 1) == FR_OK)
         {
-            MATRIX_Printf( FONT_DEFAULT, 1, 0xFFFF, 0xFFFF, 0xF81F, "MicroSD Mounted! \n");
+            // MATRIX_Printf( FONT_DEFAULT, 1, 0xFFFF, 0xFFFF, 0xF81F, "MicroSD Mounted! \n");
             /* Check free space */
             f_getfree("", &fre_clust, &pfs);
-            MATRIX_Printf( FONT_DEFAULT, 1, 0xFFFF, 0xFFFF, 0xF81F, "Total Size: \t%luMb\n",(uint32_t)((pfs->n_fatent - 2) * pfs->csize * 0.5)/1024);
-            MATRIX_Printf( FONT_DEFAULT, 1, 0xFFFF, 0xFFFF, 0xF81F, "Free Space: \t%luMb\n",(uint32_t)(fre_clust * pfs->csize * 0.5)/1024);
+            // MATRIX_Printf( FONT_DEFAULT, 1, 0xFFFF, 0xFFFF, 0xF81F, "Total Size: \t%luMb\n",(uint32_t)((pfs->n_fatent - 2) * pfs->csize * 0.5)/1024);
+            // MATRIX_Printf( FONT_DEFAULT, 1, 0xFFFF, 0xFFFF, 0xF81F, "Free Space: \t%luMb\n",(uint32_t)(fre_clust * pfs->csize * 0.5)/1024);
 
             /*##-4- Create and Open a new text file object with write access #####*/
             if(f_open(&stm32_fileobject, "STM32.TXT", FA_CREATE_ALWAYS | FA_WRITE) != FR_OK)
             {
                 /* 'STM32.TXT' file Open for write Error */
-                MATRIX_Printf( FONT_DEFAULT, 1, 0xFFFF, 0xFFFF, 0xF81F, "Create file error!\n");
+                // MATRIX_Printf( FONT_DEFAULT, 1, 0xFFFF, 0xFFFF, 0xF81F, "Create file error!\n");
             }
             else
             {
 
-                MATRIX_Printf( FONT_DEFAULT, 1, 0xFFFF, 0xFFFF, 0xFFFF, "STM32 address: 0x%X!\n", (uint32_t) &stm32_fileobject);
-                MATRIX_Printf( FONT_DEFAULT, 1, 0xFFFF, 0xFFFF, 0xFFFF, "SDFile address: 0x%X!\n", (uint32_t) &SDFile);
+                // MATRIX_Printf( FONT_DEFAULT, 1, 0xFFFF, 0xFFFF, 0xFFFF, "STM32 address: 0x%X!\n", (uint32_t) &stm32_fileobject);
+                // MATRIX_Printf( FONT_DEFAULT, 1, 0xFFFF, 0xFFFF, 0xFFFF, "SDFile address: 0x%X!\n", (uint32_t) &SDFile);
 
-                MATRIX_Printf( FONT_DEFAULT, 1, 0xFFFF, 0xFFFF, 0xF81F, "Created file *STM32.TXT*\n");
+                // MATRIX_Printf( FONT_DEFAULT, 1, 0xFFFF, 0xFFFF, 0xF81F, "Created file *STM32.TXT*\n");
                 /*##-5- Write data to the text file ################################*/
                 SDResult = f_write(&stm32_fileobject, wtext, sizeof(wtext), (void *)&byteswritten);
 
                 if((byteswritten == 0) || (SDResult != FR_OK))
                 {
                     /* 'STM32.TXT' file Write or EOF Error */
-                    MATRIX_Printf( FONT_DEFAULT, 1, 0xFFFF, 0xFFFF, 0xF81F, "Write file error!\n");
+                    // MATRIX_Printf( FONT_DEFAULT, 1, 0xFFFF, 0xFFFF, 0xF81F, "Write file error!\n");
                 }
                 else
                 {
-                    MATRIX_Printf( FONT_DEFAULT, 1, 0xFFFF, 0xFFFF, 0xF81F, "Wrote file *STM32.TXT*\n");
+                    // MATRIX_Printf( FONT_DEFAULT, 1, 0xFFFF, 0xFFFF, 0xF81F, "Wrote file *STM32.TXT*\n");
                     /*##-6- Close the open text file #################################*/
                     f_close(&stm32_fileobject);
 
@@ -2541,22 +2545,22 @@ int main(void)
                     if(f_open(&stm32_fileobject, "STM32.TXT", FA_READ) != FR_OK)
                     {
                         /* 'STM32.TXT' file Open for read Error */
-                        MATRIX_Printf( FONT_DEFAULT, 1, 0xFFFF, 0xFFFF, 0xF81F, "Open file error!\n");
+                        // MATRIX_Printf( FONT_DEFAULT, 1, 0xFFFF, 0xFFFF, 0xF81F, "Open file error!\n");
                     }
                     else
                     {
-                        MATRIX_Printf( FONT_DEFAULT, 1, 0xFFFF, 0xFFFF, 0xF81F, "Opened file *STM32.TXT*\n");
+                        // MATRIX_Printf( FONT_DEFAULT, 1, 0xFFFF, 0xFFFF, 0xF81F, "Opened file *STM32.TXT*\n");
                         /*##-8- Read data from the text file ###########################*/
                         SDResult = f_read(&stm32_fileobject, rtext, sizeof(rtext), (UINT*)&bytesread);
 
                         if((bytesread == 0) || (SDResult != FR_OK)) /* EOF or Error */
                         {
                             /* 'STM32.TXT' file Read or EOF Error */
-                            MATRIX_Printf( FONT_DEFAULT, 1, 0xFFFF, 0xFFFF, 0xF81F, "Read file error!\n");
+                            // MATRIX_Printf( FONT_DEFAULT, 1, 0xFFFF, 0xFFFF, 0xF81F, "Read file error!\n");
                         }
                         else
                         {
-                            MATRIX_Printf( FONT_DEFAULT, 1, 0xFFFF, 0xFFFF, 0xF81F, "Read file *STM32.TXT*\n");
+                            // MATRIX_Printf( FONT_DEFAULT, 1, 0xFFFF, 0xFFFF, 0xF81F, "Read file *STM32.TXT*\n");
                             /*##-9- Close the open text file #############################*/
                             f_close(&stm32_fileobject);
 
@@ -2564,12 +2568,12 @@ int main(void)
                             if ((bytesread != byteswritten))
                             {
                                 /* Read data is different from the expected data */
-                                MATRIX_Printf( FONT_DEFAULT, 1, 0xFFFF, 0xFFFF, 0xF81F, "Data Different!\n");
+                                // MATRIX_Printf( FONT_DEFAULT, 1, 0xFFFF, 0xFFFF, 0xF81F, "Data Different!\n");
                             }
                             else
                             {
                                 /* Success of the demo: no error occurrence */
-                                MATRIX_Printf( FONT_DEFAULT, 1, 0xFFFF, 0xFFFF, 0xF81F, "--> Test Card Sucessfully!\n");
+                                // MATRIX_Printf( FONT_DEFAULT, 1, 0xFFFF, 0xFFFF, 0xF81F, "--> Test Card Sucessfully!\n");
                             }
                         }
                     }
@@ -2614,7 +2618,7 @@ int main(void)
                 //         u32PreTick = u32CurrentDelay;
                 //         fCurrkFps = 500.0/(u32CurrentDelay - u32PreTick);
                 //     }
-                //     MATRIX_Printf( FONT_DEFAULT, 1U, 5, 10, 0xAAAA, "%i.%ifPs", (uint32_t) fCurrkFps, (uint32_t) ((fCurrkFps - (uint32_t) fCurrkFps) * 10) );
+                    // MATRIX_Printf( FONT_DEFAULT, 1U, 5, 10, 0xAAAA, "%i.%ifPs", (uint32_t) fCurrkFps, (uint32_t) ((fCurrkFps - (uint32_t) fCurrkFps) * 10) );
                 // }
 
                 // for (i = 0; i < 500; i++)
@@ -2629,7 +2633,7 @@ int main(void)
                 //         u32PreTick = u32CurrentDelay;
                 //         fCurrkFps = 500.0/(u32CurrentDelay - u32PreTick);
                 //     }
-                //     MATRIX_Printf( FONT_DEFAULT, 1U, 5, 10, 0xAAAA, "%i.%ifPs", (uint32_t) fCurrkFps, (uint32_t) ((fCurrkFps - (uint32_t) fCurrkFps) * 10) );
+                    // MATRIX_Printf( FONT_DEFAULT, 1U, 5, 10, 0xAAAA, "%i.%ifPs", (uint32_t) fCurrkFps, (uint32_t) ((fCurrkFps - (uint32_t) fCurrkFps) * 10) );
                 // }
                 // MEDIA_DisplayJpeg("img/natural.jpg");
                 // // MATRIX_SetCursor(0, 0);
