@@ -211,9 +211,8 @@ void EXTI9_5_IRQHandler(void)
   {
     LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_7);
     /* USER CODE BEGIN LL_EXTI_LINE_7 */
-    // OFF_LED();
-        DS3231_UpdateData();
-    // ON_LED();
+    DS3231_UpdateData();
+    (GPIOA->ODR & 0x80U) ? ( GPIOA->ODR &= 0xFFFFFF7F) : (GPIOA->ODR |= 0x80);
     /* USER CODE END LL_EXTI_LINE_7 */
   }
   /* USER CODE BEGIN EXTI9_5_IRQn 1 */

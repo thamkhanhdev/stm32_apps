@@ -141,7 +141,7 @@ DIR dir;
 /* Max brightness in daylight */
 static uint8_t u8MaxBrightness = 90U;
 /* Min brightness in nightlight */
-static uint8_t u8MinBrightness = 2U;
+static uint8_t u8MinBrightness = 10U;
 /* State of blinking led */
 static uint8_t u8PixelOff = 0U;
 /* The current position of cursor, used in display mode */
@@ -154,13 +154,13 @@ static CLOCK_Brightness_Type nBrightness = CLOCK_STATIC_BRIGHTNESS;
 static const char * cDayOfWeek[8U] =
 {
     "Rsv",
-    "Sun",
-    "Mon",
-    "Tue",
-    "Wed",
-    "Thu",
-    "Fri",
-    "Sat"
+    "CN",
+    "T2",
+    "T3",
+    "T4",
+    "T5",
+    "T6",
+    "T7"
 };
 /* USER CODE END PV */
 
@@ -626,23 +626,23 @@ static inline void MATRIX_DisplayMonitor0(void)
             u8IsFirstDraw = 0U;
 
             /* Draw the template data */
-            MATRIX_Printf( FONR_FREESERIFBOLDITALIC12PT7B, 2U, MON0_X_HOUR + 50U, MON0_Y_HOUR, 0x7BEFU, ":");
+            MATRIX_Printf( FONR_FREESERIFBOLDITALIC12PT7B, 2U, MON0_X_HOUR + 50U, MON0_Y_HOUR, 0xFFFFU, ":");
             /* Calibrate positions */
             MATRIX_MoveRegion( MON0_X_HOUR + 56U, MON0_Y_HOUR - 20U, MON0_X_HOUR + 53U, MON0_Y_HOUR - 21U, 8U, 8U );
 
             /* Draw the rainbow border lines */
-            for( uint8_t x = 0U; x < 128U; x++ )
+            for( uint8_t x = 1U; x < 127U; x++ )
             {
                 for( uint8_t y = 1U; y < 2U; y++ )
                 {
-                    uint16_t u16xTemp = ((x + (64U - y))>=128U) ? (x + (64U - y) - 128U) : (x + (64U - y));
-                    MATRIX_WritePixel( u16xTemp, y, MATRIX_Hsv2Rgb( x * 12U, 255U, 150U, 1U), 0U );
+                    // uint16_t u16xTemp = ((x + (64U - y))>=128U) ? (x + (64U - y) - 128U) : (x + (64U - y));
+                    MATRIX_WritePixel( x, y, MATRIX_Hsv2Rgb( x * 12U, 255U, 150U, 1U), 0U );
                 }
 
                 for( uint8_t y = (MON0_Y_HOUR + 6U); y < (MON0_Y_HOUR + 7U); y++ )
                 {
-                    uint16_t u16xTemp = ((x + (64U - y))>=128U) ? (x + (64U - y) - 128U) : (x + (64U - y));
-                    MATRIX_WritePixel( u16xTemp, y, MATRIX_Hsv2Rgb( x * 12U, 255U, 150U, 1U), 0U );
+                    // uint16_t u16xTemp = ((x + (64U - y))>=128U) ? (x + (64U - y) - 128U) : (x + (64U - y));
+                    MATRIX_WritePixel( x, y, MATRIX_Hsv2Rgb( x * 12U, 255U, 150U, 1U), 0U );
                 }
             }
         }
@@ -822,27 +822,27 @@ static inline void MATRIX_DisplayMonitor1(void)
             u8IsFirstDraw = 0U;
 
             /* Draw the template data */
-            MATRIX_Printf( FONT_DEFAULT, 4U, MON1_X_HOUR + 37U, MON1_Y_HOUR, 0x7BEFU, ":");
-            MATRIX_Printf( FONT_DEFAULT, 3U, MON1_X_HOUR + 90U, MON1_Y_HOUR - 3U, 0x7BEFU, ":");
+            MATRIX_Printf( FONT_DEFAULT, 4U, MON1_X_HOUR + 37U, MON1_Y_HOUR, 0xFFFF, ":");
+            MATRIX_Printf( FONT_DEFAULT, 3U, MON1_X_HOUR + 90U, MON1_Y_HOUR - 3U, 0xFFFF, ":");
 
             /* Draw the rainbow border lines */
-            for( uint8_t x = 0U; x < 128U; x++ )
+            for( uint8_t x = 1U; x < 127U; x++ )
             {
                 for( uint8_t y = 1U; y < 2U; y++ )
                 {
-                    uint16_t u16xTemp = ((x + (64U - y))>=128U) ? (x + (64U - y) - 128U) : (x + (64U - y));
-                    MATRIX_WritePixel( u16xTemp, y, MATRIX_Hsv2Rgb( x * 12U, 255U, 150U, 1U), 0U );
+                    // uint16_t u16xTemp = ((x + (64U - y))>=128U) ? (x + (64U - y) - 128U) : (x + (64U - y));
+                    MATRIX_WritePixel( x, y, MATRIX_Hsv2Rgb( x * 12U, 255U, 150U, 1U), 0U );
                 }
 
                 for( uint8_t y = 62; y < 63; y++ )
                 {
-                    uint16_t u16xTemp = ((x + (64U - y))>=128U) ? (x + (64U - y) - 128U) : (x + (64U - y));
-                    MATRIX_WritePixel( u16xTemp, y, MATRIX_Hsv2Rgb( x * 12U, 255U, 150U, 1U), 0U );
+                    // uint16_t u16xTemp = ((x + (64U - y))>=128U) ? (x + (64U - y) - 128U) : (x + (64U - y));
+                    MATRIX_WritePixel( x, y, MATRIX_Hsv2Rgb( x * 12U, 255U, 150U, 1U), 0U );
                 }
             }
             MATRIX_Printf( FONT_FREESERIF9PT7B, 1U, MON1_X_HOUR + 2U, MON1_Y_HOUR + 57U, 0x7FF,
                             "Make Yourself!");
-            MATRIX_FillRainbowColorToRegion( 1U, MON1_Y_HOUR + 44, 126U, 60U, 0U, 1535 * 2U, 0U, 0U );
+            MATRIX_FillRainbowColorToRegion( 1U, MON1_Y_HOUR + 44, 126U, 60U, 0U, 1535 * 2U, 1.0, 0U );
         }
 
         /* Update hour values if detect the changes */
@@ -877,12 +877,12 @@ static inline void MATRIX_DisplayMonitor1(void)
             MATRIX_Printf( FONT_DEFAULT, 2U, MON1_X_HOUR + 2U, MON1_Y_HOUR + 30U, 0x0U,
                             "%02i/%02i/20%02i", gOldDate, gOldMon, gOldYear
                          );
-            MATRIX_Printf( FONT_DEFAULT, 1U, MON1_X_HOUR + 102U, MON1_Y_HOUR + 18U, 0x0U,
+            MATRIX_Printf( FONT_DEFAULT, 1U, MON1_X_HOUR + 105U, MON1_Y_HOUR + 18U, 0x0U,
                             "%s", cDayOfWeek[gOldDay]);
             gOldDate = u8Date;
             gOldDay = u8Day;
             /* Update the new value */
-            MATRIX_Printf( FONT_DEFAULT, 1U, MON1_X_HOUR + 102U, MON1_Y_HOUR + 18U, 0x7FF,
+            MATRIX_Printf( FONT_DEFAULT, 1U, MON1_X_HOUR + 105U, MON1_Y_HOUR + 18U, 0x7FF,
                             "%s", cDayOfWeek[u8Day]);
             MATRIX_Printf( FONT_DEFAULT, 2U, MON1_X_HOUR + 2U, MON1_Y_HOUR + 30U, MATRIX_GenerateColor565(u8Date * 2U),
                             "%02i/%02i/20%02i", u8Date, u8Month, u8Year
@@ -1038,20 +1038,20 @@ static inline void MATRIX_AnalogClockMode0(void)
         if( gOldDate != u8Date )
         {
             MATRIX_Printf( FONT_TOMTHUMB, 2U, CLOCK_DIGITAL_DATE_X, CLOCK_DIGITAL_DATE_Y + 9U, 0x0U, "AL:%02i/%02i", u8LrDate, u8LrMoth);
-            MATRIX_Printf( FONT_DEFAULT, 2U, CLOCK_DIGITAL_DATE_X - 4U, CLOCK_DIGITAL_DATE_Y + 20U, 0x0U, "%s", cDayOfWeek[gOldDay]);
+            MATRIX_Printf( FONT_DEFAULT, 2U, CLOCK_DIGITAL_DATE_X + 1U, CLOCK_DIGITAL_DATE_Y + 20U, 0x0U, "%s", cDayOfWeek[gOldDay]);
             MATRIX_Printf( FONT_DEFAULT, 1U, CLOCK_DIGITAL_DATE_X + 11U, CLOCK_DIGITAL_DATE_Y + 11U, 0x0U, "DL:%02i/%02i", gOldDate, gOldMon);
             gOldDate = u8Date;
             gOldDay = u8Day;
             am_lich( u8Date, u8Month, u8Year, &u8LrDate, &u8LrMoth);
             MATRIX_Printf( FONT_TOMTHUMB, 2U, CLOCK_DIGITAL_DATE_X, CLOCK_DIGITAL_DATE_Y + 9U, 0xFFFFU, "AL:%02i/%02i", u8LrDate, u8LrMoth);
-            MATRIX_Printf( FONT_DEFAULT, 2U, CLOCK_DIGITAL_DATE_X - 4U, CLOCK_DIGITAL_DATE_Y + 20U, 0xFFFFU, "%s", cDayOfWeek[u8Day]);
+            MATRIX_Printf( FONT_DEFAULT, 2U, CLOCK_DIGITAL_DATE_X + 1U, CLOCK_DIGITAL_DATE_Y + 20U, 0xFFFFU, "%s", cDayOfWeek[u8Day]);
             MATRIX_Printf( FONT_DEFAULT, 1U, CLOCK_DIGITAL_DATE_X + 11U, CLOCK_DIGITAL_DATE_Y + 11U, 0xFFFFU, "DL:%02i/%02i", u8Date, u8Month );
         }
         if( gOldYear != u8Year )
         {
-            MATRIX_Printf( FONT_DEFAULT, 1U, CLOCK_DIGITAL_DATE_X + 34U, CLOCK_DIGITAL_DATE_Y + 20U, 0x0U, "20%02i", gOldYear);
+            MATRIX_Printf( FONT_DEFAULT, 1U, CLOCK_DIGITAL_DATE_X + 32U, CLOCK_DIGITAL_DATE_Y + 20U, 0x0U, "20%02i", gOldYear);
             gOldYear = u8Year;
-            MATRIX_Printf( FONT_DEFAULT, 1U, CLOCK_DIGITAL_DATE_X + 34U, CLOCK_DIGITAL_DATE_Y + 20U, 0xFFFFU, "20%02i", u8Year );
+            MATRIX_Printf( FONT_DEFAULT, 1U, CLOCK_DIGITAL_DATE_X + 32U, CLOCK_DIGITAL_DATE_Y + 20U, 0xFFFFU, "20%02i", u8Year );
         }
     }
 
@@ -1061,7 +1061,7 @@ static inline void MATRIX_AnalogClockMode0(void)
         u32CursorTick = HAL_GetTick();
         u8PixelOff = !u8PixelOff;
         MATRIX_Printf( FONR_FREESERIFBOLDITALIC12PT7B, 1U, CLOCK_DIGITAL_HM_X + 25U, CLOCK_DIGITAL_HM_Y - 2U,
-                       (u8PixelOff) ? (0x0U) : (0x7E0U), ":");
+                       (u8PixelOff) ? (0x0U) : (0xFFFF), ":");
     }
 
     /* Shift left/right the rainbow border lines */
@@ -1728,7 +1728,7 @@ int main(void)
 
     if( 0xFFU == u8MinBrightness)
     {
-        u8MinBrightness = 2U;
+        u8MinBrightness = 10U;
         FLASH_Write( FLASH_MIN_BRIGHTNESS, u8MinBrightness );
     }
 
@@ -1819,16 +1819,16 @@ int main(void)
             if( u8IsRandomMonitor )
             {
                 /* Do something */
-                if( (0U == (u8Minute % 3U)) && (0U == u8Second) )
+                if( (0U == (u8Minute % 1U)) && (0U == u8Second) )
                 {
                     IR1838_SetCurrentKey( IR_KEY_LEFT );
                 }
             }
-            if( (21U == u8Hour) && (0U == u8Minute) && (10U == u8Second))
+            if( (MATRIX_getBrightness() != u8MinBrightness) && (21U <= u8Hour))
             {
                 MATRIX_setBrightness(u8MinBrightness);
             }
-            else if( (5U == u8Hour) && (0U == u8Minute) && (10U == u8Second))
+            else if( (5U == u8Hour) && (30U == u8Minute) && (2U == u8Second))
             {
                 MATRIX_setBrightness(u8MaxBrightness);
             }
@@ -2090,7 +2090,7 @@ static void MX_TIM4_Init(void)
   /* USER CODE BEGIN TIM4_Init 1 */
 
   /* USER CODE END TIM4_Init 1 */
-  TIM_InitStruct.Prescaler = 0;
+  TIM_InitStruct.Prescaler = 49;
   TIM_InitStruct.CounterMode = LL_TIM_COUNTERMODE_UP;
   TIM_InitStruct.Autoreload = 60;
   TIM_InitStruct.ClockDivision = LL_TIM_CLOCKDIVISION_DIV1;
@@ -2128,7 +2128,7 @@ static void MX_TIM5_Init(void)
   /* USER CODE BEGIN TIM5_Init 1 */
 
   /* USER CODE END TIM5_Init 1 */
-  TIM_InitStruct.Prescaler = 1;
+  TIM_InitStruct.Prescaler = 0;
   TIM_InitStruct.CounterMode = LL_TIM_COUNTERMODE_UP;
   TIM_InitStruct.Autoreload = 100;
   TIM_InitStruct.ClockDivision = LL_TIM_CLOCKDIVISION_DIV1;
