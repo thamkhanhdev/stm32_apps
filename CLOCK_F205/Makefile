@@ -22,7 +22,7 @@ TARGET = CLOCK_F205
 # debug build?
 DEBUG = 0
 # optimization
-OPT = -Og
+OPT = -Ofast
 
 
 #######################################

@@ -77,17 +77,10 @@ extern "C"{
 #if defined(RGB444)
 uint16_t const gTimeCount[8]={ 50, 80, 150, 230, 300, 400, 480, 600}; // ok case 2: still flicker but lower than case 1 at RGB444 160Mhz or 170Mhz
 #elif defined(RGB555)
-uint16_t const gTimeCount[8]={ 50, 80, 150, 230, 300, 400, 480, 600}; // ok case 2: still flicker but lower than case 1 at RGB555 160Mhz or 170Mhz
+uint16_t const gTimeCount[8]={8, 16, 32, 64, 128, 256, 512}; // ok case 2: still flicker but lower than case 1 at RGB555 160Mhz or 170Mhz
 #elif defined(RGB565)
 uint16_t const gTimeCount[8]={ 33, 60, 110, 180, 250, 320, 480, 600}; // ok case 3: still flicker at RGB565 160Mhz or 170Mhz
 #endif /* #if defined(RGB565) */
-// uint16_t const gTimeCount[8]={ 55, 95, 150, 210, 270, 640, 480, 600}; // ok case 3: audio wrong
-// uint16_t const gTimeCount[8]={ 40, 80, 160, 240, 360, 480, 600, 1000}; // he so chia nap vao timer ok with 256x64 47.9Hz
-// uint16_t const gTimeCount[8]={ 45, 90, 180, 280, 400, 480, 600, 1000}; // he so chia nap vao timer ok with 256x64 47.9Hz
-// uint16_t const gTimeCount[8]={ 50, 100, 200, 400, 360, 480, 600, 1000}; // he so chia nap vao timer ok with 256x64 47.9Hz
-// uint16_t const gTimeCount[8]={ 55, 110, 200, 300, 400, 480, 600, 1000}; // he so chia nap vao timer ok with 256x64 47.9Hz
-// uint16_t const gTimeCount[8]={ 50, 100, 200, 400, 700, 480, 600, 1000}; // he so chia nap vao timer ok with 256x64 47.9Hz
-// uint16_t const gTimeCount[8]={ 160, 240, 360, 480, 600, 1000, 1500}; // he so chia nap vao timer ok with 256x64 47.9Hz
 
 static const int8_t sinetab[256] =
 {
@@ -194,12 +187,6 @@ static const uint32_t gBitMask[MATRIX_SCANRATE] =
 #endif /* #if 32U==MATRIX_SCANRATE */
 };
 #endif /* #if defined(RECORD_LAST_FRAME) || defined(RECORD_TEXT_NO_BACKGROUND) */
-#ifdef USE2BUS
-static uint16_t gBuff[MATRIX_WIDTH*MATRIX_HEIGHT*MAX_BIT/4];
-#else
-// static uint8_t gBuff[MATRIX_WIDTH*MATRIX_HEIGHT*MAX_BIT/2];
-uint16_t gBuff[MATRIX_WIDTH*MATRIX_HEIGHT];
-#endif /* #ifdef USE2BUS */
 static uint16_t gCursorX = 0U;
 static uint16_t gCursorY = 0U;
 static uint8_t  gTextSizeX = 1U;
@@ -207,6 +194,9 @@ static uint8_t  gTextSizeY = 1U;
 static MATRIX_FlutterTypes gFlutterState = FLUTTER_RIGHT_TO_LEFT;
 // static GFXfont *gfxFont = &TomThumb;       ///< Pointer to special font
 static const GFXfont *gfxFont = NULL;       ///< Pointer to special font
+static volatile uint32_t gCountBit = 0U;
+uint16_t gIsrBuff[MATRIX_WIDTH*MAX_BIT];
+TYPEDEF_BUFF gMainBuff[MATRIX_WIDTH][MATRIX_HEIGHT];
 /*==================================================================================================
 *                                      GLOBAL CONSTANTS
 ==================================================================================================*/
@@ -251,7 +241,6 @@ static inline void MATRIX_ExecuteTransitionLeft(uint16_t u16xStart, uint16_t u16
                                                 MATRIX_EffectTypes nEffect)
 {
     uint16_t const u16yEnd = u16yStart + u16Height;
-    uint16_t const u16SubTemp = MATRIX_TOLTAL - MATRIX_WIDTH;
     uint8_t u8xPos, u8yPos, u8Count = u16Width;
     uint16_t u16yCurrPos;
 
@@ -265,14 +254,11 @@ static inline void MATRIX_ExecuteTransitionLeft(uint16_t u16xStart, uint16_t u16
         {
             for( u8yPos = u16yStart; u8yPos < u16yEnd; u8yPos++ )
             {
-                u16yCurrPos = u8yPos * MATRIX_WIDTH;
                 for( u8xPos = u16xStart; u8xPos < u8Count; u8xPos++ )
                 {
-                    gBuff[ u16yCurrPos + u8xPos] = gBuff[u16yCurrPos + u8xPos + 1U];
-                    gBuff[ u16SubTemp - u16yCurrPos + u8xPos] = gBuff[ u16SubTemp - u16yCurrPos + u8xPos + 1U];
+                    gMainBuff[u8xPos][u8yPos] = gMainBuff[u8xPos + 1U][u8yPos];
                 }
-                gBuff[ u16yCurrPos + u8xPos] = 0U;
-                gBuff[ u16SubTemp -  u16yCurrPos + u8xPos] = 0U;
+                gMainBuff[u8xPos][u8yPos] = 0U;
             }
 
             /* Reset all scan frame in order to refresh new data *MATRIX_TransitionEffect/
@@ -284,11 +270,11 @@ static inline void MATRIX_ExecuteTransitionLeft(uint16_t u16xStart, uint16_t u16
             //     for( u8xPos = u16xStart; u8xPos < u8Count; u8xPos++ )
             //     {
             //         u16yCurrPos = u8yPos * MATRIX_WIDTH;
-            //         gBuff[u16yCurrPos + u8xPos] = gBuff[u16yCurrPos + u8xPos + 1U];
-            //         gBuff[ MATRIX_TOLTAL -  MATRIX_WIDTH - u16yCurrPos + u8xPos] = gBuff[ MATRIX_TOLTAL -  MATRIX_WIDTH - u16yCurrPos + u8xPos + 1U];
+            //         gMainBuff[u16yCurrPos + u8xPos] = gMainBuff[u16yCurrPos + u8xPos + 1U];
+            //         gMainBuff[ MATRIX_TOLTAL -  MATRIX_WIDTH - u16yCurrPos + u8xPos] = gMainBuff[ MATRIX_TOLTAL -  MATRIX_WIDTH - u16yCurrPos + u8xPos + 1U];
             //     }
-            //     gBuff[u8yPos * MATRIX_WIDTH + u8xPos] = 0U;
-            //     gBuff[ MATRIX_TOLTAL -  (1 + u8yPos) * MATRIX_WIDTH + u8xPos] = 0U;
+            //     gMainBuff[u8yPos * MATRIX_WIDTH + u8xPos] = 0U;
+            //     gMainBuff[ MATRIX_TOLTAL -  (1 + u8yPos) * MATRIX_WIDTH + u8xPos] = 0U;
             // }
 
             /* Delay in few times */
@@ -314,9 +300,9 @@ static inline void MATRIX_ExecuteTransitionRight(MATRIX_EffectTypes nEffect)
             {
                 for( u8xPos = 0U; u8xPos < MATRIX_WIDTH - 1U; u8xPos++ )
                 {
-                    gBuff[u8yPos * MATRIX_WIDTH + u8xPos] = gBuff[u8yPos * MATRIX_WIDTH + u8xPos + 1U];
+                    gMainBuff[u8xPos][u8yPos] = gMainBuff[u8xPos + 1U][u8yPos];
                 }
-                gBuff[u8yPos * MATRIX_WIDTH + u8xPos] = 0U;
+                gMainBuff[u8xPos][u8yPos] = 0U;
             }
             HAL_Delay( 50 );
         }
@@ -350,118 +336,101 @@ static inline void MATRIX_ExecuteTransitionRight(MATRIX_EffectTypes nEffect)
         return;
     }
 
-    /* Fill data to the second bus if used */
-#ifdef USE2BUS
-    if( y >= MATRIX_HEIGHT/2 )
-    {
-        /* Minus by MATRIX_HEIGHT/2 */
-        y = y - MATRIX_HEIGHT/2 ;
-
-        if( y < MATRIX_SCANRATE )
-        {
-        }
-        else
-        {
-        }
-    }
-    else
-#endif /* USE2BUS */
-    if( y < MATRIX_SCANRATE)
-    {
-        /**
-         * Data mapping for lower half of the pannel
-         */
-#if defined(RGB444)
-        /*
-         *  15  14  13  12 | 11  10   9   8 | 7   6   5   4 | 3   2   1   0
-         *  R3  R2  R1  R0   --  G3  G2  G1  G0  --  --  B3  B2  B1  B0  --
-         *
-         *  11  10   9   8 | 7   6   5   4 | 3   2   1   0
-         *  G3  B3  R3  G2  B2  R2  G1  B1  R1  G0  B0  R0
-         */
-        // gBuff[ y * MATRIX_WIDTH + x] =  ((u16Color >> 6u) & 0x200) | ((u16Color >> 8u) &  0x40) | ((u16Color >> 10u) &  0x8) | ((u16Color >> 12u) & 0x1) |  /* R3 -> R0 */
-        //                                 ((u16Color << 1u) & 0x800) | ((u16Color >> 1u) & 0x100) | ((u16Color >>  3u) & 0x20) | ((u16Color >>  5u) & 0x4) |  /* G3 -> G0 */
-        //                                 ((u16Color << 6u) & 0x400) | ((u16Color << 4u) &  0x80) | ((u16Color <<  2u) & 0x10) | ((u16Color <<  0u) & 0x2);    /* B3 -> B0 */
-        gBuff[ y * MATRIX_WIDTH + x] =  ((u16Color >> 6u) & 0x200) | ((u16Color >> 8u) &  0x40) | ((u16Color >> 10u) &  0x8) | ((u16Color >> 12u) & 0x1) | /* R3 -> R0 */
-                                        ((u16Color << 0u) & 0x400) | ((u16Color >> 2u) &  0x80) | ((u16Color >>  4u) & 0x10) | ((u16Color >>  6u) & 0x2) | /* G3 -> G0 */
-                                        ((u16Color << 7u) & 0x800) | ((u16Color << 5u) & 0x100) | ((u16Color <<  3u) & 0x20) | ((u16Color <<  1u) & 0x4);  /* B3 -> B0 */
-#elif defined(RGB555)
-        /*
-         *  15  14  13  12 | 11  10   9   8 | 7   6   5   4 | 3   2   1   0
-         *  R4  R3  R2  R1   R0  G4  G3  G2  G1  G0  --  B4  B3  B2  B1  B0
-         *
-         *  15  14  13  12 | 11  10   9   8 | 7   6   5   4 | 3   2   1   0
-         *  --  G4  B4  R4   G3  B3  R3  G2  B2  R2  G1  B1  R1  G0  B0  R0
-         */
-        /* Origin matrix */
-        // gBuff[ y * MATRIX_WIDTH + x] =  ((u16Color >> 3U) & 0x1000) | ((u16Color >> 5u) & 0x200) | ((u16Color >> 7u) &  0x40) | ((u16Color >>  9u) &  0x8) | ((u16Color >> 11u) & 0x1) | /* R4 -> R0 */
-        //                                 ((u16Color << 4U) & 0x4000) | ((u16Color << 2u) & 0x800) | ((u16Color << 0u) & 0x100) | ((u16Color >>  2u) & 0x20) | ((u16Color >>  4u) & 0x4) | /* G4 -> G0 */
-        //                                 ((u16Color << 9U) & 0x2000) | ((u16Color << 7u) & 0x400) | ((u16Color << 5u) &  0x80) | ((u16Color <<  3u) & 0x10) | ((u16Color <<  1u) & 0x2);  /* B4 -> B0 */
-        gBuff[ y * MATRIX_WIDTH + x] =  ((u16Color >>  3u) & 0x1000) | ((u16Color >> 5u) & 0x200) | ((u16Color >> 7u) &  0x40) | ((u16Color >>  9u) &  0x8) | ((u16Color >> 11u) & 0x1) | /* R4 -> R0 */
-                                        ((u16Color <<  3u) & 0x2000) | ((u16Color << 1u) & 0x400) | ((u16Color >> 1u) &  0x80) | ((u16Color >>  3u) & 0x10) | ((u16Color >>  5u) & 0x2) | /* G4 -> G0 */
-                                        ((u16Color << 10u) & 0x4000) | ((u16Color << 8u) & 0x800) | ((u16Color << 6u) & 0x100) | ((u16Color <<  4u) & 0x20) | ((u16Color <<  2u) & 0x4);  /* B4 -> B0 */
-#elif defined(RGB565)
-        /*
-         *  15  14  13  12 | 11  10   9   8 | 7   6   5   4 | 3   2   1   0
-         *  R4  R3  R2  R1   R0  G5  G4  G3  G2  G1  G0  B4  B3  B2  B1  B0
-         *
-         *  15  14  13  12 | 11  10   9   8 | 7   6   5   4 | 3   2   1   0
-         *  G5  G4  B4  R4   G3  B3  R3  G2  B2  R2  G1  B1  R1  G0  B0  R0
-         */
-        gBuff[ y * MATRIX_WIDTH + x] =  ((u16Color >> 3U) & 0x1000) | ((u16Color >> 5u) & 0x200) | ((u16Color >> 7u) &  0x40) | ((u16Color >>  9u) &  0x8) | ((u16Color >> 11u) & 0x1) | /* R4 -> R0 */
-          ((u16Color << 5U) & 0x8000) | ((u16Color << 5U) & 0x4000) | ((u16Color << 3u) & 0x800) | ((u16Color << 1u) & 0x100) | ((u16Color >>  1u) & 0x20) | ((u16Color >>  3u) & 0x4) | /* G5 -> G0 */
-                                        ((u16Color << 9U) & 0x2000) | ((u16Color << 7u) & 0x400) | ((u16Color << 5u) &  0x80) | ((u16Color <<  3u) & 0x10) | ((u16Color <<  1u) & 0x2);  /* B4 -> B0 */
-#endif
-    }
-    else
-    {
-        /**
-         * Data mapping for upper half of the pannel
-         */
-#if defined(RGB444)
-        /*
-         *  15  14  13  12 | 11  10   9   8 | 7   6   5   4 | 3   2   1   0
-         *  R3  R2  R1  R0   --  G3  G2  G1  G0  --  --  B3  B2  B1  B0  --
-         *
-         *  11  10   9   8 | 7   6   5   4 | 3   2   1   0
-         *  B3  G3  R3  B2  G2  R2  B1  G1  R1  B0  G0  R0
-         */
-        // gBuff[ y * MATRIX_WIDTH + x] =  ((u16Color >> 6u) & 0x200) | ((u16Color >> 8u) &  0x40) | ((u16Color >> 10u) &  0x8) | ((u16Color >> 12u) & 0x1) | /* R3 -> R0 */
-        //                                 ((u16Color << 0u) & 0x400) | ((u16Color >> 2u) &  0x80) | ((u16Color >>  4u) & 0x10) | ((u16Color >>  6u) & 0x2) | /* G3 -> G0 */
-        //                                 ((u16Color << 7u) & 0x800) | ((u16Color << 5u) & 0x100) | ((u16Color <<  3u) & 0x20) | ((u16Color <<  1u) & 0x4);  /* B3 -> B0 */
-        gBuff[ y * MATRIX_WIDTH + x] =  ((u16Color >> 6u) & 0x200) | ((u16Color >> 8u) &  0x40) | ((u16Color >> 10u) &  0x8) | ((u16Color >> 12u) & 0x1) |  /* R3 -> R0 */
-                                        ((u16Color << 1u) & 0x800) | ((u16Color >> 1u) & 0x100) | ((u16Color >>  3u) & 0x20) | ((u16Color >>  5u) & 0x4) |  /* G3 -> G0 */
-                                        ((u16Color << 6u) & 0x400) | ((u16Color << 4u) &  0x80) | ((u16Color <<  2u) & 0x10) | ((u16Color <<  0u) & 0x2);    /* B3 -> B0 */
-#elif defined(RGB555)
-        /*
-         *  15  14  13  12 | 11  10   9   8 | 7   6   5   4 | 3   2   1   0
-         *  R4  R3  R2  R1   R0  G4  G3  G2  G1  G0  --  B4  B3  B2  B1  B0
-         *
-         *  15  14  13  12 | 11  10   9   8 | 7   6   5   4 | 3   2   1   0
-         *  --  B4  G4  R4   B3  G3  R3  B2  G2  R2  B1  G1  R1  B0  G0  R0
-         */
-        /* Origin matrix */
-        // gBuff[ y * MATRIX_WIDTH + x] =  ((u16Color >>  3u) & 0x1000) | ((u16Color >> 5u) & 0x200) | ((u16Color >> 7u) &  0x40) | ((u16Color >>  9u) &  0x8) | ((u16Color >> 11u) & 0x1) | /* R4 -> R0 */
-        //                                 ((u16Color <<  3u) & 0x2000) | ((u16Color << 1u) & 0x400) | ((u16Color >> 1u) &  0x80) | ((u16Color >>  3u) & 0x10) | ((u16Color >>  5u) & 0x2) | /* G4 -> G0 */
-        //                                 ((u16Color << 10u) & 0x4000) | ((u16Color << 8u) & 0x800) | ((u16Color << 6u) & 0x100) | ((u16Color <<  4u) & 0x20) | ((u16Color <<  2u) & 0x4);  /* B4 -> B0 */
-        gBuff[ y * MATRIX_WIDTH + x] =  ((u16Color >> 3U) & 0x1000) | ((u16Color >> 5u) & 0x200) | ((u16Color >> 7u) &  0x40) | ((u16Color >>  9u) &  0x8) | ((u16Color >> 11u) & 0x1) | /* R4 -> R0 */
-                                        ((u16Color << 4U) & 0x4000) | ((u16Color << 2u) & 0x800) | ((u16Color << 0u) & 0x100) | ((u16Color >>  2u) & 0x20) | ((u16Color >>  4u) & 0x4) | /* G4 -> G0 */
-                                        ((u16Color << 9U) & 0x2000) | ((u16Color << 7u) & 0x400) | ((u16Color << 5u) &  0x80) | ((u16Color <<  3u) & 0x10) | ((u16Color <<  1u) & 0x2);  /* B4 -> B0 */
-#elif defined(RGB565)
-        /*
-         *  15  14  13  12 | 11  10   9   8 | 7   6   5   4 | 3   2   1   0
-         *  R4  R3  R2  R1   R0  G5  G4  G3  G2  G1  G0  B4  B3  B2  B1  B0
-         *
-         *  15  14  13  12 | 11  10   9   8 | 7   6   5   4 | 3   2   1   0
-         *  G5  B4  G4  R4   B3  G3  R3  B2  G2  R2  B1  G1  R1  B0  G0  R0
-         */
-        gBuff[ y * MATRIX_WIDTH + x] =  ((u16Color >>  3u) & 0x1000) | ((u16Color >> 5u) & 0x200) | ((u16Color >> 7u) &  0x40) | ((u16Color >>  9u) &  0x8) | ((u16Color >> 11u) & 0x1) | /* R4 -> R0 */
-          ((u16Color << 5U) & 0x8000) | ((u16Color <<  4u) & 0x2000) | ((u16Color << 2u) & 0x400) | ((u16Color >> 0u) &  0x80) | ((u16Color >>  2u) & 0x10) | ((u16Color >>  4u) & 0x2) | /* G4 -> G0 */
-                                        ((u16Color << 10u) & 0x4000) | ((u16Color << 8u) & 0x800) | ((u16Color << 6u) & 0x100) | ((u16Color <<  4u) & 0x20) | ((u16Color <<  2u) & 0x4);  /* B4 -> B0 */
-#endif
-    }
+    gMainBuff[x][y] = (TYPEDEF_BUFF) u16Color;
 }
 
+static void MATRIX_ProcessNextRow(void)
+{
+    uint32_t _curPos, color;
+    uint16_t u16Idx;
+    uint16_t bit, limit;
+    uint8_t r, g, b;
+
+    for( u16Idx = 0U; u16Idx < MATRIX_WIDTH; u16Idx++ )
+    {
+        /* Process the first part */
+        color = gMainBuff[u16Idx][gRows];
+        r = (color >>  R_COLOR_SHIFT) & R_COLOR_MASK;
+        g = (color >>  G_COLOR_SHIFT) & G_COLOR_MASK;
+        b = (color >>  B_COLOR_SHIFT) & B_COLOR_MASK;
+
+        bit   = 1;
+        limit = 1 << MAX_BIT;
+        _curPos = u16Idx;
+
+        while( bit < limit )
+        {
+           gIsrBuff[_curPos] &= ~RGB1_MASK;                   /* 00000111b Mask out R,G,B in one op */
+           if( r & bit ) gIsrBuff[_curPos] |= R1_MASK;     /* Plane N R: bit 6 0000.0100.0000b     */
+           if( g & bit ) gIsrBuff[_curPos] |= G1_MASK;     /* Plane N G: bit 7 0000.1000.0000b     */
+           if( b & bit ) gIsrBuff[_curPos] |= B1_MASK;    /* Plane N B: bit 8 0001.0000.0000b     */
+            _curPos  += MATRIX_WIDTH;                /* Advance to next bit plane */
+            bit <<= 1 ;
+        }
+
+        /* Process the second part */
+        color = gMainBuff[u16Idx][gRows | MATRIX_SCANRATE];
+        r = (color >>  R_COLOR_SHIFT) & R_COLOR_MASK;
+        g = (color >>  G_COLOR_SHIFT) & G_COLOR_MASK;
+        b = (color >>  B_COLOR_SHIFT) & B_COLOR_MASK;
+
+        bit   = 1;
+        limit = 1 << MAX_BIT;
+        _curPos = u16Idx;
+
+        while( bit < limit )
+        {
+           gIsrBuff[_curPos] &= ~RGB2_MASK;                   /* 00000111b Mask out R,G,B in one op */
+           if( r & bit ) gIsrBuff[_curPos] |= R2_MASK;     /* Plane N R: bit 6 0000.0100.0000b     */
+           if( g & bit ) gIsrBuff[_curPos] |= G2_MASK;     /* Plane N G: bit 7 0000.1000.0000b     */
+           if( b & bit ) gIsrBuff[_curPos] |= B2_MASK;    /* Plane N B: bit 8 0001.0000.0000b     */
+            _curPos  += MATRIX_WIDTH;                /* Advance to next bit plane */
+            bit <<= 1 ;
+        }
+
+#ifdef USE2BUS
+        /* Process the first part */
+        color = gMainBuff[u16Idx][gRows | (MATRIX_SCANRATE << 1)];
+        r = (color >>  R_COLOR_SHIFT) & R_COLOR_MASK;
+        g = (color >>  G_COLOR_SHIFT) & G_COLOR_MASK;
+        b = (color >>  B_COLOR_SHIFT) & B_COLOR_MASK;
+
+        bit   = 1;
+        limit = 1 << MAX_BIT;
+        _curPos = u16Idx;
+
+        while( bit < limit )
+        {
+           gIsrBuff[_curPos] &= ~RGB3_MASK;                   /* 00000111b Mask out R,G,B in one op */
+           if( r & bit ) gIsrBuff[_curPos] |= R3_MASK;     /* Plane N R: bit 6 0000.0100.0000b     */
+           if( g & bit ) gIsrBuff[_curPos] |= G3_MASK;     /* Plane N G: bit 7 0000.1000.0000b     */
+           if( b & bit ) gIsrBuff[_curPos] |= B3_MASK;    /* Plane N B: bit 8 0001.0000.0000b     */
+            _curPos  += MATRIX_WIDTH;                /* Advance to next bit plane */
+            bit <<= 1 ;
+        }
+
+        /* Process the second part */
+        color = gMainBuff[u16Idx][gRows | MATRIX_SCANRATE | (MATRIX_SCANRATE << 1)];
+        r = (color >>  R_COLOR_SHIFT) & R_COLOR_MASK;
+        g = (color >>  G_COLOR_SHIFT) & G_COLOR_MASK;
+        b = (color >>  B_COLOR_SHIFT) & B_COLOR_MASK;
+
+        bit   = 1;
+        limit = 1 << MAX_BIT;
+        _curPos = u16Idx;
+
+        while( bit < limit )
+        {
+           gIsrBuff[_curPos] &= ~RGB4_MASK;                   /* 00000111b Mask out R,G,B in one op */
+           if( r & bit ) gIsrBuff[_curPos] |= R4_MASK;     /* Plane N R: bit 6 0000.0100.0000b     */
+           if( g & bit ) gIsrBuff[_curPos] |= G4_MASK;     /* Plane N G: bit 7 0000.1000.0000b     */
+           if( b & bit ) gIsrBuff[_curPos] |= B4_MASK;    /* Plane N B: bit 8 0001.0000.0000b     */
+            _curPos  += MATRIX_WIDTH;                /* Advance to next bit plane */
+            bit <<= 1 ;
+        }
+#endif /* #ifdef USE_BUS_2 */
+    }
+}
 /*==================================================================================================
 *                                       GLOBAL FUNCTIONS
 ==================================================================================================*/
@@ -477,65 +446,57 @@ static inline void MATRIX_ExecuteTransitionRight(MATRIX_EffectTypes nEffect)
   *                 |---------- r0 ----------|---------- r1 ----------|---------- r2 ----------|
   *                 Total elements are MATRIX_WIDTH * MATRIX_HEIGHT * MAX_BIT. Actual only need to scan a half
   *                 part of one matrix.
-  *             2. Only use the one data array gBuff[MATRIX_WIDTH * MATRIX_HEIGHT]. In this case, only prefer use the color code are RGB565, RGB555, RGB444...
+  *             2. Only use the one data array gMainBuff[MATRIX_WIDTH * MATRIX_HEIGHT]. In this case, only prefer use the color code are RGB565, RGB555, RGB444...
   *                 Each interrupt event occured, we want to print out each bit possition like as below algorithm. This exemple shall be declare RGB565 encode
   *                 | R4 R3 R2 R1 R0 | G5 G4 G3 G2 G1 G0 | B4 B3 B2 B1 B0 |
-  *                 u16TempDat = gBuff[ y * MATRIX_WIDTH + x ];
-  *                 DAT_P->ODR = gBuff[ y * MATRIX_WIDTH + x ];
+  *                 u16TempDat = gMainBuff[ y * MATRIX_WIDTH + x ];
+  *                 DAT_P->ODR = gMainBuff[ y * MATRIX_WIDTH + x ];
   * @param  None.
   * @retval None.
   */
 void IRQ_ProcessMonitor( void )
 {
     uint16_t u16Color = 0U;
-    uint16_t u16Count = 0U;
+    uint16_t u16Count = MATRIX_WIDTH;
     uint16_t t, duration;
     uint8_t u8Timeout = IRQ_TIMEDELAY;
 
-    t = (MATRIX_WIDTH > 8) ? LOOPTIME : (LOOPTIME * 2);
-    duration = ((t + CALLOVERHEAD * 2) << gBitPos) - CALLOVERHEAD;
+    TIM_OE->CCR3 = 0U;
 
-    /* Load new division value */
+    /*! Step 1: Clock in the data for the current row one bit at a time */
+    while( u16Count-- )
+    {
+        DAT_P->ODR = gIsrBuff[ gCountBit ] & BUS1_MASK;
+        CLK_P->BSRR=CLK_OFF;
+        gCountBit++;
+        CLK_P->BSRR=CLK_ON;
+    }
+
+    /*! Step 2:
+     *  Pull the latch and output enable pins high. This enables the latch,
+     *  allowing the row data to reach the output driver but it also disables
+     *  the output so that no LEDs are lit while we're switching rows.
+     */
     TIM_DAT->PSC = gTimeCount[gBitPos];
-    // TIM_DAT->PSC = duration;
     /* Trigger EGR upto 1 in order re-load PSC value */
     TIM_DAT->EGR = 1U;
     /* Clear interrupt flag */
     TIM_DAT->SR = 0xFFFFFFFE;
 
     /* Latch data loaded during *prior* interrupt */
-    LAT_P->BSRR = LAT_BIT_SET;
-    /* Disable LED output during gRows/gBitPos switchover */
-    TIM_OE->CCR3 = 0U;
+    LAT_P->BSRR = LAT_ON;
 
-    /* Release new data region */
-    while( u16Count < MATRIX_WIDTH)
-    {
-        CLK_P->BSRR = CLK_BIT_RESET;
-#if defined(RGB565)
-        if( 5U == gBitPos)
-        {
-            DAT_P->ODR = (((gBuff[ u16Count + gRows * MATRIX_WIDTH ] >> 10U) & 0x20U) | ((gBuff[ u16Count + (gRows + MATRIX_SCANRATE) * MATRIX_WIDTH ] >> 14U) & 0x2U));
-        }
-        else
-#endif /* #if defined(RGB565) */
-        {
-            /* Origin matrix */
-            // DAT_P->ODR = ((((gBuff[ u16Count + gRows * MATRIX_WIDTH ] >> (gBitPos * 3)) << 3U) & 0x38U) | ((gBuff[ u16Count + (gRows + MATRIX_SCANRATE) * MATRIX_WIDTH ] >> (gBitPos * 3U)) & 0x7U));
-            u16Color = gBuff[ u16Count + (gRows + MATRIX_SCANRATE) * MATRIX_WIDTH ];
-            u16Color = u16Color >> (gBitPos * 3U);
-            u16Color = (u16Color & 0x1) | ((u16Color & 0x2) << 2U) | ((u16Color & 0x4) << 2U);
-            DAT_P->ODR = ((((gBuff[ u16Count + gRows * MATRIX_WIDTH ] >> (gBitPos * 3)) << 6U) & 0x1C0U) |
-                         ((u16Color << 9U) & 0x3200U));
-        }
-        u16Count++;
-        CLK_P->BSRR = CLK_BIT_SET;
-    }
-
-    TIM_OE->CCR3 = gBrightness;
-    LAT_P->BSRR = LAT_BIT_RESET;
+    /*! Step 3: Switch rows by driving the appropriate row select lines */
     ROW_P->ODR = gRows;
-    // while( u8Timeout -- );
+
+    /*! Step 4:
+     *  Pull the latch and output enable pins low again,
+     *  enabling the output and closing the latch so we
+     *  can clock in the next row of data.
+     */
+    LAT_P->BSRR = LAT_OFF;
+    TIM_OE->CCR3 = gBrightness;
+    // TIM_OE->CCR3 = (2 * (1 << gBitPos));
 
     if( ++gBitPos >= MAX_BIT )
     {
@@ -544,6 +505,8 @@ void IRQ_ProcessMonitor( void )
         {
             gRows = 0U;
         }
+        gCountBit = 0UL;
+        MATRIX_ProcessNextRow();
     }
 }
 
@@ -565,8 +528,8 @@ inline void MATRIX_MoveRegion(uint16_t u16xStart, uint16_t u16yStart, uint16_t u
             {
                 for( u16xCurPos = u8Width; u16xCurPos > 0; u16xCurPos-- )
                 {
-                    gBuff[ ((u16yCurPos - 1U + u16yEnd)) * MATRIX_WIDTH + u16xCurPos - 1U + u16xEnd] = gBuff[ (u16yCurPos - 1U + u16yStart) * MATRIX_WIDTH + u16xCurPos - 1U + u16xStart];
-                    gBuff[ (u16yCurPos - 1U + u16yStart) * MATRIX_WIDTH + u16xCurPos - 1U + u16xStart] = 0U;
+                    gMainBuff[u16xCurPos - 1U + u16xEnd][u16yCurPos - 1U + u16yEnd] = gMainBuff[u16xCurPos - 1U + u16xStart][u16yCurPos - 1U + u16yStart];
+                    gMainBuff[u16xCurPos - 1U + u16xStart][u16yCurPos - 1U + u16yStart] = 0U;
                 }
             }
         }
@@ -579,8 +542,8 @@ inline void MATRIX_MoveRegion(uint16_t u16xStart, uint16_t u16yStart, uint16_t u
             {
                 for( u16xCurPos = u8Width; u16xCurPos > 0; u16xCurPos-- )
                 {
-                    gBuff[ ((u16yCurPos + u16yEnd)) * MATRIX_WIDTH + u16xCurPos - 1U + u16xEnd] = gBuff[ (u16yCurPos + u16yStart) * MATRIX_WIDTH + u16xCurPos - 1U + u16xStart];
-                    gBuff[ (u16yCurPos  + u16yStart) * MATRIX_WIDTH + u16xCurPos - 1U + u16xStart] = 0U;
+                    gMainBuff[u16xCurPos - 1U + u16xEnd][u16yCurPos + u16yEnd] = gMainBuff[u16xCurPos - 1U + u16xStart][u16yCurPos + u16yStart];
+                    gMainBuff[u16xCurPos - 1U + u16xStart][u16yCurPos  + u16yStart] = 0U;
                 }
             }
         }
@@ -596,8 +559,8 @@ inline void MATRIX_MoveRegion(uint16_t u16xStart, uint16_t u16yStart, uint16_t u
             {
                 for( u16xCurPos = 0U; u16xCurPos < u8Width; u16xCurPos++ )
                 {
-                    gBuff[ ((u16yCurPos - 1U + u16yEnd)) * MATRIX_WIDTH + u16xCurPos + u16xEnd] = gBuff[ (u16yCurPos - 1U + u16yStart) * MATRIX_WIDTH + u16xCurPos + u16xStart];
-                    gBuff[ (u16yCurPos - 1U + u16yStart) * MATRIX_WIDTH + u16xCurPos + u16xStart] = 0U;
+                    gMainBuff[u16xCurPos + u16xEnd][u16yCurPos - 1U + u16yEnd] = gMainBuff[u16xCurPos + u16xStart][u16yCurPos - 1U + u16yStart];
+                    gMainBuff[u16xCurPos + u16xStart][u16yCurPos - 1U + u16yStart] = 0U;
                 }
             }
         }
@@ -610,8 +573,8 @@ inline void MATRIX_MoveRegion(uint16_t u16xStart, uint16_t u16yStart, uint16_t u
             {
                 for( u16xCurPos = 0U; u16xCurPos < u8Width; u16xCurPos++ )
                 {
-                    gBuff[ ((u16yCurPos + u16yEnd)) * MATRIX_WIDTH + u16xCurPos + u16xEnd] = gBuff[ (u16yCurPos + u16yStart) * MATRIX_WIDTH + u16xCurPos + u16xStart];
-                    gBuff[ (u16yCurPos + u16yStart) * MATRIX_WIDTH + u16xCurPos + u16xStart] = 0U;
+                    gMainBuff[u16xCurPos + u16xEnd][u16yCurPos + u16yEnd] = gMainBuff[u16xCurPos + u16xStart][u16yCurPos + u16yStart];
+                    gMainBuff[u16xCurPos + u16xStart][u16yCurPos + u16yStart] = 0U;
                 }
             }
         }
@@ -622,7 +585,7 @@ inline void MATRIX_DispImage( const uint8_t * pData, uint16_t u16xStartedPos, ui
 {
     uint8_t u8xPos, u8yPos;
     uint8_t r, g, b;
-    uint32_t u32Color;
+    uint32_t uColor;
 
     (void) pData;
 
@@ -636,19 +599,19 @@ inline void MATRIX_DispImage( const uint8_t * pData, uint16_t u16xStartedPos, ui
             g = pData[ u8yPos * u8Width*3 + u8xPos * 3 + 1];
             b = pData[ u8yPos * u8Width*3 + u8xPos * 3 + 0];
 
-            // r = (u32Color >> 11U) & 0x1F;
-            // g = (u32Color >>  5U) & 0x3F;
-            // b = (u32Color >>  0U) & 0x1F;
+            // r = (uColor >> 11U) & 0x1F;
+            // g = (uColor >>  5U) & 0x3F;
+            // b = (uColor >>  0U) & 0x1F;
 
             r = pgm_read_byte(&gamma_table[(r * 255) >> 8]); // Gamma correction table maps
             g = pgm_read_byte(&gamma_table[(g * 255) >> 8]); // 8-bit input to 4-bit output
             b = pgm_read_byte(&gamma_table[(b * 255) >> 8]);
 
-            u32Color =  (r << 12) | ((r & 0x8) << 8) | // 4/4/4 -> 5/6/5
+            uColor =  (r << 12) | ((r & 0x8) << 8) | // 4/4/4 -> 5/6/5
                         (g <<  7) | ((g & 0xC) << 3) |
                         (b <<  1) | ( b        >> 3);
 
-            gBuff[u8yPos * MATRIX_WIDTH + u8xPos] = u32Color;
+            gMainBuff[u8xPos][u8yPos] = (TYPEDEF_BUFF) uColor;
         }
     }
 }
@@ -696,7 +659,7 @@ inline void MATRIX_FlutterLeftRight(uint16_t u16xStartedPos, uint16_t u16yStarte
     {
         for( u8yPos = u16yStartedPos; u8yPos < (u16yStartedPos + u8Height); u8yPos++ )
         {
-            if( gBuff[u8yPos * MATRIX_WIDTH + u16xStartedPos] )
+            if( gMainBuff[u16xStartedPos][u8yPos] )
             {
                 gFlutterState = FLUTTER_LEFT_TO_RIGHT;
                 break;
@@ -707,7 +670,7 @@ inline void MATRIX_FlutterLeftRight(uint16_t u16xStartedPos, uint16_t u16yStarte
     {
         for( u8yPos = u16yStartedPos; u8yPos < (u16yStartedPos + u8Height - 1U); u8yPos++ )
         {
-            if( gBuff[u8yPos * MATRIX_WIDTH + u16xStartedPos + u8Width - 1U ] )
+            if( gMainBuff[u16xStartedPos + u8Width - 1U][u8yPos] )
             {
                 gFlutterState = FLUTTER_RIGHT_TO_LEFT;
                 break;
@@ -719,24 +682,24 @@ inline void MATRIX_FlutterLeftRight(uint16_t u16xStartedPos, uint16_t u16yStarte
     {
         for( u8yPos = u16yStartedPos; u8yPos < (u16yStartedPos + u8Height); u8yPos++ )
         {
-            u16ColorBackup = gBuff[u8yPos * MATRIX_WIDTH + u16xStartedPos];
+            u16ColorBackup = gMainBuff[u16xStartedPos][u8yPos];
             for( u8xPos = u16xStartedPos; u8xPos < (u16xStartedPos + u8Width - 1U ); u8xPos++ )
             {
-                gBuff[u8yPos * MATRIX_WIDTH + u8xPos] = gBuff[u8yPos * MATRIX_WIDTH + u8xPos + 1U ];
+                gMainBuff[u8xPos][u8yPos] = gMainBuff[u8xPos + 1U][u8yPos];
             }
-            gBuff[u8yPos * MATRIX_WIDTH + u8xPos] = u16ColorBackup;
+            gMainBuff[u8xPos][u8yPos] = u16ColorBackup;
         }
     }
     else if( FLUTTER_LEFT_TO_RIGHT == gFlutterState )
     {
         for( u8yPos = u16yStartedPos; u8yPos < (u16yStartedPos + u8Height); u8yPos++ )
         {
-            u16ColorBackup = gBuff[u8yPos * MATRIX_WIDTH + u16xStartedPos + u8Width - 1U];
+            u16ColorBackup = gMainBuff[u16xStartedPos + u8Width - 1U][u8yPos];
             for( u8xPos = (u16xStartedPos + u8Width - 2U ); u8xPos >= u16xStartedPos; u8xPos-- )
             {
-                gBuff[u8yPos * MATRIX_WIDTH + u8xPos + 1U ] = gBuff[u8yPos * MATRIX_WIDTH + u8xPos];
+                gMainBuff[u8xPos + 1U][u8yPos] = gMainBuff[u8xPos][u8yPos];
             }
-            gBuff[u8yPos * MATRIX_WIDTH + u16xStartedPos] = u16ColorBackup;
+            gMainBuff[u16xStartedPos][u8yPos] = u16ColorBackup;
         }
     }
 }
@@ -748,12 +711,12 @@ inline void MATRIX_ShiftLeft(uint16_t u16xStartedPos, uint16_t u16yStartedPos, u
 
     for( u8yPos = u16yStartedPos; u8yPos < (u16yStartedPos + u8Height); u8yPos++ )
     {
-        u16ColorBackup = gBuff[u8yPos * MATRIX_WIDTH + u16xStartedPos];
+        u16ColorBackup = gMainBuff[u16xStartedPos][u8yPos];
         for( u8xPos = u16xStartedPos; u8xPos < (u16xStartedPos + u8Width - 1U ); u8xPos++ )
         {
-            gBuff[u8yPos * MATRIX_WIDTH + u8xPos] = gBuff[u8yPos * MATRIX_WIDTH + u8xPos +1 ];
+            gMainBuff[u8xPos][u8yPos] = gMainBuff[u8xPos + 1U][u8yPos];
         }
-        gBuff[u8yPos * MATRIX_WIDTH + u8xPos] = u16ColorBackup;
+        gMainBuff[u8xPos][u8yPos] = u16ColorBackup;
     }
 }
 
@@ -767,13 +730,12 @@ inline void MATRIX_ShiftRight(uint16_t u16xStartedPos, uint16_t u16yStartedPos, 
 
     for( u8yPos = u16yStartedPos; u8yPos < u16yEnd; u8yPos++ )
     {
-        u16yCurrPos = u8yPos * MATRIX_WIDTH;
-        u16ColorBackup = gBuff[u16yCurrPos + u16xEnd];
+        u16ColorBackup = gMainBuff[u16xEnd][u8yPos];
         for( u8xPos = u16xEnd; u8xPos > u16xStartedPos; u8xPos-- )
         {
-            gBuff[u16yCurrPos + u8xPos] = gBuff[u16yCurrPos + u8xPos - 1U];
+            gMainBuff[u8xPos][u8yPos] = gMainBuff[u8xPos - 1U][u8yPos];
         }
-        gBuff[u16yCurrPos + u8xPos] = u16ColorBackup;
+        gMainBuff[u8xPos][u8yPos] = u16ColorBackup;
     }
 }
 
@@ -865,9 +827,9 @@ inline void MATRIX_FillRainbowColorToRegion(uint8_t u8xStart, uint8_t u8yStart, 
     uint8_t u8yCurPos = 0U;
     uint8_t u8xTemp = 0U;
 
-    for( u8xCurPos = u8xStart; u8xCurPos <= u8xEnd; u8xCurPos++ )
+    for( u8yCurPos = u8yStart; u8yCurPos <= u8yEnd; u8yCurPos++ )
     {
-        for( u8yCurPos = u8yStart; u8yCurPos <= u8yEnd; u8yCurPos++ )
+        for( u8xCurPos = u8xStart; u8xCurPos <= u8xEnd; u8xCurPos++ )
         {
             /**
              *  |-----------------------------|
@@ -880,16 +842,17 @@ inline void MATRIX_FillRainbowColorToRegion(uint8_t u8xStart, uint8_t u8yStart, 
              *   |_____________________________|
              *
              */
-            uint16_t u8xTemp = ((u8xCurPos + fTilt*(u8Height - u8yCurPos))>u8xEnd) ?
-                    (u8xCurPos + fTilt*(u8Height - u8yCurPos) - u8Width) :
-                    (u8xCurPos + fTilt*(u8Height - u8yCurPos));
+            float fCal = fTilt * (u8Height - (u8yCurPos - u8yStart));
+            u8xTemp = ((u8xCurPos - (uint8_t) fCal) < u8xStart) ?
+                    (u8xCurPos - (uint8_t) fCal + u8Width) :
+                    (u8xCurPos - (uint8_t) fCal);
 
             /* Check whether the expected pixel has data */
-            if( gBuff[u8yCurPos * MATRIX_WIDTH + u8xTemp] )
+            if( gMainBuff[u8xCurPos][u8yCurPos] )
             {
                 /* Overide the rainbow color to the current pixel */
-                MATRIX_WritePixel( u8xTemp, u8yCurPos,
-                                   MATRIX_Hsv2Rgb( (u8xCurPos - u8xStart) * u8Muliple + u16ColorStart,
+                MATRIX_WritePixel( u8xCurPos, u8yCurPos,
+                                   MATRIX_Hsv2Rgb( (u8xTemp - u8xStart) * u8Muliple + u16ColorStart,
                                                     255U, 150U, u8GammaFlag
                                                  ), 0U
                                  );
@@ -1002,12 +965,12 @@ long        hueShift= 0;
         // HAL_Delay(800);
         // for( j = 0; j < 7; j++ )
         // {
-        //     xReserved = gBuff[j * 128 ];
+        //     xReserved = gMainBuff[j * 128 ];
         //     for( i = 0; i < 127; i++ )
         //     {
-        //         gBuff[j * 128 + i] = gBuff[j * 128 + i +1 ];
+        //         gMainBuff[j * 128 + i] = gMainBuff[j * 128 + i +1 ];
         //     }
-        //     gBuff[j * 128 + i] = xReserved;
+        //     gMainBuff[j * 128 + i] = xReserved;
         // }
         sx1 = (int)(cos(angle1) * radius1 + centerx1);
         sx2 = (int)(cos(angle2) * radius2 + centerx2);

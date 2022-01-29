@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "Makefile": "makefile2",
+        "*.component": "javascript",
+        "*.gld": "linkerscript",
+        "sdmmc.h": "c"
+    }
+}

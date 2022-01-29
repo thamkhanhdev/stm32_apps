@@ -97,10 +97,10 @@ extern "C"{
 
 #define RECORD_TEXT_NO_BACKGROUND
 // #define RECORD_LAST_FRAME
+#define USE_SECOND_METHOD
 
 #define MATRIX_WIDTH     128U
 #define MATRIX_HEIGHT    64U
-#define MATRIX_TOLTAL    ((MATRIX_WIDTH)*(MATRIX_HEIGHT))
 
 #ifdef USE2BUS
 #define MATRIX_SCANRATE  (MATRIX_HEIGHT/4U)
@@ -110,35 +110,76 @@ extern "C"{
 #define MATRIX_MASKROWS  MATRIX_SCANRATE-1U
 
 #if defined(RGB888)
-#define MAX_BIT   8
+    #define TYPEDEF_BUFF uint32_t
+
+    #define MAX_BIT   ((uint8_t) (8U))
+
+    #define R_COLOR_SHIFT ((uint8_t) (16U))
+    #define R_COLOR_MASK  ((uint8_t) (0xFFU))
+
+    #define G_COLOR_SHIFT ((uint8_t) (8U))
+    #define G_COLOR_MASK  ((uint8_t) (0xFFU))
+
+    #define B_COLOR_SHIFT ((uint8_t) (0U))
+    #define B_COLOR_MASK  ((uint8_t) (0xFFU))
 #elif defined(RGB666) || defined(RGB565)
-#define MAX_BIT   6
+    #define TYPEDEF_BUFF uint16_t
+
+    #define MAX_BIT   ((uint8_t) (6U))
+
+    #define R_COLOR_SHIFT ((uint8_t) (11U))
+    #define R_COLOR_MASK  ((uint8_t) (0x1FU))
+
+    #define G_COLOR_SHIFT ((uint8_t) (6U))
+    #define G_COLOR_MASK  ((uint8_t) (0x1FU))
+
+    #define B_COLOR_SHIFT ((uint8_t) (0U))
+    #define B_COLOR_MASK  ((uint8_t) (0x1FU))
 #elif defined(RGB555)
-#define MAX_BIT   5
+    #define TYPEDEF_BUFF uint16_t
+
+    #define MAX_BIT   ((uint8_t) (5U))
+
+    #define R_COLOR_SHIFT ((uint8_t) (11U))
+    #define R_COLOR_MASK  ((uint8_t) (0x1FU))
+
+    #define G_COLOR_SHIFT ((uint8_t) (6U))
+    #define G_COLOR_MASK  ((uint8_t) (0x1FU))
+
+    #define B_COLOR_SHIFT ((uint8_t) (0U))
+    #define B_COLOR_MASK  ((uint8_t) (0x1FU))
 #elif defined(RGB444)
-#define MAX_BIT   4
+    #define MAX_BIT   ((uint8_t) (4U))
+
+    #define R_COLOR_SHIFT ((uint8_t) (8U))
+    #define R_COLOR_MASK  ((uint8_t) (0xFU))
+
+    #define G_COLOR_SHIFT ((uint8_t) (4U))
+    #define G_COLOR_MASK  ((uint8_t) (0xFU))
+
+    #define B_COLOR_SHIFT ((uint8_t) (0U))
+    #define B_COLOR_MASK  ((uint8_t) (0xFU))
 #elif defined(RGB333)
-#define MAX_BIT   3
+#define MAX_BIT   ((uint8_t) (3U))
 #endif
 
-#define CLK       0   	//A
-#define LAT       1		//A
-#define OE        2  	//A
+/* Port A */
+#define LAT       ((uint8_t) (1U))
+#define LAT_OFF   ((uint32_t) ((1<<(LAT+16))))
+#define LAT_ON    ((uint32_t) (1<<LAT))
+#define OE        ((uint8_t) (2U))
+#define OE_OFF    ((uint32_t) ((1<<(OE+16))))
+#define OE_ON     ((uint32_t) (1<<OE))
+#define CLK       ((uint8_t) (0U))
+#define CLK_OFF   ((uint32_t) ((1<<(CLK+16))))
+#define CLK_ON    ((uint32_t) (1<<CLK))
 
-#define CLK_BIT_RESET       (uint32_t) (1<<(CLK+16))
-#define CLK_BIT_SET         (uint32_t) (1<<CLK)
-#define LAT_BIT_RESET       (uint32_t) (1<<(LAT+16))
-#define LAT_BIT_SET         (uint32_t) (1<<LAT)
-#define LAT_BIT_SET_MASK    (uint32_t) (~((uint32_t)LAT_BIT_SET))
-#define LAT_BIT_RESET_MASK  (uint32_t) (~((uint32_t)LAT_BIT_RESET))
-#define CLK_BIT_SET_MASK    (uint32_t) (~((uint32_t)CLK_BIT_SET))
-#define CLK_BIT_RESET_MASK  (uint32_t) (~((uint32_t)CLK_BIT_RESET))
-
-#define A         0   //C
-#define B         1   //C
-#define C         2   //C
-#define D         3   //C
-#define E         4   //C
+/* Port C */
+#define A         0
+#define B         1
+#define C         2
+#define D         3
+#define E         4
 
 #define R1        3
 #define B1        4
@@ -147,16 +188,16 @@ extern "C"{
 #define G2        1
 #define B2        2
 
-#define R1_MASK     (uint16_t) (1 << R1)
-#define G1_MASK     (uint16_t) (1 << G1)
-#define B1_MASK     (uint16_t) (1 << B1)
-#define RGB1_MASK   (uint16_t) (R1_MASK | G1_MASK | B1_MASK)
+#define R1_MASK     ((uint16_t) (1 << R1))
+#define G1_MASK     ((uint16_t) (1 << G1))
+#define B1_MASK     ((uint16_t) (1 << B1))
+#define RGB1_MASK   ((uint16_t) (R1_MASK | G1_MASK | B1_MASK))
 
-#define R2_MASK     (uint16_t) (1 << R2)
-#define G2_MASK     (uint16_t) (1 << G2)
-#define B2_MASK     (uint16_t) (1 << B2)
-#define RGB2_MASK   (uint16_t) (R2_MASK | G2_MASK | B2_MASK)
-#define BUS1_MASK   (uint16_t) (RGB1_MASK | RGB2_MASK)
+#define R2_MASK     ((uint16_t) (1 << R2))
+#define G2_MASK     ((uint16_t) (1 << G2))
+#define B2_MASK     ((uint16_t) (1 << B2))
+#define RGB2_MASK   ((uint16_t) (R2_MASK | G2_MASK | B2_MASK))
+#define BUS1_MASK   ((uint16_t) (RGB1_MASK | RGB2_MASK))
 
 #ifdef USE2BUS
 #define R3        6
@@ -166,15 +207,15 @@ extern "C"{
 #define B4        12
 #define G4        13
 
-#define R3_MASK     (uint16_t) (1 << R3)
-#define G3_MASK     (uint16_t) (1 << G3)
-#define B3_MASK     (uint16_t) (1 << B3)
-#define RGB3_MASK   (uint16_t) (R3_MASK | G3_MASK | B3_MASK)
+#define R3_MASK     ((uint16_t) (1 << R3))
+#define G3_MASK     ((uint16_t) (1 << G3))
+#define B3_MASK     ((uint16_t) (1 << B3))
+#define RGB3_MASK   ((uint16_t) (R3_MASK | G3_MASK | B3_MASK))
 
-#define R4_MASK     (uint16_t) (1 << R4)
-#define G4_MASK     (uint16_t) (1 << G4)
-#define B4_MASK     (uint16_t) (1 << B4)
-#define RGB4_MASK   (uint16_t) (R4_MASK | G4_MASK | B4_MASK)
+#define R4_MASK     ((uint16_t) (1 << R4))
+#define G4_MASK     ((uint16_t) (1 << G4))
+#define B4_MASK     ((uint16_t) (1 << B4))
+#define RGB4_MASK   ((uint16_t) (R4_MASK | G4_MASK | B4_MASK))
 #endif /* #ifdef USE2BUS */
 
 #define CLK_P       GPIOA
