@@ -54,9 +54,13 @@ extern "C"{
 // static uint16_t const gTimeCount[8]={10, 20, 40, 80, 160, 240, 320}; // he so chia nap vao timer ok with 256x64 47.9Hz
 // static uint16_t const gTimeCount[8]={15, 30, 60, 120, 160, 240, 320}; // he so chia nap vao timer ok with 256x64 47.9Hz
 const uint16_t scan_PWM_duty[]={4,8,16,32,64,128,256,512,1024};   //he so chia nạp vao time pwm chan OE
-uint16_t const gTimeCount[8]={14, 28, 56, 112, 224, 448, 480, 600}; // he so chia nap vao timer ok with 256x64 47.9Hz
-// uint16_t const gTimeCount[8]={ 40, 80, 160, 240, 360, 480, 600, 1000}; // he so chia nap vao timer ok with 256x64 47.9Hz
-// uint16_t const gTimeCount[8]={ 160, 240, 360, 480, 600, 1000, 1500}; // he so chia nap vao timer ok with 256x64 47.9Hz
+// uint16_t const gTimeCount[8]={14, 28, 56, 112, 224, 448, 480, 600}; // he so chia nap vao timer ok with 256x64 47.9Hz
+// uint16_t const gTimeCount[8]={ 40, 80, 160, 240, 360, 480, 720, 1200}; // RGB565 he so chia nap vao timer ok with 256x64 47.9Hz
+// uint16_t const gTimeCount[MAX_BIT]={ 16, 16, 16, 16, 16, 16}; // RGB555 First options he so chia nap vao timer ok with 256x64 47.9Hz
+// uint16_t const gTimeCount[MAX_BIT]={3, 7, 15, 31, 59, 69, 128}; // RGB555 First options he so chia nap vao timer ok with 256x64 47.9Hz
+uint16_t const gTimeCount[MAX_BIT]={20, 40, 80, 160, 320, 40}; // RGB555 First options he so chia nap vao timer ok with 256x64 47.9Hz
+// uint16_t const gTimeCount[MAX_BIT]={ 90, 180, 270, 380, 600, 800}; // RGB555 Second options he so chia nap vao timer ok with 256x64 47.9Hz
+// uint16_t const gTimeCount[MAX_BIT]={ 120, 240, 360, 480, 600, 1000}; // he so chia nap vao timer ok with 256x64 47.9Hz
 
 static const int8_t sinetab[256] = {
      0,   2,   5,   8,  11,  15,  18,  21,
@@ -99,32 +103,40 @@ static const int8_t sinetab[256] = {
 /**
  * @brief Number of multiplexed rows; actual MATRIX_HEIGHT is 2X this.
  */
-static uint8_t gRows = 0;
+static uint8_t gRows __attribute__((section (".ram_d1_cacheable")));
 
 /**
  * @brief The actual postion bit is handling.
  */
-static uint8_t gBitPos = 0U;
+static uint8_t gBitPos __attribute__((section (".ram_d1_cacheable")));
 
 /**
  * @brief The current brightness value
  */
-static uint8_t gBrightness;
-static bool gCp437 = false;
-static volatile uint32_t gCountBit = 0UL;
-#ifdef MAXTRIX_MAX_BUFFER
-static uint16_t gBuff0[MATRIX_WIDTH*(MAXTRIX_MAX_BUFFER)*MAX_BIT/2];
-static uint16_t gBuff1[MATRIX_WIDTH*(MATRIX_HEIGHT - MAXTRIX_MAX_BUFFER)*MAX_BIT/2];
-#else
-static uint16_t gBuff0[MATRIX_WIDTH*(MATRIX_HEIGHT)*MAX_BIT/2];
-#endif /* #ifdef MAXTRIX_MAX_BUFFER */
-static uint16_t gCursorX = 0U;
-static uint16_t gCursorY = 0U;
-static uint8_t  gTextSizeX = 1U;
-static uint8_t  gTextSizeY = 1U;
-static uint16_t gTextColor = 0xFFFFU;
-static uint16_t gTextBgColor = 0xFFFFU;
+static uint16_t gBrightness __attribute__((section (".ram_d1_cacheable")));
+static bool gCp437 __attribute__((section (".ram_d1_cacheable")));
+static volatile uint32_t gCountBit __attribute__((section (".ram_d1_cacheable")));
+static uint16_t gCursorX __attribute__((section (".ram_d1_cacheable")));
+static uint16_t gCursorY __attribute__((section (".ram_d1_cacheable")));
+static uint8_t  gTextSizeX __attribute__((section (".ram_d1_cacheable")));
+static uint8_t  gTextSizeY __attribute__((section (".ram_d1_cacheable")));
+static uint16_t gTextColor __attribute__((section (".ram_d1_cacheable")));
+static uint16_t gTextBgColor __attribute__((section (".ram_d1_cacheable")));
+
 static const GFXfont *gfxFont = &TomThumb;       ///< Pointer to special font
+#ifdef MAXTRIX_MAX_BUFFER
+#ifdef USE_SECOND_METHOD
+    uint16_t gIsrBuff0[MATRIX_WIDTH*MAX_BIT] __attribute__((section (".ram_d2_cacheable")));
+    uint16_t gIsrBuff1[MATRIX_WIDTH*MAX_BIT] __attribute__((section (".ram_d2_cacheable")));
+    TYPEDEF_BUFF gMainBuff0[MATRIX_WIDTH][MAXTRIX_MAX_BUFFER] __attribute__((section (".ram_d2_cacheable")));
+    TYPEDEF_BUFF gMainBuff1[MATRIX_WIDTH][MATRIX_HEIGHT - MAXTRIX_MAX_BUFFER] __attribute__((section (".ram_d2_cacheable")));
+#else
+    uint16_t gIsrBuff0[MATRIX_WIDTH*(MAXTRIX_MAX_BUFFER)*MAX_BIT/2] __attribute__((section (".ram_d2_cacheable")));
+    uint16_t gIsrBuff1[MATRIX_WIDTH*(MATRIX_HEIGHT - MAXTRIX_MAX_BUFFER)*MAX_BIT/2] __attribute__((section (".ram_d2_cacheable")));
+#endif /* #ifdef USE_SECOND_METHOD */
+#else
+uint16_t gIsrBuff0[MATRIX_WIDTH*(MATRIX_HEIGHT)*MAX_BIT/2] __attribute__((section (".ram_d1_cacheable")));
+#endif /* #ifdef MAXTRIX_MAX_BUFFER */
 // static const GFXfont *gfxFont = NULL;       ///< Pointer to special font
 /*==================================================================================================
 *                                      GLOBAL CONSTANTS
@@ -135,10 +147,6 @@ static const GFXfont *gfxFont = &TomThumb;       ///< Pointer to special font
 *                                      GLOBAL VARIABLES
 ==================================================================================================*/
 
-/**
-  * @brief The array store image data.
-  */
-extern const uint8_t gImage_test[];
 
 /*==================================================================================================
 *                                   LOCAL FUNCTION PROTOTYPES
@@ -162,14 +170,6 @@ static inline GFXglyph * pgm_read_glyph_ptr(const GFXfont *gfxFont, uint8_t c)
     return &(((GFXglyph *)pgm_read_pointer(&gfxFont->glyph))[c]);
 }
 
-inline static void MATRIX_Vprint( MATRIX_FontTypes fontType, const char *fmt, va_list argp )
-{
-    char string[200];
-    if(0 < vsprintf(string,fmt,argp)) // build string
-    {
-        MATRIX_Print( (uint8_t *) string, fontType);
-    }
-}
 /**
  * @brief   Write a pixel, overwrite in subclasses if startWrite is defined!
  * @details
@@ -192,6 +192,20 @@ inline static void MATRIX_Vprint( MATRIX_FontTypes fontType, const char *fmt, va
  */
  static inline void MATRIX_DrawPixel( uint16_t x, uint16_t y, uint32_t c )
 {
+#ifdef USE_SECOND_METHOD
+#ifdef USE_DOUBLE_BUFFER
+    if( y < MAXTRIX_MAX_BUFFER )
+#endif /* #ifdef USE_DOUBLE_BUFFERss */
+    {
+        gMainBuff0[x][y] = (TYPEDEF_BUFF) c;
+    }
+#ifdef USE_DOUBLE_BUFFER
+    else
+    {
+        gMainBuff1[x][ y & MAXTRIX_MAX_BUFFER_MASK] = (TYPEDEF_BUFF) c;
+    }
+#endif /* #ifdef USE_DOUBLE_BUFFER */
+#else
     uint32_t _curPos;
     uint8_t r, g, b;
     uint16_t bit, limit;
@@ -222,6 +236,7 @@ inline static void MATRIX_Vprint( MATRIX_FontTypes fontType, const char *fmt, va
     bit   = 1;
     limit = 1 << MAX_BIT;
 
+#ifdef USE_DOUBLE_BUFFER
 #ifdef USE_BUS_3
     if( y >= MAXTRIX_MAX_BUFFER )
     {
@@ -244,10 +259,10 @@ inline static void MATRIX_Vprint( MATRIX_FontTypes fontType, const char *fmt, va
              */
             while( bit < limit )
             {
-                gBuff1[_curPos] &= ~RGB5_MASK;                   /* 00000111b Mask out R,G,B in one op */
-                if( r & bit ) gBuff1[_curPos] |= R5_MASK;     /* Plane N R: bit 6 0000.0100.0000b     */
-                if( g & bit ) gBuff1[_curPos] |= G5_MASK;     /* Plane N G: bit 7 0000.1000.0000b     */
-                if( b & bit ) gBuff1[_curPos] |= B5_MASK;    /* Plane N B: bit 8 0001.0000.0000b     */
+                gIsrBuff1[_curPos] &= ~RGB5_MASK;                   /* 00000111b Mask out R,G,B in one op */
+                if( r & bit ) gIsrBuff1[_curPos] |= R5_MASK;     /* Plane N R: bit 6 0000.0100.0000b     */
+                if( g & bit ) gIsrBuff1[_curPos] |= G5_MASK;     /* Plane N G: bit 7 0000.1000.0000b     */
+                if( b & bit ) gIsrBuff1[_curPos] |= B5_MASK;    /* Plane N B: bit 8 0001.0000.0000b     */
                 _curPos  += MATRIX_WIDTH;                /* Advance to next bit plane */
                 bit <<= 1 ;
             }
@@ -255,14 +270,14 @@ inline static void MATRIX_Vprint( MATRIX_FontTypes fontType, const char *fmt, va
         else
         {
             /* Data for the lower half of the display is stored in the upper bits */
-            _curPos = (y - MATRIX_SCANRATE) * MATRIX_WIDTH * MAX_BIT + x;
+            _curPos = ((y - MATRIX_SCANRATE)<<MATRIX_WIDTH_BIT) * MAX_BIT + x;
 
             while( bit < limit )
             {
-                gBuff1[_curPos] &= ~RGB6_MASK;              /* 00111000b Mask out R,G,B in one op */
-                if(r & bit) gBuff1[_curPos] |= R6_MASK;    /* Plane N R: bit 11 1000.0000.0000b    */
-                if(g & bit) gBuff1[_curPos] |= G6_MASK;   /* Plane N G: bit 9  0010.0000.0000b    */
-                if(b & bit) gBuff1[_curPos] |= B6_MASK;   /* Plane N B: bit 10 0100.0000.0000b    */
+                gIsrBuff1[_curPos] &= ~RGB6_MASK;              /* 00111000b Mask out R,G,B in one op */
+                if(r & bit) gIsrBuff1[_curPos] |= R6_MASK;    /* Plane N R: bit 11 1000.0000.0000b    */
+                if(g & bit) gIsrBuff1[_curPos] |= G6_MASK;   /* Plane N G: bit 9  0010.0000.0000b    */
+                if(b & bit) gIsrBuff1[_curPos] |= B6_MASK;   /* Plane N B: bit 10 0100.0000.0000b    */
                 _curPos  += MATRIX_WIDTH;             /* Advance to next bit plane */
                 bit <<= 1 ;
             }
@@ -270,6 +285,7 @@ inline static void MATRIX_Vprint( MATRIX_FontTypes fontType, const char *fmt, va
     }
     else
 #endif /* #ifdef USE_BUS_3 */
+#endif /* #ifdef USE_DOUBLE_BUFFER */
 
     /* Fill data to the second bus if used */
 #ifdef USE_BUS_2
@@ -294,10 +310,10 @@ inline static void MATRIX_Vprint( MATRIX_FontTypes fontType, const char *fmt, va
              */
             while( bit < limit )
             {
-                gBuff0[_curPos] &= ~RGB3_MASK;                   /* 00000111b Mask out R,G,B in one op */
-                if( r & bit ) gBuff0[_curPos] |= R3_MASK;     /* Plane N R: bit 6 0000.0100.0000b     */
-                if( g & bit ) gBuff0[_curPos] |= G3_MASK;     /* Plane N G: bit 7 0000.1000.0000b     */
-                if( b & bit ) gBuff0[_curPos] |= B3_MASK;    /* Plane N B: bit 8 0001.0000.0000b     */
+                gIsrBuff0[_curPos] &= ~RGB3_MASK;                   /* 00000111b Mask out R,G,B in one op */
+                if( r & bit ) gIsrBuff0[_curPos] |= R3_MASK;     /* Plane N R: bit 6 0000.0100.0000b     */
+                if( g & bit ) gIsrBuff0[_curPos] |= G3_MASK;     /* Plane N G: bit 7 0000.1000.0000b     */
+                if( b & bit ) gIsrBuff0[_curPos] |= B3_MASK;    /* Plane N B: bit 8 0001.0000.0000b     */
                 _curPos  += MATRIX_WIDTH;                /* Advance to next bit plane */
                 bit <<= 1 ;
             }
@@ -305,14 +321,14 @@ inline static void MATRIX_Vprint( MATRIX_FontTypes fontType, const char *fmt, va
         else
         {
             /* Data for the lower half of the display is stored in the upper bits */
-            _curPos = (y - MATRIX_SCANRATE) * MATRIX_WIDTH * MAX_BIT + x;
+            _curPos = ((y - MATRIX_SCANRATE)<<MATRIX_WIDTH_BIT) * MAX_BIT + x;
 
             while( bit < limit )
             {
-                gBuff0[_curPos] &= ~RGB4_MASK;              /* 00111000b Mask out R,G,B in one op */
-                if(r & bit) gBuff0[_curPos] |= R4_MASK;    /* Plane N R: bit 11 1000.0000.0000b    */
-                if(g & bit) gBuff0[_curPos] |= G4_MASK;   /* Plane N G: bit 9  0010.0000.0000b    */
-                if(b & bit) gBuff0[_curPos] |= B4_MASK;   /* Plane N B: bit 10 0100.0000.0000b    */
+                gIsrBuff0[_curPos] &= ~RGB4_MASK;              /* 00111000b Mask out R,G,B in one op */
+                if(r & bit) gIsrBuff0[_curPos] |= R4_MASK;    /* Plane N R: bit 11 1000.0000.0000b    */
+                if(g & bit) gIsrBuff0[_curPos] |= G4_MASK;   /* Plane N G: bit 9  0010.0000.0000b    */
+                if(b & bit) gIsrBuff0[_curPos] |= B4_MASK;   /* Plane N B: bit 10 0100.0000.0000b    */
                 _curPos  += MATRIX_WIDTH;             /* Advance to next bit plane */
                 bit <<= 1 ;
             }
@@ -339,10 +355,10 @@ inline static void MATRIX_Vprint( MATRIX_FontTypes fontType, const char *fmt, va
          */
         while( bit < limit )
         {
-           gBuff0[_curPos] &= ~RGB1_MASK;                   /* 00000111b Mask out R,G,B in one op */
-           if( r & bit ) gBuff0[_curPos] |= R1_MASK;     /* Plane N R: bit 6 0000.0100.0000b     */
-           if( g & bit ) gBuff0[_curPos] |= G1_MASK;     /* Plane N G: bit 7 0000.1000.0000b     */
-           if( b & bit ) gBuff0[_curPos] |= B1_MASK;    /* Plane N B: bit 8 0001.0000.0000b     */
+           gIsrBuff0[_curPos] &= ~RGB1_MASK;                   /* 00000111b Mask out R,G,B in one op */
+           if( r & bit ) gIsrBuff0[_curPos] |= R1_MASK;     /* Plane N R: bit 6 0000.0100.0000b     */
+           if( g & bit ) gIsrBuff0[_curPos] |= G1_MASK;     /* Plane N G: bit 7 0000.1000.0000b     */
+           if( b & bit ) gIsrBuff0[_curPos] |= B1_MASK;    /* Plane N B: bit 8 0001.0000.0000b     */
             _curPos  += MATRIX_WIDTH;                /* Advance to next bit plane */
             bit <<= 1 ;
         }
@@ -350,35 +366,160 @@ inline static void MATRIX_Vprint( MATRIX_FontTypes fontType, const char *fmt, va
    else
    {
        /* Data for the lower half of the display is stored in the upper bits */
-       _curPos = (y - MATRIX_SCANRATE) * MATRIX_WIDTH * MAX_BIT + x;
+       _curPos = ((y - MATRIX_SCANRATE)<<MATRIX_WIDTH_BIT) * MAX_BIT + x;
 
        while( bit < limit )
        {
-           gBuff0[_curPos] &= ~RGB2_MASK;              /* 00111000b Mask out R,G,B in one op */
-           if(r & bit) gBuff0[_curPos] |= R2_MASK;    /* Plane N R: bit 11 1000.0000.0000b    */
-           if(g & bit) gBuff0[_curPos] |= G2_MASK;   /* Plane N G: bit 9  0010.0000.0000b    */
-           if(b & bit) gBuff0[_curPos] |= B2_MASK;   /* Plane N B: bit 10 0100.0000.0000b    */
+           gIsrBuff0[_curPos] &= ~RGB2_MASK;              /* 00111000b Mask out R,G,B in one op */
+           if(r & bit) gIsrBuff0[_curPos] |= R2_MASK;    /* Plane N R: bit 11 1000.0000.0000b    */
+           if(g & bit) gIsrBuff0[_curPos] |= G2_MASK;   /* Plane N G: bit 9  0010.0000.0000b    */
+           if(b & bit) gIsrBuff0[_curPos] |= B2_MASK;   /* Plane N B: bit 10 0100.0000.0000b    */
            _curPos  += MATRIX_WIDTH;             /* Advance to next bit plane */
            bit <<= 1 ;
        }
    }
 #endif /* #ifdef USE_BUS_1 */
+#endif /* #ifdef USE_SECOND_METHOD */
 }
 
-static inline uint16_t MATRIX_Color888( uint8_t r, uint8_t g, uint8_t b, bool gflag )
+#ifdef USE_SECOND_METHOD
+static void MATRIX_ProcessNextRow(void)
 {
-    if( gflag )
-    { // Gamma-corrected color?
-        r = pgm_read_byte(&gamma_table[r]); // Gamma correction table maps
-        g = pgm_read_byte(&gamma_table[g]); // 8-bit input to 4-bit output
-        b = pgm_read_byte(&gamma_table[b]);
-        return  ((uint16_t)r << 12) | ((uint16_t)(r & 0x8) << 8) | // 4/4/4->5/6/5
-                ((uint16_t)g <<  7) | ((uint16_t)(g & 0xC) << 3) |
-                (          b <<  1) | (           b        >> 3);
-    } // else linear (uncorrected) color
-    return ((uint16_t)(r & 0xF8) << 8) | ((uint16_t)(g & 0xFC) << 3) | (b >> 3);
-}
+    uint32_t _curPos, color;
+    uint16_t u16Idx;
+    uint16_t bit, limit;
+    uint8_t r, g, b;
 
+    for( u16Idx = 0U; u16Idx < MATRIX_WIDTH; u16Idx++ )
+    {
+#ifdef USE_BUS_1
+        /* Process the first part */
+        color = gMainBuff0[u16Idx][gRows];
+        r = (color >>  R_COLOR_SHIFT) & R_COLOR_MASK;
+        g = (color >>  G_COLOR_SHIFT) & G_COLOR_MASK;
+        b = (color >>  B_COLOR_SHIFT) & B_COLOR_MASK;
+
+        bit   = 1;
+        limit = 1 << MAX_BIT;
+        _curPos = u16Idx;
+
+        while( bit < limit )
+        {
+           gIsrBuff0[_curPos] &= ~RGB1_MASK;                   /* 00000111b Mask out R,G,B in one op */
+           if( r & bit ) gIsrBuff0[_curPos] |= R1_MASK;     /* Plane N R: bit 6 0000.0100.0000b     */
+           if( g & bit ) gIsrBuff0[_curPos] |= G1_MASK;     /* Plane N G: bit 7 0000.1000.0000b     */
+           if( b & bit ) gIsrBuff0[_curPos] |= B1_MASK;    /* Plane N B: bit 8 0001.0000.0000b     */
+            _curPos  += MATRIX_WIDTH;                /* Advance to next bit plane */
+            bit <<= 1 ;
+        }
+
+        /* Process the second part */
+        color = gMainBuff0[u16Idx][gRows | MATRIX_SCANRATE];
+        r = (color >>  R_COLOR_SHIFT) & R_COLOR_MASK;
+        g = (color >>  G_COLOR_SHIFT) & G_COLOR_MASK;
+        b = (color >>  B_COLOR_SHIFT) & B_COLOR_MASK;
+
+        bit   = 1;
+        limit = 1 << MAX_BIT;
+        _curPos = u16Idx;
+
+        while( bit < limit )
+        {
+           gIsrBuff0[_curPos] &= ~RGB2_MASK;                   /* 00000111b Mask out R,G,B in one op */
+           if( r & bit ) gIsrBuff0[_curPos] |= R2_MASK;     /* Plane N R: bit 6 0000.0100.0000b     */
+           if( g & bit ) gIsrBuff0[_curPos] |= G2_MASK;     /* Plane N G: bit 7 0000.1000.0000b     */
+           if( b & bit ) gIsrBuff0[_curPos] |= B2_MASK;    /* Plane N B: bit 8 0001.0000.0000b     */
+            _curPos  += MATRIX_WIDTH;                /* Advance to next bit plane */
+            bit <<= 1 ;
+        }
+#endif /* #ifdef USE_BUS_1 */
+
+#ifdef USE_BUS_2
+        /* Process the first part */
+        color = gMainBuff0[u16Idx][gRows | (MATRIX_SCANRATE << 1)];
+        r = (color >>  R_COLOR_SHIFT) & R_COLOR_MASK;
+        g = (color >>  G_COLOR_SHIFT) & G_COLOR_MASK;
+        b = (color >>  B_COLOR_SHIFT) & B_COLOR_MASK;
+
+        bit   = 1;
+        limit = 1 << MAX_BIT;
+        _curPos = u16Idx;
+
+        while( bit < limit )
+        {
+           gIsrBuff0[_curPos] &= ~RGB3_MASK;                   /* 00000111b Mask out R,G,B in one op */
+           if( r & bit ) gIsrBuff0[_curPos] |= R3_MASK;     /* Plane N R: bit 6 0000.0100.0000b     */
+           if( g & bit ) gIsrBuff0[_curPos] |= G3_MASK;     /* Plane N G: bit 7 0000.1000.0000b     */
+           if( b & bit ) gIsrBuff0[_curPos] |= B3_MASK;    /* Plane N B: bit 8 0001.0000.0000b     */
+            _curPos  += MATRIX_WIDTH;                /* Advance to next bit plane */
+            bit <<= 1 ;
+        }
+
+        /* Process the second part */
+        color = gMainBuff0[u16Idx][gRows | MATRIX_SCANRATE | (MATRIX_SCANRATE << 1)];
+        r = (color >>  R_COLOR_SHIFT) & R_COLOR_MASK;
+        g = (color >>  G_COLOR_SHIFT) & G_COLOR_MASK;
+        b = (color >>  B_COLOR_SHIFT) & B_COLOR_MASK;
+
+        bit   = 1;
+        limit = 1 << MAX_BIT;
+        _curPos = u16Idx;
+
+        while( bit < limit )
+        {
+           gIsrBuff0[_curPos] &= ~RGB4_MASK;                   /* 00000111b Mask out R,G,B in one op */
+           if( r & bit ) gIsrBuff0[_curPos] |= R4_MASK;     /* Plane N R: bit 6 0000.0100.0000b     */
+           if( g & bit ) gIsrBuff0[_curPos] |= G4_MASK;     /* Plane N G: bit 7 0000.1000.0000b     */
+           if( b & bit ) gIsrBuff0[_curPos] |= B4_MASK;    /* Plane N B: bit 8 0001.0000.0000b     */
+            _curPos  += MATRIX_WIDTH;                /* Advance to next bit plane */
+            bit <<= 1 ;
+        }
+#endif /* #ifdef USE_BUS_2 */
+
+#ifdef USE_BUS_3
+        /* Process the first part */
+        color = gMainBuff1[u16Idx][gRows];
+        r = (color >>  R_COLOR_SHIFT) & R_COLOR_MASK;
+        g = (color >>  G_COLOR_SHIFT) & G_COLOR_MASK;
+        b = (color >>  B_COLOR_SHIFT) & B_COLOR_MASK;
+
+        bit   = 1;
+        limit = 1 << MAX_BIT;
+        _curPos = u16Idx;
+
+        while( bit < limit )
+        {
+           gIsrBuff1[_curPos] &= ~RGB5_MASK;                   /* 00000111b Mask out R,G,B in one op */
+           if( r & bit ) gIsrBuff1[_curPos] |= R5_MASK;     /* Plane N R: bit 6 0000.0100.0000b     */
+           if( g & bit ) gIsrBuff1[_curPos] |= G5_MASK;     /* Plane N G: bit 7 0000.1000.0000b     */
+           if( b & bit ) gIsrBuff1[_curPos] |= B5_MASK;    /* Plane N B: bit 8 0001.0000.0000b     */
+            _curPos  += MATRIX_WIDTH;                /* Advance to next bit plane */
+            bit <<= 1 ;
+        }
+
+        /* Process the second part */
+        color = gMainBuff1[u16Idx][gRows | MATRIX_SCANRATE];
+        r = (color >>  R_COLOR_SHIFT) & R_COLOR_MASK;
+        g = (color >>  G_COLOR_SHIFT) & G_COLOR_MASK;
+        b = (color >>  B_COLOR_SHIFT) & B_COLOR_MASK;
+
+        bit   = 1;
+        limit = 1 << MAX_BIT;
+        _curPos = u16Idx;
+
+        while( bit < limit )
+        {
+           gIsrBuff1[_curPos] &= ~RGB6_MASK;                   /* 00000111b Mask out R,G,B in one op */
+           if( r & bit ) gIsrBuff1[_curPos] |= R6_MASK;     /* Plane N R: bit 6 0000.0100.0000b     */
+           if( g & bit ) gIsrBuff1[_curPos] |= G6_MASK;     /* Plane N G: bit 7 0000.1000.0000b     */
+           if( b & bit ) gIsrBuff1[_curPos] |= B6_MASK;    /* Plane N B: bit 8 0001.0000.0000b     */
+            _curPos  += MATRIX_WIDTH;                /* Advance to next bit plane */
+            bit <<= 1 ;
+        }
+#endif /* #ifdef USE_BUS_3 */
+    }
+}
+#endif /* #ifdef USE_SECOND_METHOD */
 /*==================================================================================================
 *                                       GLOBAL FUNCTIONS
 ==================================================================================================*/
@@ -390,7 +531,17 @@ static inline uint16_t MATRIX_Color888( uint8_t r, uint8_t g, uint8_t b, bool gf
   */
 StdReturnType MATRIX_Init( uint8_t bri )
 {
-    gBrightness = bri;
+    gBrightness = bri % 20U;
+    gRows = 0U;
+    gBitPos = 0U;
+    gCp437 = false;
+    gCountBit = 0U;
+    gCursorX = 0U;
+    gCursorY = 0U;
+    gTextSizeX = 1U;
+    gTextSizeY = 1U;
+    gTextColor = 0xFFFFU;
+    gTextBgColor = 0x0U;
 
     return E_OK;
 }
@@ -405,93 +556,67 @@ void IRQ_ProcessMonitor( void )
 {
     uint16_t u16Count = MATRIX_WIDTH;
 
-    /* Disable LED output during gRows/gBitPos switchover */
-    TIM2->CCR2 = 0U;
+    GPIOD->BSRR = 0x4000;
 
-    /* Release new data region */
+    /*! Step 1: Clock in the data for the current row one bit at a time */
     while( u16Count-- )
     {
 #if defined(USE_BUS_1) || defined(USE_BUS_2)
-        DAT0_P->ODR= gBuff0[ gCountBit ];
+        DAT0_P->ODR= gIsrBuff0[ gCountBit ];
 #endif /* #if defined(USE_BUS_3) || defined(USE_BUS_4) */
-#if defined(USE_BUS_3) || defined(USE_BUS_4)
-        DAT1_P->ODR= gBuff1[ gCountBit ];
-#endif /* #if defined(USE_BUS_3) || defined(USE_BUS_4) */
-        gCountBit++;
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
+#ifdef USE_DOUBLE_BUFFER
+        DAT1_P->ODR= gIsrBuff1[ gCountBit ];
+#endif /* #ifdef USE_DOUBLE_BUFFER */
         CLK_P->BSRR=CLK_OFF;
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
+        gCountBit++;
         CLK_P->BSRR=CLK_ON;
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
-        __asm("nop\n");
     }
 
-    TIM2->CCR2 = gBrightness;
-    // TIM2->CCR2 = scan_PWM_duty[gBitPos];
-    /* Load new division value */
-    TIM4->PSC = gTimeCount[gBitPos];
-    /* Trigger EGR upto 1 in order re-load PSC value */
+    /*! Step 2:
+     *  Pull the latch and output enable pins high. This enables the latch,
+     *  allowing the row data to reach the output driver but it also disables
+     *  the output so that no LEDs are lit while we're switching rows.
+     */
+    TIM2->CCR2 = 0U;
+    /*! Trigger EGR upto 1 in order re-load PSC value */
     TIM4->EGR = 1U;
-    /* Clear interrupt flag */
+    /*! Clear interrupt flag */
     TIM4->SR = 0xFFFFFFFE;
-    // if( gBitPos == 0U )
-    // {
-        // gBitPos 0 was loaded on prior interrupt invocation and is about to
-        // latch now, so update the row address lines before we do that:
-        // ROW_P->ODR = (ROW_P->ODR & MATRIX_MASKROWS) | gRows;
-        ROW_P->ODR = gRows;
-    // }
-    /* Latch data loaded during *prior* interrupt */
+
     LAT_P->BSRR=LAT_ON;
+
+    /*! Step 3: Switch rows by driving the appropriate row select lines */
+    // TIM4->PSC = gTimeCount[gBitPos];
+    ROW_P->ODR = gRows;
+
+    /*! Step 4:
+     *  Pull the latch and output enable pins low again,
+     *  enabling the output and closing the latch so we
+     *  can clock in the next row of data.
+     */
+    // TIM2->CCR2 = 1280 - (gBrightness * (1 << gBitPos));
     LAT_P->BSRR = LAT_OFF;
+    // TIM2->CCR2 = gBrightness;
+    // TIM2->CCR2 = gTimeCount[gBitPos];
+    TIM2->CCR2 = (gBrightness * (1 << gBitPos));
 
     if( ++gBitPos >= MAX_BIT )
-    {      // Advance gBitPos counter.  Maxed out?
-        gBitPos = 0U;                  // Yes, reset to gBitPos 0, and
+    {
+        gBitPos = 0U;
         if( ++gRows >= MATRIX_SCANRATE )
-        {        // advance gRows counter.  Maxed out?
-            gRows = 0U;              // Yes, reset gRows counter, then...
+        {
+            gRows = 0U;
+#ifndef USE_SECOND_METHOD
             gCountBit = 0UL;
+#endif /* #ifndef USE_SECOND_METHOD */
         }
+#ifdef USE_SECOND_METHOD
+        gCountBit = 0UL;
+        MATRIX_ProcessNextRow();
+#endif /* #ifdef USE_SECOND_METHOD */
     }
+
+    GPIOD->BSRR = 0x40000000;
 }
 
 /**
@@ -545,10 +670,6 @@ StdReturnType MATRIX_disImage( const uint8_t arr[], uint16_t nCols, uint16_t nRo
         {
             p1 = row * nCols*3;
 #if   defined(RGB888) || defined(RGB666)
-            /**
-             * In the case use RGB888 format, we didnt want to down quality
-             * of the pixels.
-             */
             r = arr[p1+col*3+2];
             g = arr[p1+col*3+1];
             b = arr[p1+col*3+0];
@@ -726,7 +847,7 @@ long        hueShift= 0;
  *  @param    r   Radius of circle
  *  @param    color 16-bit 5-6-5 Color to draw with
  */
-void MATRIX_DrawCircle( int16_t x0, int16_t y0, int16_t r, uint16_t color)
+void MATRIX_DrawCircle( int16_t x0, int16_t y0, int16_t r, uint32_t u32Color)
 {
     int16_t f = 1 - r;
     int16_t ddF_x = 1;
@@ -734,10 +855,10 @@ void MATRIX_DrawCircle( int16_t x0, int16_t y0, int16_t r, uint16_t color)
     int16_t x = 0;
     int16_t y = r;
 
-    MATRIX_DrawPixel(x0  , y0+r, color);
-    MATRIX_DrawPixel(x0  , y0-r, color);
-    MATRIX_DrawPixel(x0+r, y0  , color);
-    MATRIX_DrawPixel(x0-r, y0  , color);
+    MATRIX_DrawPixel(x0  , y0+r, u32Color);
+    MATRIX_DrawPixel(x0  , y0-r, u32Color);
+    MATRIX_DrawPixel(x0+r, y0  , u32Color);
+    MATRIX_DrawPixel(x0-r, y0  , u32Color);
 
     while (x<y) {
         if (f >= 0) {
@@ -749,14 +870,14 @@ void MATRIX_DrawCircle( int16_t x0, int16_t y0, int16_t r, uint16_t color)
         ddF_x += 2;
         f += ddF_x;
 
-        MATRIX_DrawPixel(x0 + x, y0 + y, color);
-        MATRIX_DrawPixel(x0 - x, y0 + y, color);
-        MATRIX_DrawPixel(x0 + x, y0 - y, color);
-        MATRIX_DrawPixel(x0 - x, y0 - y, color);
-        MATRIX_DrawPixel(x0 + y, y0 + x, color);
-        MATRIX_DrawPixel(x0 - y, y0 + x, color);
-        MATRIX_DrawPixel(x0 + y, y0 - x, color);
-        MATRIX_DrawPixel(x0 - y, y0 - x, color);
+        MATRIX_DrawPixel(x0 + x, y0 + y, u32Color);
+        MATRIX_DrawPixel(x0 - x, y0 + y, u32Color);
+        MATRIX_DrawPixel(x0 + x, y0 - y, u32Color);
+        MATRIX_DrawPixel(x0 - x, y0 - y, u32Color);
+        MATRIX_DrawPixel(x0 + y, y0 + x, u32Color);
+        MATRIX_DrawPixel(x0 - y, y0 + x, u32Color);
+        MATRIX_DrawPixel(x0 + y, y0 - x, u32Color);
+        MATRIX_DrawPixel(x0 - y, y0 - x, u32Color);
     }
 }
 
@@ -769,7 +890,7 @@ void MATRIX_DrawCircle( int16_t x0, int16_t y0, int16_t r, uint16_t color)
  *   @param    y1  End point y coordinate
  *   @param    color 16-bit 5-6-5 Color to draw with
  */
-void MATRIX_WriteLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color)
+void MATRIX_WriteLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint32_t u32Color)
 {
     int16_t steep = abs(y1 - y0) > abs(x1 - x0);
 
@@ -798,9 +919,9 @@ void MATRIX_WriteLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t c
 
     for (; x0<=x1; x0++) {
         if (steep) {
-            MATRIX_DrawPixel(y0, x0, color);
+            MATRIX_DrawPixel(y0, x0, u32Color);
         } else {
-            MATRIX_DrawPixel(x0, y0, color);
+            MATRIX_DrawPixel(x0, y0, u32Color);
         }
         err -= dy;
         if (err < 0) {
@@ -818,9 +939,9 @@ void MATRIX_WriteLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t c
  *   @param    h   Height in pixels
  *   @param    color 16-bit 5-6-5 Color to fill with
  */
-void MATRIX_DrawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color)
+void MATRIX_DrawFastVLine(int16_t x, int16_t y, int16_t h, uint32_t u32Color)
 {
-    MATRIX_WriteLine(x, y, x, y+h-1, color);
+    MATRIX_WriteLine(x, y, x, y+h-1, u32Color);
 }
 
 /**
@@ -831,9 +952,9 @@ void MATRIX_DrawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color)
  *   @param    w   Width in pixels
  *   @param    color 16-bit 5-6-5 Color to fill with
  */
-void MATRIX_DrawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color)
+void MATRIX_DrawFastHLine(int16_t x, int16_t y, int16_t w, uint32_t u32Color)
 {
-    MATRIX_WriteLine(x, y, x+w-1, y, color);
+    MATRIX_WriteLine(x, y, x+w-1, y, u32Color);
 }
 
 /*!
@@ -845,11 +966,11 @@ void MATRIX_DrawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color)
  *  @param    h   Height in pixels
  *  @param    color 16-bit 5-6-5 Color to fill with
 */
-void MATRIX_FillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
+void MATRIX_FillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint32_t u32Color)
 {
     for( int16_t i=x; i<x+w; i++)
     {
-        MATRIX_DrawFastVLine(i, y, h, color);
+        MATRIX_DrawFastVLine(i, y, h, u32Color);
     }
 }
 
@@ -858,9 +979,9 @@ void MATRIX_FillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
  *
  *  @param    color 16-bit 5-6-5 Color to fill with
  */
-void MATRIX_FillScreen(uint16_t color)
+void MATRIX_FillScreen(uint32_t u32Color)
 {
-    MATRIX_FillRect(0, 0, MATRIX_WIDTH, MATRIX_HEIGHT, color);
+    MATRIX_FillRect(0, 0, MATRIX_WIDTH, MATRIX_HEIGHT, u32Color);
 }
 
 /**
@@ -871,17 +992,17 @@ void MATRIX_FillScreen(uint16_t color)
  *  @param    y1  End point y coordinate
  *  @param    color 16-bit 5-6-5 Color to draw with
  */
-void MATRIX_DrawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color)
+void MATRIX_DrawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint32_t u32Color)
 {
     // Update in subclasses if desired!
     if(x0 == x1){
         if(y0 > y1) _swap_int16_t(y0, y1);
-        MATRIX_DrawFastVLine(x0, y0, y1 - y0 + 1, color);
+        MATRIX_DrawFastVLine(x0, y0, y1 - y0 + 1, u32Color);
     } else if(y0 == y1){
         if(x0 > x1) _swap_int16_t(x0, x1);
-        MATRIX_DrawFastHLine(x0, y0, x1 - x0 + 1, color);
+        MATRIX_DrawFastHLine(x0, y0, x1 - x0 + 1, u32Color);
     } else {
-        MATRIX_WriteLine(x0, y0, x1, y1, color);
+        MATRIX_WriteLine(x0, y0, x1, y1, u32Color);
     }
 }
 
@@ -894,7 +1015,7 @@ void MATRIX_DrawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t co
  *  @param    cornername  Mask bit #1 or bit #2 to indicate which quarters of the circle we're doing
  *  @param    color 16-bit 5-6-5 Color to draw with
  */
-void MATRIX_DrawCircleHelper( int16_t x0, int16_t y0, int16_t r, uint8_t cornername, uint16_t color)
+void MATRIX_DrawCircleHelper( int16_t x0, int16_t y0, int16_t r, uint8_t cornername, uint32_t u32Color)
 {
     int16_t f     = 1 - r;
     int16_t ddF_x = 1;
@@ -912,20 +1033,20 @@ void MATRIX_DrawCircleHelper( int16_t x0, int16_t y0, int16_t r, uint8_t cornern
         ddF_x += 2;
         f     += ddF_x;
         if (cornername & 0x4) {
-            MATRIX_DrawPixel(x0 + x, y0 + y, color);
-            MATRIX_DrawPixel(x0 + y, y0 + x, color);
+            MATRIX_DrawPixel(x0 + x, y0 + y, u32Color);
+            MATRIX_DrawPixel(x0 + y, y0 + x, u32Color);
         }
         if (cornername & 0x2) {
-            MATRIX_DrawPixel(x0 + x, y0 - y, color);
-            MATRIX_DrawPixel(x0 + y, y0 - x, color);
+            MATRIX_DrawPixel(x0 + x, y0 - y, u32Color);
+            MATRIX_DrawPixel(x0 + y, y0 - x, u32Color);
         }
         if (cornername & 0x8) {
-            MATRIX_DrawPixel(x0 - y, y0 + x, color);
-            MATRIX_DrawPixel(x0 - x, y0 + y, color);
+            MATRIX_DrawPixel(x0 - y, y0 + x, u32Color);
+            MATRIX_DrawPixel(x0 - x, y0 + y, u32Color);
         }
         if (cornername & 0x1) {
-            MATRIX_DrawPixel(x0 - y, y0 - x, color);
-            MATRIX_DrawPixel(x0 - x, y0 - y, color);
+            MATRIX_DrawPixel(x0 - y, y0 - x, u32Color);
+            MATRIX_DrawPixel(x0 - x, y0 - y, u32Color);
         }
     }
 }
@@ -938,10 +1059,10 @@ void MATRIX_DrawCircleHelper( int16_t x0, int16_t y0, int16_t r, uint8_t cornern
  *  @param    r   Radius of circle
  *  @param    color 16-bit 5-6-5 Color to fill with
  */
-void MATRIX_FillCircle( int16_t x0, int16_t y0, int16_t r, uint16_t color )
+void MATRIX_FillCircle( int16_t x0, int16_t y0, int16_t r, uint32_t u32Color )
 {
-    MATRIX_DrawFastVLine(x0, y0-r, 2*r+1, color);
-    MATRIX_FillCircleHelper(x0, y0, r, 3, 0, color);
+    MATRIX_DrawFastVLine(x0, y0-r, 2*r+1, u32Color);
+    MATRIX_FillCircleHelper(x0, y0, r, 3, 0, u32Color);
 }
 
 /**
@@ -954,7 +1075,7 @@ void MATRIX_FillCircle( int16_t x0, int16_t y0, int16_t r, uint16_t color )
  *  @param  delta    Offset from center-point, used for round-rects
  *  @param  color    16-bit 5-6-5 Color to fill with
  */
-void MATRIX_FillCircleHelper( int16_t x0, int16_t y0, int16_t r, uint8_t corners, int16_t delta, uint16_t color )
+void MATRIX_FillCircleHelper( int16_t x0, int16_t y0, int16_t r, uint8_t corners, int16_t delta, uint32_t u32Color )
 {
     int16_t f     = 1 - r;
     int16_t ddF_x = 1;
@@ -978,12 +1099,12 @@ void MATRIX_FillCircleHelper( int16_t x0, int16_t y0, int16_t r, uint8_t corners
         // These checks avoid double-drawing certain lines, important
         // for the SSD1306 library which has an INVERT drawing mode.
         if(x < (y + 1)) {
-            if(corners & 1) MATRIX_DrawFastVLine(x0+x, y0-y, 2*y+delta, color);
-            if(corners & 2) MATRIX_DrawFastVLine(x0-x, y0-y, 2*y+delta, color);
+            if(corners & 1) MATRIX_DrawFastVLine(x0+x, y0-y, 2*y+delta, u32Color);
+            if(corners & 2) MATRIX_DrawFastVLine(x0-x, y0-y, 2*y+delta, u32Color);
         }
         if(y != py) {
-            if(corners & 1) MATRIX_DrawFastVLine(x0+py, y0-px, 2*px+delta, color);
-            if(corners & 2) MATRIX_DrawFastVLine(x0-py, y0-px, 2*px+delta, color);
+            if(corners & 1) MATRIX_DrawFastVLine(x0+py, y0-px, 2*px+delta, u32Color);
+            if(corners & 2) MATRIX_DrawFastVLine(x0-py, y0-px, 2*px+delta, u32Color);
             py = y;
         }
         px = x;
@@ -999,12 +1120,12 @@ void MATRIX_FillCircleHelper( int16_t x0, int16_t y0, int16_t r, uint8_t corners
  *  @param    h   Height in pixels
  *  @param    color 16-bit 5-6-5 Color to draw with
  */
-void MATRIX_DrawRect( int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color )
+void MATRIX_DrawRect( int16_t x, int16_t y, int16_t w, int16_t h, uint32_t u32Color )
 {
-    MATRIX_DrawFastHLine(x, y, w, color);
-    MATRIX_DrawFastHLine(x, y+h-1, w, color);
-    MATRIX_DrawFastVLine(x, y, h, color);
-    MATRIX_DrawFastVLine(x+w-1, y, h, color);
+    MATRIX_DrawFastHLine(x, y, w, u32Color);
+    MATRIX_DrawFastHLine(x, y+h-1, w, u32Color);
+    MATRIX_DrawFastVLine(x, y, h, u32Color);
+    MATRIX_DrawFastVLine(x+w-1, y, h, u32Color);
 }
 
 /**
@@ -1017,20 +1138,20 @@ void MATRIX_DrawRect( int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color
  *  @param    r   Radius of corner rounding
  *  @param    color 16-bit 5-6-5 Color to draw with
  */
-void MATRIX_DrawRoundRect( int16_t x, int16_t y, int16_t w, int16_t h, int16_t r, uint16_t color )
+void MATRIX_DrawRoundRect( int16_t x, int16_t y, int16_t w, int16_t h, int16_t r, uint32_t u32Color )
 {
     int16_t max_radius = ((w < h) ? w : h) / 2; // 1/2 minor axis
     if(r > max_radius) r = max_radius;
     // smarter version
-    MATRIX_DrawFastHLine(x+r  , y    , w-2*r, color); // Top
-    MATRIX_DrawFastHLine(x+r  , y+h-1, w-2*r, color); // Bottom
-    MATRIX_DrawFastVLine(x    , y+r  , h-2*r, color); // Left
-    MATRIX_DrawFastVLine(x+w-1, y+r  , h-2*r, color); // Right
+    MATRIX_DrawFastHLine(x+r  , y    , w-2*r, u32Color); // Top
+    MATRIX_DrawFastHLine(x+r  , y+h-1, w-2*r, u32Color); // Bottom
+    MATRIX_DrawFastVLine(x    , y+r  , h-2*r, u32Color); // Left
+    MATRIX_DrawFastVLine(x+w-1, y+r  , h-2*r, u32Color); // Right
     // draw four corners
-    MATRIX_DrawCircleHelper(x+r    , y+r    , r, 1, color);
-    MATRIX_DrawCircleHelper(x+w-r-1, y+r    , r, 2, color);
-    MATRIX_DrawCircleHelper(x+w-r-1, y+h-r-1, r, 4, color);
-    MATRIX_DrawCircleHelper(x+r    , y+h-r-1, r, 8, color);
+    MATRIX_DrawCircleHelper(x+r    , y+r    , r, 1, u32Color);
+    MATRIX_DrawCircleHelper(x+w-r-1, y+r    , r, 2, u32Color);
+    MATRIX_DrawCircleHelper(x+w-r-1, y+h-r-1, r, 4, u32Color);
+    MATRIX_DrawCircleHelper(x+r    , y+h-r-1, r, 8, u32Color);
 }
 
 /**
@@ -1043,15 +1164,15 @@ void MATRIX_DrawRoundRect( int16_t x, int16_t y, int16_t w, int16_t h, int16_t r
  *  @param    r   Radius of corner rounding
  *  @param    color 16-bit 5-6-5 Color to draw/fill with
  */
-void MATRIX_FillRoundRect( int16_t x, int16_t y, int16_t w, int16_t h, int16_t r, uint16_t color )
+void MATRIX_FillRoundRect( int16_t x, int16_t y, int16_t w, int16_t h, int16_t r, uint32_t u32Color )
 {
     int16_t max_radius = ((w < h) ? w : h) / 2; // 1/2 minor axis
     if(r > max_radius) r = max_radius;
     // smarter version
-    MATRIX_FillRect(x+r, y, w-2*r, h, color);
+    MATRIX_FillRect(x+r, y, w-2*r, h, u32Color);
     // draw four corners
-    MATRIX_FillCircleHelper(x+w-r-1, y+r, r, 1, h-2*r-1, color);
-    MATRIX_FillCircleHelper(x+r    , y+r, r, 2, h-2*r-1, color);
+    MATRIX_FillCircleHelper(x+w-r-1, y+r, r, 1, h-2*r-1, u32Color);
+    MATRIX_FillCircleHelper(x+r    , y+r, r, 2, h-2*r-1, u32Color);
 }
 
 /**
@@ -1065,11 +1186,11 @@ void MATRIX_FillRoundRect( int16_t x, int16_t y, int16_t w, int16_t h, int16_t r
  *  @param    y2  Vertex #2 y coordinate
  *  @param    color 16-bit 5-6-5 Color to draw with
  */
-void MATRIX_DrawTriangle( int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color )
+void MATRIX_DrawTriangle( int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint32_t u32Color )
 {
-    MATRIX_DrawLine(x0, y0, x1, y1, color);
-    MATRIX_DrawLine(x1, y1, x2, y2, color);
-    MATRIX_DrawLine(x2, y2, x0, y0, color);
+    MATRIX_DrawLine(x0, y0, x1, y1, u32Color);
+    MATRIX_DrawLine(x1, y1, x2, y2, u32Color);
+    MATRIX_DrawLine(x2, y2, x0, y0, u32Color);
 }
 
 /**
@@ -1083,7 +1204,7 @@ void MATRIX_DrawTriangle( int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_
  *   @param    y2  Vertex #2 y coordinate
  *   @param    color 16-bit 5-6-5 Color to fill/draw with
  */
-void MATRIX_FillTriangle( int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color )
+void MATRIX_FillTriangle( int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint32_t u32Color )
 {
 
     int16_t a, b, y, last;
@@ -1105,7 +1226,7 @@ void MATRIX_FillTriangle( int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_
         else if(x1 > b) b = x1;
         if(x2 < a)      a = x2;
         else if(x2 > b) b = x2;
-        MATRIX_DrawFastHLine(a, y0, b-a+1, color);
+        MATRIX_DrawFastHLine(a, y0, b-a+1, u32Color);
         return;
     }
 
@@ -1139,7 +1260,7 @@ void MATRIX_FillTriangle( int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_
         b = x0 + (x2 - x0) * (y - y0) / (y2 - y0);
         */
         if(a > b) _swap_int16_t(a,b);
-        MATRIX_DrawFastHLine(a, y, b-a+1, color);
+        MATRIX_DrawFastHLine(a, y, b-a+1, u32Color);
     }
 
     // For lower part of triangle, find scanline crossings for segments
@@ -1156,7 +1277,7 @@ void MATRIX_FillTriangle( int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_
         b = x0 + (x2 - x0) * (y - y0) / (y2 - y0);
         */
         if(a > b) _swap_int16_t(a,b);
-        MATRIX_DrawFastHLine(a, y, b-a+1, color);
+        MATRIX_DrawFastHLine(a, y, b-a+1, u32Color);
     }
 }
 
@@ -1173,7 +1294,7 @@ void MATRIX_FillTriangle( int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_
  *  @param    size_x  Font magnification level in X-axis, 1 is 'original' size
  *  @param    size_y  Font magnification level in Y-axis, 1 is 'original' size
 */
-void MATRIX_DrawChar( int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_t bg, uint8_t size_x, uint8_t size_y, MATRIX_FontTypes fontType )
+void MATRIX_DrawChar( int16_t x, int16_t y, unsigned char c, uint32_t u32Color, uint16_t bg, uint8_t size_x, uint8_t size_y, MATRIX_FontTypes fontType )
 {
     if( FONT_DEFAULT == fontType )
     { // 'Classic' built-in font
@@ -1192,10 +1313,10 @@ void MATRIX_DrawChar( int16_t x, int16_t y, unsigned char c, uint16_t color, uin
             for(int8_t j=0; j<8; j++, line >>= 1) {
                 if(line & 1) {
                     if(size_x == 1 && size_y == 1)
-                        MATRIX_DrawPixel(x+i, y+j, color);
+                        MATRIX_DrawPixel(x+i, y+j, u32Color);
                     else
-                        MATRIX_FillRect(x+i*size_x, y+j*size_y, size_x, size_y, color);
-                } else if(bg != color) {
+                        MATRIX_FillRect(x+i*size_x, y+j*size_y, size_x, size_y, u32Color);
+                } else if(bg != u32Color) {
                     if(size_x == 1 && size_y == 1)
                         MATRIX_DrawPixel(x+i, y+j, bg);
                     else
@@ -1203,7 +1324,7 @@ void MATRIX_DrawChar( int16_t x, int16_t y, unsigned char c, uint16_t color, uin
                 }
             }
         }
-        if(bg != color) { // If opaque, draw vertical line for last column
+        if(bg != u32Color) { // If opaque, draw vertical line for last column
             if(size_x == 1 && size_y == 1) MATRIX_DrawFastVLine(x+5, y, 8, bg);
             else          MATRIX_FillRect(x+5*size_x, y, size_x, 8*size_y, bg);
         }
@@ -1256,10 +1377,10 @@ void MATRIX_DrawChar( int16_t x, int16_t y, unsigned char c, uint16_t color, uin
                 }
                 if(bits & 0x80) {
                     if(size_x == 1 && size_y == 1) {
-                        MATRIX_DrawPixel(x+xo+xx, y+yo+yy, color);
+                        MATRIX_DrawPixel(x+xo+xx, y+yo+yy, u32Color);
                     } else {
                         MATRIX_FillRect(x+(xo16+xx)*size_x, y+(yo16+yy)*size_y,
-                          size_x, size_y, color);
+                          size_x, size_y, u32Color);
                     }
                 }
                 bits <<= 1;
@@ -1274,9 +1395,9 @@ void MATRIX_DrawChar( int16_t x, int16_t y, unsigned char c, uint16_t color, uin
  *
  *  @param  c  The 8-bit ascii character to write
  */
-size_t MATRIX_Write( uint8_t c, MATRIX_FontTypes fontType )
+size_t MATRIX_Write( uint8_t c, MATRIX_FontTypes nFontType, uint32_t u32Color )
 {
-    if( FONT_DEFAULT == fontType ) // 'Classic' built-in font
+    if( FONT_DEFAULT == nFontType ) // 'Classic' built-in font
     {
         if(c == '\n') {                        // Newline?
             gCursorX  = 0;                     // Reset x to zero,
@@ -1286,7 +1407,7 @@ size_t MATRIX_Write( uint8_t c, MATRIX_FontTypes fontType )
                 gCursorX  = 0;                 // Reset x to zero,
                 gCursorY += gTextSizeY * 8;    // advance y one line
             }
-            MATRIX_DrawChar(gCursorX, gCursorY, c, gTextColor, gTextBgColor, gTextSizeX, gTextSizeY, fontType );
+            MATRIX_DrawChar(gCursorX, gCursorY, c, u32Color, gTextBgColor, gTextSizeX, gTextSizeY, nFontType );
             gCursorX += gTextSizeX * 6;          // Advance x one char
         }
     } else
@@ -1313,7 +1434,7 @@ size_t MATRIX_Write( uint8_t c, MATRIX_FontTypes fontType )
                           (uint8_t)pgm_read_byte(&gfxFont->yAdvance);
                         }
                     }
-                    MATRIX_DrawChar(gCursorX, gCursorY, c, gTextColor, gTextBgColor, gTextSizeX, gTextSizeY, fontType );
+                    MATRIX_DrawChar(gCursorX, gCursorY, c, u32Color, gTextBgColor, gTextSizeX, gTextSizeY, nFontType );
                 }
                 gCursorX += (uint8_t)pgm_read_byte(&glyph->xAdvance) * (int16_t)gTextSizeX;
             }
@@ -1355,19 +1476,69 @@ void MATRIX_SetRotation( uint8_t x )
     // }
 }
 
-void MATRIX_Print( uint8_t *s, MATRIX_FontTypes fontType )
+void MATRIX_Print( char *s, MATRIX_FontTypes nFontType, uint32_t u32Color )
 {
     while (*s)
     {
-        MATRIX_Write(*s++, fontType );
+        MATRIX_Write( *s++, nFontType, u32Color );
     }
 }
 
-void MATRIX_Printf( MATRIX_FontTypes fontType, char *fmt, ... )
+void MATRIX_Printf( MATRIX_FontTypes nFontType, uint8_t u8TextSize,
+                    uint16_t u16XPos, uint16_t u16YPos, uint32_t u32Color, char *fmt, ... )
 {
     va_list argp;
+    char string[200];
+
     va_start(argp, fmt);
-    MATRIX_Vprint( fontType, fmt, argp );
+
+    if( 0U < vsprintf( string, fmt, argp ) )
+    {
+        gTextSizeX = (u8TextSize > 0) ? u8TextSize : 1;
+        gTextSizeY = (u8TextSize > 0) ? u8TextSize : 1;
+
+        if( (0xFFFFU != u16XPos) && (0xFFFFU != u16YPos) )
+        {
+            gCursorX = u16XPos;
+            gCursorY = u16YPos;
+        }
+/*
+        if( FONT_TOMTHUMB == nFontType)
+        {
+            gfxFont = &TomThumb;
+        }
+        else if( FONT_FREESERIF9PT7B == nFontType )
+        {
+            gfxFont = &FreeSerif9pt7b;
+        }
+        else if ( FONR_FREESERIFBOLDITALIC18PT7B == nFontType )
+        {
+            gfxFont = &FreeSerifBoldItalic18pt7b;
+        }
+        else if ( FONR_FREESERIFBOLDITALIC12PT7B == nFontType )
+        {
+            gfxFont = &FreeSerifBoldItalic12pt7b;
+        }
+        else if ( FONR_FREESANOBLIQUE9PT7B == nFontType )
+        {
+            gfxFont = &FreeSansOblique9pt7b;
+        }
+        else if ( FONT_FREEMONO9PT7B == nFontType )
+        {
+            gfxFont = &FreeMono9pt7b;
+        }
+        else if ( FONR_FREESAN9PT7B == nFontType )
+        {
+            gfxFont = &FreeSans9pt7b;
+        }
+        else if ( FONT_ORG_01 == nFontType )
+        {
+            gfxFont = &Org_01;
+        } */
+
+        MATRIX_Print( string, nFontType, u32Color );
+    }
+
     va_end(argp);
 }
 /**
@@ -1734,7 +1905,7 @@ void Adafruit_GFX_Button::drawButton(boolean inverted) {
  *  @param    color 16-bit 5-6-5 Color to draw with
  */
 void Adafruit_GFX::drawBitmap(int16_t x, int16_t y,
-  const uint8_t bitmap[], int16_t w, int16_t h, uint16_t color) {
+  const uint8_t bitmap[], int16_t w, int16_t h, uint32_t u32Color) {
 
     int16_t byteWidth = (w + 7) / 8; // Bitmap scanline pad = whole byte
     uint8_t byte = 0;
@@ -1761,7 +1932,7 @@ void Adafruit_GFX::drawBitmap(int16_t x, int16_t y,
 */
 void Adafruit_GFX::drawBitmap(int16_t x, int16_t y,
   const uint8_t bitmap[], int16_t w, int16_t h,
-  uint16_t color, uint16_t bg) {
+  uint32_t u32Color, uint16_t bg) {
 
     int16_t byteWidth = (w + 7) / 8; // Bitmap scanline pad = whole byte
     uint8_t byte = 0;
@@ -1787,7 +1958,7 @@ void Adafruit_GFX::drawBitmap(int16_t x, int16_t y,
     @param    color 16-bit 5-6-5 Color to draw with
 */
 void Adafruit_GFX::drawBitmap(int16_t x, int16_t y,
-  uint8_t *bitmap, int16_t w, int16_t h, uint16_t color) {
+  uint8_t *bitmap, int16_t w, int16_t h, uint32_t u32Color) {
 
     int16_t byteWidth = (w + 7) / 8; // Bitmap scanline pad = whole byte
     uint8_t byte = 0;
@@ -1814,7 +1985,7 @@ void Adafruit_GFX::drawBitmap(int16_t x, int16_t y,
     @param    bg 16-bit 5-6-5 Color to draw background with
 */
 void Adafruit_GFX::drawBitmap(int16_t x, int16_t y,
-  uint8_t *bitmap, int16_t w, int16_t h, uint16_t color, uint16_t bg) {
+  uint8_t *bitmap, int16_t w, int16_t h, uint32_t u32Color, uint16_t bg) {
 
     int16_t byteWidth = (w + 7) / 8; // Bitmap scanline pad = whole byte
     uint8_t byte = 0;
@@ -1844,7 +2015,7 @@ void Adafruit_GFX::drawBitmap(int16_t x, int16_t y,
     @param    color 16-bit 5-6-5 Color to draw pixels with
 */
 void Adafruit_GFX::drawXBitmap(int16_t x, int16_t y,
-  const uint8_t bitmap[], int16_t w, int16_t h, uint16_t color) {
+  const uint8_t bitmap[], int16_t w, int16_t h, uint32_t u32Color) {
 
     int16_t byteWidth = (w + 7) / 8; // Bitmap scanline pad = whole byte
     uint8_t byte = 0;

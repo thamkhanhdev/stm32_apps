@@ -55,4 +55,3 @@ void MX_LIBJPEG_Init(void);
   * @}
   */
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
